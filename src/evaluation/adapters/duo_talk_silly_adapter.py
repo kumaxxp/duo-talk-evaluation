@@ -108,30 +108,74 @@ class DuoTalkSillyAdapter(SystemAdapter):
         self,
         prompt: str,
         max_tokens: int = 300,
-        temperature: float = 0.7
+        temperature: float = 0.7,
+        retries: int = 2
     ) -> str:
-        """KoboldCPPで応答を生成"""
-        try:
-            response = requests.post(
-                f"{self.kobold_url}/api/v1/generate",
-                json={
-                    "prompt": prompt,
-                    "max_length": max_tokens,
-                    "temperature": temperature,
-                    "top_p": 0.9,
-                    "rep_pen": 1.1,
-                    "stop_sequence": ["\n\n", "やな:", "あゆ:", "# ", "##"]
-                },
-                timeout=120
-            )
-            response.raise_for_status()
-            return response.json()["results"][0]["text"].strip()
-        except requests.RequestException as e:
-            logger.error(f"KoboldCPP request failed: {e}")
-            return ""
-        except (KeyError, IndexError) as e:
-            logger.error(f"KoboldCPP response parse error: {e}")
-            return ""
+        """KoboldCPPで応答を生成
+
+        Args:
+            prompt: プロンプト
+            max_tokens: 最大トークン数
+            temperature: 温度パラメータ
+            retries: 空応答時のリトライ回数
+        """
+        for attempt in range(retries + 1):
+            try:
+                # 空応答対策: リトライ時は温度を上げる
+                temp = temperature + (attempt * 0.1)
+
+                response = requests.post(
+                    f"{self.kobold_url}/api/v1/generate",
+                    json={
+                        "prompt": prompt,
+                        "max_length": max_tokens,
+                        "temperature": min(temp, 1.0),
+                        "top_p": 0.9,
+                        "top_k": 40,
+                        "min_p": 0.05,
+                        "rep_pen": 1.05,
+                        "stop_sequence": [
+                            "\n\n", "やな:", "あゆ:", "# ", "##",
+                            "<|im_end|>", "<|im_start|>", "<|eot_id|>",
+                            "<end_of_turn>", "<start_of_turn>",
+                        ]
+                    },
+                    timeout=120
+                )
+                response.raise_for_status()
+                raw = response.json()["results"][0]["text"].strip()
+                result = self._clean_response(raw)
+
+                # 空応答チェック（---、-、空文字など）
+                if result and not result.replace("-", "").strip() == "":
+                    return result
+                logger.warning(f"Empty response attempt {attempt + 1}, retrying...")
+
+            except requests.RequestException as e:
+                logger.error(f"KoboldCPP request failed: {e}")
+                return ""
+            except (KeyError, IndexError) as e:
+                logger.error(f"KoboldCPP response parse error: {e}")
+                return ""
+
+        return ""
+
+    def _clean_response(self, text: str) -> str:
+        """応答からチャットテンプレートトークンを除去"""
+        import re
+        tokens_to_remove = [
+            r"<\|im_end\|>",
+            r"<\|im_start\|>user",
+            r"<\|im_start\|>assistant",
+            r"<\|im_start\|>system",
+            r"<\|eot_id\|>",
+            r"<end_of_turn>",
+            r"<start_of_turn>model",
+            r"<start_of_turn>user",
+        ]
+        for token in tokens_to_remove:
+            text = re.sub(token, "", text)
+        return text.strip()
 
     def generate_dialogue(
         self,

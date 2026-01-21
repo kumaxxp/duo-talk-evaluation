@@ -165,10 +165,30 @@ class ConfigurableAdapter:
     def _generate_response(self, prompt: str) -> str:
         """LLMで応答を生成"""
         if self.variation.llm_backend == LLMBackend.OLLAMA:
-            return self._generate_ollama(prompt)
+            raw = self._generate_ollama(prompt)
         elif self.variation.llm_backend == LLMBackend.KOBOLDCPP:
-            return self._generate_koboldcpp(prompt)
-        return ""
+            raw = self._generate_koboldcpp(prompt)
+        else:
+            return ""
+        return self._clean_response(raw)
+
+    def _clean_response(self, text: str) -> str:
+        """応答からチャットテンプレートトークンを除去"""
+        import re
+        # チャットテンプレートトークンを除去
+        tokens_to_remove = [
+            r"<\|im_end\|>",
+            r"<\|im_start\|>user",
+            r"<\|im_start\|>assistant",
+            r"<\|im_start\|>system",
+            r"<\|eot_id\|>",
+            r"<end_of_turn>",
+            r"<start_of_turn>model",
+            r"<start_of_turn>user",
+        ]
+        for token in tokens_to_remove:
+            text = re.sub(token, "", text)
+        return text.strip()
 
     def _generate_ollama(self, prompt: str) -> str:
         """Ollamaで応答を生成"""
@@ -183,7 +203,11 @@ class ConfigurableAdapter:
                     ],
                     "temperature": self.variation.temperature,
                     "max_tokens": 300,
-                    "stop": ["\n\n", "やな:", "あゆ:", "# ", "##"],
+                    "stop": [
+                        "\n\n", "やな:", "あゆ:", "# ", "##",
+                        "<|im_end|>", "<|im_start|>", "<|eot_id|>",
+                        "<end_of_turn>", "<start_of_turn>",
+                    ],
                 },
                 timeout=120
             )
@@ -196,29 +220,52 @@ class ConfigurableAdapter:
             logger.error(f"Ollama response parse error: {e}")
             return ""
 
-    def _generate_koboldcpp(self, prompt: str) -> str:
-        """KoboldCPPで応答を生成"""
-        try:
-            response = requests.post(
-                f"{self.variation.kobold_url}/api/v1/generate",
-                json={
-                    "prompt": prompt,
-                    "max_length": 300,
-                    "temperature": self.variation.temperature,
-                    "top_p": 0.9,
-                    "rep_pen": 1.1,
-                    "stop_sequence": ["\n\n", "やな:", "あゆ:", "# ", "##"]
-                },
-                timeout=120
-            )
-            response.raise_for_status()
-            return response.json()["results"][0]["text"].strip()
-        except requests.RequestException as e:
-            logger.error(f"KoboldCPP request failed: {e}")
-            return ""
-        except (KeyError, IndexError) as e:
-            logger.error(f"KoboldCPP response parse error: {e}")
-            return ""
+    def _generate_koboldcpp(self, prompt: str, retries: int = 2) -> str:
+        """KoboldCPPで応答を生成
+
+        Args:
+            prompt: プロンプト
+            retries: 空応答時のリトライ回数
+        """
+        for attempt in range(retries + 1):
+            try:
+                # 空応答対策: リトライ時は温度を上げる
+                temp = self.variation.temperature + (attempt * 0.1)
+
+                response = requests.post(
+                    f"{self.variation.kobold_url}/api/v1/generate",
+                    json={
+                        "prompt": prompt,
+                        "max_length": 300,
+                        "temperature": min(temp, 1.0),
+                        "top_p": 0.9,
+                        "top_k": 40,
+                        "min_p": 0.05,
+                        "rep_pen": 1.05,
+                        "stop_sequence": [
+                            "\n\n", "やな:", "あゆ:", "# ", "##",
+                            "<|im_end|>", "<|im_start|>", "<|eot_id|>",
+                            "<end_of_turn>", "<start_of_turn>",
+                        ]
+                    },
+                    timeout=120
+                )
+                response.raise_for_status()
+                result = response.json()["results"][0]["text"].strip()
+
+                # 空応答チェック（---、-、空文字など）
+                if result and not result.replace("-", "").strip() == "":
+                    return result
+                logger.warning(f"Empty response attempt {attempt + 1}, retrying...")
+
+            except requests.RequestException as e:
+                logger.error(f"KoboldCPP request failed: {e}")
+                return ""
+            except (KeyError, IndexError) as e:
+                logger.error(f"KoboldCPP response parse error: {e}")
+                return ""
+
+        return ""
 
     def to_standard_format(self, result: dict) -> list[dict]:
         """標準形式に変換（評価器用）"""
