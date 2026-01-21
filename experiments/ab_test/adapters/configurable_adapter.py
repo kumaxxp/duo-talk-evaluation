@@ -253,8 +253,9 @@ class ConfigurableAdapter:
                 response.raise_for_status()
                 result = response.json()["results"][0]["text"].strip()
 
-                # 空応答チェック（---、-、空文字など）
-                if result and not result.replace("-", "").strip() == "":
+                # 空応答チェック（---, ___, *, 空文字など）
+                cleaned = result.replace("-", "").replace("_", "").replace("*", "").strip()
+                if result and cleaned:
                     return result
                 logger.warning(f"Empty response attempt {attempt + 1}, retrying...")
 
