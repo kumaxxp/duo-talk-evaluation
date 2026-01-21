@@ -36,10 +36,10 @@ variations:
     ollama_model: "gemma3:12b"
 
   - name: "gemma2_27b"
-    llm_backend: "koboldcpp"
+    llm_backend: "ollama"
     llm_model: "gemma2-27b"
-    # duo-talk-sillyで使用されているモデル (Gemma2-Llama-Swallow)
-    kobold_url: "http://localhost:5001"
+    # duo-talk-sillyで使用されているモデル (Gemma2-Llama-Swallow via Ollama)
+    ollama_model: "gemma2-swallow-27b"
 
 metrics:
   - naturalness
