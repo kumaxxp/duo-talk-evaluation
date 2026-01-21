@@ -1,0 +1,72 @@
+# 検証軸1: LLM比較実験
+# Gemma3 12B (Ollama) vs Gemma2 27B (KoboldCPP)
+#
+# 背景:
+# - duo-talk, duo-talk-simple は Gemma3-12b (Ollama) を使用
+# - duo-talk-silly は Gemma2-27B (KoboldCPP) を使用
+# - Phase 0でnaturalness差が観測された（silly: 0.900 vs 他: 0.700-0.750）
+
+experiment:
+  id: "exp_llm_comparison_001"
+  name: "LLM比較: Gemma3 12B vs Gemma2 27B"
+  description: |
+    同一プロンプト構造（シンプル）でLLMのみを変更し、
+    naturalness/consistency/concretenessの差を検証する。
+
+    仮説:
+    - H1-1: Gemma2 27Bはnaturalnessで優位（モデルサイズ効果）
+    - H1-2: Gemma3 12Bはconsistencyで優位（Gemma3の改善）
+    - H1-3: concretenessはRAGなしでは差が出にくい
+
+base_config:
+  prompt_structure: "simple"  # シンプル構造で固定
+  rag_enabled: false          # RAG無効（変数隔離）
+  director_enabled: false     # Director無効（変数隔離）
+  few_shot_count: 3
+  scenarios:
+    - casual_greeting
+    - emotional_support
+    - topic_exploration
+
+variations:
+  - name: "gemma3_12b"
+    llm_backend: "ollama"
+    llm_model: "gemma3-12b"
+    # duo-talk/duo-talk-simpleで使用されているモデル
+    ollama_model: "gemma3:12b"
+
+  - name: "gemma2_27b"
+    llm_backend: "koboldcpp"
+    llm_model: "gemma2-27b"
+    # duo-talk-sillyで使用されているモデル (Gemma2-Llama-Swallow)
+    kobold_url: "http://localhost:5001"
+
+metrics:
+  - naturalness
+  - character_consistency
+  - concreteness
+  - relationship_quality
+  - topic_novelty
+
+# カスタムシナリオ定義（オプション）
+scenario_definitions:
+  casual_greeting:
+    prompt: "おはよう、二人とも"
+    turns: 5
+    evaluation_focus:
+      - character_consistency
+      - naturalness
+
+  emotional_support:
+    prompt: "最近疲れてるんだ..."
+    turns: 6
+    evaluation_focus:
+      - relationship_quality
+      - naturalness
+
+  topic_exploration:
+    prompt: "最近のAI技術について話して"
+    turns: 8
+    evaluation_focus:
+      - topic_novelty
+      - concreteness

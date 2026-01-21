@@ -1,0 +1,46 @@
+# 検証軸4: Director影響分析
+# Directorあり vs なし（同一LLM・プロンプト構造・RAG）
+
+experiment:
+  id: "exp_director_comparison_001"
+  name: "Director影響分析: Directorあり vs なし"
+  description: |
+    Director（NoveltyGuard含む）の有無が品質・処理時間に与える影響を検証。
+    - 品質向上効果
+    - 処理時間増加
+    - JetRacer文脈混入リスク
+
+base_config:
+  llm_backend: "ollama"
+  llm_model: "swallow-8b"
+  prompt_structure: "layered"  # duo-talk形式で固定
+  rag_enabled: true            # RAGあり（duo-talkの標準構成）
+  few_shot_count: 3
+  scenarios:
+    - disagreement_resolution  # ループが発生しやすいシナリオ
+    - topic_exploration
+
+variations:
+  - name: "director_disabled"
+    director_enabled: false
+    ollama_model: "hf.co/mmnga/tokyotech-llm-Llama-3.1-Swallow-8B-Instruct-v0.3-gguf:Q4_K_M"
+
+  - name: "director_enabled"
+    director_enabled: true
+    novelty_guard_enabled: true
+    max_retries: 3
+    ollama_model: "hf.co/mmnga/tokyotech-llm-Llama-3.1-Swallow-8B-Instruct-v0.3-gguf:Q4_K_M"
+
+metrics:
+  - topic_novelty             # NoveltyGuardの主な効果指標
+  - character_consistency
+  - naturalness
+  - concreteness
+
+additional_metrics:
+  - processing_time           # 処理時間の比較
+  - retry_count               # リトライ回数
+  - context_contamination     # JetRacer文脈混入率
+
+# 注意: Director有効時はduo-talkのUnifiedPipelineを使用する必要あり
+# ConfigurableAdapterの拡張が必要

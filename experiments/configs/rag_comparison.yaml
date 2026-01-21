@@ -1,0 +1,38 @@
+# 検証軸3: RAG影響分析
+# RAGあり vs なし（同一LLM・プロンプト構造）
+
+experiment:
+  id: "exp_rag_comparison_001"
+  name: "RAG影響分析: RAGあり vs なし"
+  description: |
+    RAGの有無がconcretenessに与える影響を検証。
+    同時に、無関係な知識混入（relevance低下）のリスクも確認。
+
+base_config:
+  llm_backend: "ollama"
+  llm_model: "swallow-8b"
+  prompt_structure: "simple"   # シンプル構造で固定
+  director_enabled: false      # Director無効（変数隔離）
+  few_shot_count: 3
+  scenarios:
+    - topic_exploration        # concretnessを最も評価しやすい
+    - casual_greeting
+
+variations:
+  - name: "rag_disabled"
+    rag_enabled: false
+    ollama_model: "hf.co/mmnga/tokyotech-llm-Llama-3.1-Swallow-8B-Instruct-v0.3-gguf:Q4_K_M"
+
+  - name: "rag_enabled"
+    rag_enabled: true
+    rag_top_k: 3
+    ollama_model: "hf.co/mmnga/tokyotech-llm-Llama-3.1-Swallow-8B-Instruct-v0.3-gguf:Q4_K_M"
+
+metrics:
+  - concreteness              # RAGの主な効果指標
+  - relevance                 # 文脈混入のリスク指標
+  - naturalness
+  - character_consistency
+
+# 注意: RAG有効時はduo-talk-simpleのRAGエンジンを使用する必要あり
+# ConfigurableAdapterの拡張が必要

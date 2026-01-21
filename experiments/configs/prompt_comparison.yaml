@@ -1,0 +1,66 @@
+# 検証軸2: プロンプト構造比較実験
+# レイヤリング vs シンプル vs SillyTavern（同一LLM）
+
+experiment:
+  id: "exp_prompt_comparison_003"
+  name: "プロンプト構造比較: Layered vs Simple vs SillyTavern (Gemma3 12B)"
+  description: |
+    同一LLM（Gemma3 12B）でプロンプト構造のみを変更し、
+    character_consistency/naturalnessへの影響を検証する。
+
+base_config:
+  llm_backend: "ollama"
+  llm_model: "gemma3:12b"
+  ollama_model: "gemma3:12b"
+  rag_enabled: false          # RAG無効（変数隔離）
+  director_enabled: false     # Director無効（変数隔離）
+  few_shot_count: 3
+  scenarios:
+    - casual_greeting
+    - emotional_support
+    - topic_exploration
+
+variations:
+  - name: "layered"
+    prompt_structure: "layered"
+    # duo-talk方式: XML階層構造
+    ollama_model: "gemma3:12b"
+
+  - name: "simple"
+    prompt_structure: "simple"
+    # duo-talk-simple方式: フラット構造 + 制約ルール
+    ollama_model: "gemma3:12b"
+
+  - name: "sillytavern"
+    prompt_structure: "sillytavern"
+    # SillyTavern方式: Character Card V2準拠
+    ollama_model: "gemma3:12b"
+
+metrics:
+  - naturalness
+  - character_consistency
+  - concreteness
+  - relationship_quality
+  - topic_novelty
+
+scenario_definitions:
+  casual_greeting:
+    prompt: "おはよう、二人とも"
+    turns: 5
+    evaluation_focus:
+      - character_consistency
+      - naturalness
+
+  emotional_support:
+    prompt: "最近疲れてるんだ..."
+    turns: 6
+    evaluation_focus:
+      - relationship_quality
+      - naturalness
+
+  topic_exploration:
+    prompt: "最近のAI技術について話して"
+    turns: 8
+    evaluation_focus:
+      - topic_novelty
+      - concreteness

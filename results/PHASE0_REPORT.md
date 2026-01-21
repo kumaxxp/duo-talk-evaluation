@@ -12,9 +12,12 @@
 
 | システム | アーキテクチャ | バックエンド | 特徴 |
 |----------|---------------|-------------|------|
-| duo-talk | UnifiedPipeline + Director + RAG | Ollama (Swallow 8B) | フル機能、品質重視 |
-| duo-talk-simple | DuoDialogueManager + RAG | Ollama (Swallow 8B) | CLI特化、シンプル構成 |
+| duo-talk | UnifiedPipeline + Director + RAG | Ollama (Swallow 8B)* | フル機能、品質重視 |
+| duo-talk-simple | DuoDialogueManager + RAG | Ollama (Swallow 8B)* | CLI特化、シンプル構成 |
 | duo-talk-silly | 直接LLM呼び出し | KoboldCPP (Gemma2 27B) | 最小構成、高速 |
+
+> **注**: *Phase 0評価時はメモリ制約のためSwallow 8Bを使用。本来はGemma3-12bが標準設定。
+> 深掘り検証（Phase 0.5）ではGemma3-12b vs Gemma2-27Bの比較を実施予定。
 
 ### 1.2 評価シナリオ
 
