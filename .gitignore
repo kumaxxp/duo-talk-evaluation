@@ -51,7 +51,7 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
-# Project specific
-results/*.json
-results/*.md
+# Project specific - keep experiment results
+!results/*.json
+!results/*.md
 !results/.gitkeep
