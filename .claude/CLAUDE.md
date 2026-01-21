@@ -168,9 +168,39 @@ scenarios:
     評価観点: relationship_quality, naturalness
 ```
 
+## Sequential Comparison Workflow (メモリ制約対応)
+
+**重要**: 3システム同時実行はメモリ不足で不可能。1システムずつ評価を実行。
+
+### 実行手順
+```bash
+# Step 1: KoboldCPP起動中に実行
+python experiments/compare_single.py duo-talk-silly
+
+# Step 2: KoboldCPP停止 → Ollama起動（Swallow 8B推奨）
+python experiments/compare_single.py duo-talk-simple
+
+# Step 3: Ollama停止 → duo-talk Flask起動（軽量モデル設定必須）
+python experiments/compare_single.py duo-talk --port 5002
+
+# Step 4: 結果マージ
+python experiments/compare_single.py --merge
+```
+
+### メモリ要件
+| システム | バックエンド | メモリ要件 |
+|----------|-------------|-----------|
+| duo-talk-silly | KoboldCPP | ~16GB VRAM (Gemma2 27B) |
+| duo-talk-simple | Ollama | ~5GB RAM (Swallow 8B) |
+| duo-talk | Ollama (Flask経由) | ~16GB RAM (gemma3:27b) |
+
+### 出力ファイル
+- `results/single_<system>_<timestamp>.json` - 個別結果
+- `results/<timestamp>_merged_comparison.json` - マージ済み比較結果
+
 ## Next Steps (優先順)
-1. **比較実験実行** - サービス起動後に `python experiments/compare_systems.py`
-2. **レポート分析** - results/に出力されたJSON/MDを分析
+1. **順次比較実験** - `compare_single.py`で1システムずつ評価
+2. **結果マージ** - `compare_single.py --merge`で統合
 3. **Phase 1移行判断** - 結果に基づき決定
 
 ## Environment Details
@@ -190,8 +220,16 @@ python experiments/model_list.py
 # 全テスト実行
 python -m pytest tests/ -v
 
-# 3システム比較実験
-python experiments/compare_systems.py
+# 単一システム評価（推奨）
+python experiments/compare_single.py duo-talk-silly
+python experiments/compare_single.py duo-talk-simple
+python experiments/compare_single.py duo-talk --port 5002
+
+# 結果マージ
+python experiments/compare_single.py --merge
+
+# 3システム同時比較（非推奨：メモリ不足）
+# python experiments/compare_systems.py
 ```
 
 ## Resolved Issues
