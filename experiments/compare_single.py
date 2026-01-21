@@ -77,9 +77,13 @@ SCENARIOS = [
 
 
 def get_adapter(system_name: str, port: int = 5000):
-    """システム名からアダプタを取得"""
+    """システム名からアダプタを取得
+
+    Note: portパラメータは後方互換性のため残すが、
+    duo-talkはコンソールモード（ライブラリ直接呼び出し）を使用するため不要。
+    """
     adapters = {
-        "duo-talk": lambda: DuoTalkAdapter(base_url=f"http://localhost:{port}"),
+        "duo-talk": lambda: DuoTalkAdapter(),  # コンソールモード（Flaskサーバー不要）
         "duo-talk-simple": lambda: DuoTalkSimpleAdapter(),
         "duo-talk-silly": lambda: DuoTalkSillyAdapter(),
     }

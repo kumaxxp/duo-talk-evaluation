@@ -1,0 +1,24 @@
+{
+  "system": "duo-talk",
+  "timestamp": "2026-01-21T20:14:26.458123",
+  "evaluator": "LocalLLMEvaluator",
+  "scenarios": {
+    "casual_greeting": {
+      "success": false,
+      "error": "UnifiedPipeline.run() got an unexpected keyword argument 'text'"
+    },
+    "topic_exploration": {
+      "success": false,
+      "error": "UnifiedPipeline.run() got an unexpected keyword argument 'text'"
+    },
+    "disagreement_resolution": {
+      "success": false,
+      "error": "UnifiedPipeline.run() got an unexpected keyword argument 'text'"
+    },
+    "emotional_support": {
+      "success": false,
+      "error": "UnifiedPipeline.run() got an unexpected keyword argument 'text'"
+    }
+  },
+  "summary": {}
+}

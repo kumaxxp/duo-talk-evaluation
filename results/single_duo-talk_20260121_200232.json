@@ -1,0 +1,24 @@
+{
+  "system": "duo-talk",
+  "timestamp": "2026-01-21T20:02:26.159169",
+  "evaluator": "LocalLLMEvaluator",
+  "scenarios": {
+    "casual_greeting": {
+      "success": false,
+      "error": "Speech generation failed at turn 0: Error code: 404 - {'error': {'message': 'model \"gemma3-12b-int8\" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}}"
+    },
+    "topic_exploration": {
+      "success": false,
+      "error": "Speech generation failed at turn 0: Error code: 404 - {'error': {'message': 'model \"gemma3-12b-int8\" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}}"
+    },
+    "disagreement_resolution": {
+      "success": false,
+      "error": "Speech generation failed at turn 0: Error code: 404 - {'error': {'message': 'model \"gemma3-12b-int8\" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}}"
+    },
+    "emotional_support": {
+      "success": false,
+      "error": "Speech generation failed at turn 0: Error code: 404 - {'error': {'message': 'model \"gemma3-12b-int8\" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}}"
+    }
+  },
+  "summary": {}
+}
