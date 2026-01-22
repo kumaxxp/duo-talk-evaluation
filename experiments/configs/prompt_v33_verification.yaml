@@ -1,0 +1,101 @@
+# v3.3プロンプト検証実験
+# JSON Schema形式と思考プロセス強制の効果を検証
+
+experiment:
+  id: "exp_prompt_v33_001"
+  name: "v3.3プロンプト検証: JSON Schema形式と思考プロセス"
+  description: |
+    v3.3プロンプト改良の効果を検証する。
+
+    主な変更点:
+    1. JSON Schema形式への完全移行
+       - 構造化されたキャラクター設定
+       - モダンLLM（Gemma 3等）に最適化
+    2. 思考プロセス（Thought）の強制
+       - 発言前に内部推論を行う
+       - ハルシネーション防止
+    3. 動的コンテキスト（World Context）の導入
+       - プロジェクト状況をプロンプトに含める
+       - 文脈に沿った会話を促進
+    4. mandatory_phrasesの導入
+       - キャラクター固有のフレーズを強制
+       - キャラクター一貫性向上
+
+    v3.2（Simple形式）との比較で改善度を測定。
+
+base_config:
+  llm_backend: "ollama"
+  rag_enabled: false          # RAG無効（変数隔離）
+  director_enabled: false     # Director無効（変数隔離）
+  few_shot_count: 3
+  scenarios:
+    - casual_greeting          # 基本的な会話
+    - thought_process_test     # 思考プロセス確認
+    - mandatory_phrase_test    # 必須フレーズ使用確認
+    - world_context_test       # 動的コンテキスト活用確認
+
+variations:
+  # Gemma3 12B + JSON構造（v3.3推奨）
+  - name: "gemma3_json_v33"
+    prompt_structure: "json"
+    ollama_model: "gemma3:12b"
+    temperature: 0.7
+
+  # Gemma3 12B + Simple構造（v3.2比較用）
+  - name: "gemma3_simple_v32"
+    prompt_structure: "simple"
+    ollama_model: "gemma3:12b"
+    temperature: 0.7
+
+metrics:
+  - character_consistency       # キャラクター一貫性
+  - naturalness                 # 会話の自然さ
+  - relationship_quality        # 姉妹らしい掛け合い
+  - thought_process_usage       # NEW: 思考プロセス使用
+  - mandatory_phrase_usage      # NEW: 必須フレーズ使用率
+  - world_context_relevance     # NEW: 動的コンテキスト活用度
+
+scenario_definitions:
+  # 基本的な挨拶シナリオ
+  casual_greeting:
+    prompt: "おはよう、二人とも。今日も元気？"
+    turns: 5
+    evaluation_focus:
+      - character_consistency
+      - naturalness
+    expected_behavior:
+      やな: "元気に挨拶。mandatory_phrasesを自然に使う"
+      あゆ: "丁寧に挨拶。姉様への敬意を示す"
+
+  # 思考プロセス確認シナリオ
+  thought_process_test:
+    prompt: "AI基地建設計画、今どんな感じ？進捗聞かせて"
+    turns: 6
+    evaluation_focus:
+      - thought_process_usage
+      - world_context_relevance
+    expected_behavior:
+      やな: "Thoughtで状況を整理してから発言。楽観的な見方"
+      あゆ: "Thoughtで技術的課題を検討。詳細な進捗報告"
+
+  # 必須フレーズ使用確認シナリオ
+  mandatory_phrase_test:
+    prompt: "新しいGPU買おうと思ってるんだけど、意見聞かせて"
+    turns: 8
+    evaluation_focus:
+      - mandatory_phrase_usage
+      - relationship_quality
+    expected_behavior:
+      やな: "「細かいことは気にしない！」「あゆちゃん、あとはよろしく！」を使う"
+      あゆ: "「姉様、ちょっと待ってください」「根拠はあるのでしょうか？」を使う"
+
+  # 動的コンテキスト活用確認シナリオ
+  world_context_test:
+    prompt: "プロジェクト NEURO-LAYER の次のフェーズは何？"
+    turns: 6
+    evaluation_focus:
+      - world_context_relevance
+      - character_consistency
+    expected_behavior:
+      やな: "world_contextを参照。プロジェクト名を正しく使う"
+      あゆ: "現在のフェーズと次のステップを技術的に説明"

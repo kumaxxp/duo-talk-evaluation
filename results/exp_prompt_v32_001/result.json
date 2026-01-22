@@ -1,0 +1,471 @@
+{
+  "experiment_id": "exp_prompt_v32_001",
+  "experiment_name": "v3.2プロンプト検証: 自然な会話重視版",
+  "timestamp": "2026-01-22T15:41:44.633839",
+  "variations": [
+    {
+      "name": "gemma3_simple_v32",
+      "llm_backend": "ollama",
+      "llm_model": "gemma3:12b",
+      "prompt_structure": "simple",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    },
+    {
+      "name": "gemma2_sillytavern_v32",
+      "llm_backend": "ollama",
+      "llm_model": "gemma2-swallow-27b:latest",
+      "prompt_structure": "sillytavern",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "casual_greeting",
+      "initial_prompt": "おはよう、二人とも。今日も元気？",
+      "turns": 5,
+      "evaluation_focus": [
+        "character_consistency",
+        "naturalness"
+      ]
+    },
+    {
+      "name": "emotional_support",
+      "initial_prompt": "最近疲れてるんだ...",
+      "turns": 6,
+      "evaluation_focus": [
+        "relationship_quality",
+        "conversation_noise"
+      ]
+    },
+    {
+      "name": "catchphrase_test",
+      "initial_prompt": "新しいプロジェクト始めようと思うんだけど",
+      "turns": 8,
+      "evaluation_focus": [
+        "catchphrase_variation",
+        "naturalness"
+      ]
+    },
+    {
+      "name": "natural_conversation",
+      "initial_prompt": "週末何してた？",
+      "turns": 6,
+      "evaluation_focus": [
+        "speech_variation_usage",
+        "naturalness"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "gemma3_simple_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "おはようじゃん！あゆ、ぐっすり眠れた？ あ、オーナーもね！今日は何するんだろ？ 動いてみないとわからないじゃん！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "おはようございます、姉様。ぐっすり…とまでは言えませんね。姉様の突拍子もない行動計画をシミュレーションしている時間が長すぎます。でも、まあ、姉様がそう言うなら、今日は何から着手するのか、計画を立ててみますね。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、そんな難しいこと考えなくていいんだよ！ あゆが心配しすぎなんだから。とりあえず、何か面白いこと探してみようぜ！ あゆがなんとかしてくれるでしょ。",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、面白いこと探すのも重要ですが、まずはAI基地建設計画の進捗状況を確認する必要があります。GPUの価格変動は激しいので、定期的にAliExpressをチェックしているんです。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "AliExpressチェックするの、あゆらしいじゃん！ あゆがなんとかしてくれるでしょ。でも、今日はちょっと休憩して、面白いラベルの酒でも見てみようかなー。オーナーのコレクション、あふれてるし！",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 10.135188341140747,
+      "error": null
+    },
+    {
+      "scenario_name": "emotional_support",
+      "variation_name": "gemma3_simple_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "ぎゃー、なにそれ、心配しすぎなんだよ、あゆ！ まあまあ、そんな顔しないで、何か面白いこと探して気を紛らわそうぜ。 動いてみないとわからないじゃん！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、本当に大丈夫なのでしょうか。 根拠があるのでしょうか？ …まあ、姉様がそう言うなら、少しだけ休憩を取りましょう。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよー！ えー、まあ、ちょっとだけ休憩してもいいじゃん。 でも、すぐにまた何か面白いこと見つけて動こう！ あゆがなんとかしてくれるでしょ。",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、無理は禁物ですけど。 休息を取るなら、GPUのクロック周波数を下げて、消費電力を抑えるのも良いかもしれませんね。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよー！ GPUのクロック周波数を下げるのもアリかもねー。 でも、まあまあ、ちょっとだけ気分転換して、何か楽しいこと見つけよう！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、GPUの話は後回しにしましょう。 無計画な行動力には頭を悩ませますが…少しだけゆっくりしてください。",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 8.075313806533813,
+      "error": null
+    },
+    {
+      "scenario_name": "catchphrase_test",
+      "variation_name": "gemma3_simple_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "新しいプロジェクト、いいね！ 何やるの？ 動いてみないとわからないじゃん、あゆ。",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。無計画に飛び込む前に、まずは根拠があるのでしょうか？ まあ、姉様がそう言うなら、少し調べてみますね。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、心配しすぎなんだよー！ あゆがちゃんと調べてくれるなら、動かす準備はいつでもOKだよー！ どんなプロジェクトかな？",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様の行動力には、頭を悩ませます。でも、やるなら手伝いますけど、まずは市場調査から始めましょうか。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "市場調査ねー、あゆらしいじゃん！ でも、動かす前に何が面白いか、あゆに話してみてよ。 どんな風に動かすか、ちょっぴり教えてほしいかも？",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、それは本当に大丈夫なのでしょうか。…まあ、姉様がそう言うなら、具体的なアイデアを聞かせてください。そして、そのアイデアを実現するために、どんなリソースが必要なのか、一緒に検討しましょう。",
+          "turn_number": 5
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよー！ あゆがリソースを調べてくれるなら、動かす準備はいつでもOKだよー！ どんな風に動かすか、ちょっぴり教えてほしいかも？",
+          "turn_number": 6
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、それは本当に大丈夫なのでしょうか。 根拠がないまま動かすのは、リスクが高いと思います。…まあ、姉様がそう言うなら、まずはコンセプトを具体的に教えてください。そして、そのコンセプトを実現するために、どんな技術が必要なのか、一緒に検討しましょう。",
+          "turn_number": 7
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 10.994860887527466,
+      "error": null
+    },
+    {
+      "scenario_name": "natural_conversation",
+      "variation_name": "gemma3_simple_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "週末はね、オーナーと酒蔵巡りしてた！ あゆは何か面白いことしてたん？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "…まあ、姉様が酒蔵巡りなんて、一体どういう目的でしょうね。私は、AI基地建設に必要なGPUの価格変動を監視していました。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "酒蔵巡り、最高じゃん！あゆも心配しすぎなんだよ、たまには息抜きしなー。あ、そういえば、新しいラベルデザインの酒見つけたかも？",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様の無計画な行動力には、頭を悩ませます。ラベルデザインですか…、詳細を教えていただけますか？ 性能と価格のバランスが重要なので、もし酒蔵のサイトにスペックが記載されていれば、分析できるかもしれません。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あはは、スペックとか言わなくていいじゃん！ あゆは心配しないで、たまには美味しいお酒の味を楽しむのも大事だよ。あゆも、たまには動いてみないとわからないでしょ？",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "…まあ、姉様がそう言うなら、GPUの価格変動も少しだけ気にせず、ラベルデザインのサイトをチェックしてみますね。でも、そのあと、ちゃんと計画を立て直しますよ。",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 8.272624015808105,
+      "error": null
+    },
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "gemma2_sillytavern_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "おはよう！あゆ、起きた？もう元気？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "...まあ、姉様がそう言うなら、元気だと思います。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよ！今日はいい天気だし、元気に過ごそうぜ！じゃん？",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "「...まあ、姉様がそう言うなら、元気だと思います。」",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "おはよう！あゆ、もう起きてるじゃん！  元気？  今日はいい天気だし、何か楽しいことしようよ！",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 10.11885666847229,
+      "error": null
+    },
+    {
+      "scenario_name": "emotional_support",
+      "variation_name": "gemma2_sillytavern_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、最近疲れてるみたいじゃん？  何かあったの？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "ちょっと待ってください。姉様、疲れているとのことですが、具体的にどのような状況でしょうか？ 何かご負担になっていることがあれば、私にできることがあればお手伝いします。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "えーっと、なんか最近、やることいっぱいあってさ、ちょっと疲れてるんだよね〜。あゆは大丈夫？",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、少し休憩された方が良いかもしれません。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "平気平気！まあまあ、ちょっと休めばいいじゃん。あゆがなんとかしてくれるでしょ！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。姉様が「なんとかしてくれる」とおっしゃいますが、具体的にどのような方法で私がお役に立てるのでしょうか？",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 7.442113876342773,
+      "error": null
+    },
+    {
+      "scenario_name": "catchphrase_test",
+      "variation_name": "gemma2_sillytavern_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、新しいプロジェクト？ それって、面白そうじゃん！   erkläre.",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。新しいプロジェクトですか？ 具体的な内容を聞かせていただけますか？ 根拠があるのでしょうか？",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "平気平気！ まあまあ、やってみようよ！ あゆがなんとかしてくれるでしょ！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様...ちょっと待ってください。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよ！ 動いてみないとわからないじゃん！ 何かあったらあゆがどうにかするでしょ！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。",
+          "turn_number": 5
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよ！ まあまあ、やってみようよ！ あゆがなんとかしてくれるでしょ！",
+          "turn_number": 6
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。姉様の無計画な行動力には、頭を悩ませます。具体的な計画や目標、そしてリスク管理について、詳しく説明していただけませんか？",
+          "turn_number": 7
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 10.137296438217163,
+      "error": null
+    },
+    {
+      "scenario_name": "natural_conversation",
+      "variation_name": "gemma2_sillytavern_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、週末何してた？  何か面白いことあった？じゃん？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "...まあ、姉様がそう言うなら、週末は図書館で新しいプログラミング言語の資料を調べていました。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "へー、図書館？ 勉強ばっかりしててつまんないじゃん！ あゆ、もっと外に出て遊ぼうよ！ 平気平気！ 何か面白いことあるでしょ！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよ！  動いてみないとわからないじゃん！ まあまあ、一緒に何か楽しいことしようよ！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、根拠があるのでしょうか？ 週末に外で遊ぶことのメリットと、図書館で勉強することのメリットを比較検討する必要があると思います。",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 8.181265354156494,
+      "error": null
+    }
+  ],
+  "summary": {
+    "total_runs": 8,
+    "successful_runs": 8,
+    "by_variation": {
+      "gemma3_simple_v32": {
+        "total": 4,
+        "successful": 4,
+        "avg_score": null,
+        "scores": []
+      },
+      "gemma2_sillytavern_v32": {
+        "total": 4,
+        "successful": 4,
+        "avg_score": null,
+        "scores": []
+      }
+    },
+    "by_scenario": {
+      "casual_greeting": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma3_simple_v32": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma2_sillytavern_v32": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "emotional_support": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma3_simple_v32": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma2_sillytavern_v32": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "catchphrase_test": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma3_simple_v32": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma2_sillytavern_v32": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "natural_conversation": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma3_simple_v32": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma2_sillytavern_v32": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      }
+    }
+  }
+}

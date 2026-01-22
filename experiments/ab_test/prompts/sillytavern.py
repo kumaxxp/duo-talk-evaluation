@@ -32,7 +32,7 @@ class SillyTavernPromptBuilder(PromptBuilder):
   - {register_note}
   - 短めの文で話す（{self.max_sentences}文以内）
 - 考え方: {char.core_belief}
-
+{self._format_description(char)}
 # よく使うフレーズ
 {self._format_phrases(char)}
 {self._format_feature_phrases(char)}
@@ -92,4 +92,24 @@ class SillyTavernPromptBuilder(PromptBuilder):
         lines = ["\n# 特徴的なフレーズ（積極的に使う）"]
         for phrase in char.feature_phrases:
             lines.append(f"- 「{phrase}」")
+        return "\n".join(lines)
+
+    def _format_description(self, char: CharacterConfig) -> str:
+        """description（背景情報）をフォーマット（v3.1）"""
+        if not char.deep_values or not char.deep_values.identity:
+            return ""
+
+        dv = char.deep_values
+        identity = dv.identity
+
+        lines = ["\n# 背景情報"]
+        lines.append(f"- フルネーム: {identity.full_name}（{identity.reading}）")
+        lines.append(f"- 誕生日: {identity.birthday}（{identity.birthplace}で誕生）")
+        if identity.name_origin:
+            lines.append(f"- 名前由来: {identity.name_origin}")
+        lines.append("- 居住地: オーナーのPC内に姉妹で同居")
+
+        if dv.knowledge_bias:
+            lines.append(f"- 知識の偏り: {dv.knowledge_bias.domain}")
+
         return "\n".join(lines)

@@ -12,6 +12,7 @@ import requests
 
 from experiments.ab_test.config import LLMBackend, PromptStructure, VariationConfig
 from experiments.ab_test.prompts import (
+    JSONPromptBuilder,
     LayeredPromptBuilder,
     PromptBuilder,
     SimplePromptBuilder,
@@ -38,6 +39,7 @@ class ConfigurableAdapter:
             PromptStructure.LAYERED: LayeredPromptBuilder,
             PromptStructure.SIMPLE: SimplePromptBuilder,
             PromptStructure.SILLYTAVERN: SillyTavernPromptBuilder,
+            PromptStructure.JSON: JSONPromptBuilder,
         }
         builder_class = builders.get(self.variation.prompt_structure, SimplePromptBuilder)
         return builder_class(
@@ -138,6 +140,12 @@ class ConfigurableAdapter:
                     "turn_number": turn_num,
                 })
 
+            # バックエンドに応じて適切なモデル名を使用
+            if self.variation.llm_backend == LLMBackend.OLLAMA:
+                model_name = self.variation.ollama_model
+            else:
+                model_name = self.variation.llm_model
+
             return {
                 "conversation": conversation,
                 "success": True,
@@ -145,7 +153,7 @@ class ConfigurableAdapter:
                 "variation": self.variation.name,
                 "metadata": {
                     "llm_backend": self.variation.llm_backend.value,
-                    "llm_model": self.variation.llm_model,
+                    "llm_model": model_name,
                     "prompt_structure": self.variation.prompt_structure.value,
                     "rag_enabled": self.variation.rag_enabled,
                     "director_enabled": self.variation.director_enabled,

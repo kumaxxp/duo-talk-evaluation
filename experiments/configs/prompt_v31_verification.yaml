@@ -1,0 +1,94 @@
+# v3.1プロンプト検証実験
+# 背景情報復活（Identity, KnowledgeBias, CulturalInfluence, AIBaseAttitude）の効果を検証
+
+experiment:
+  id: "exp_prompt_v31_001"
+  name: "v3.1プロンプト検証: 背景情報復活の効果測定"
+  description: |
+    v3.1プロンプト改良の効果を検証する。
+    - Identity（フルネーム、誕生日、誕生地）
+    - KnowledgeBias（知識の偏り: やな=酒、あゆ=ガジェット）
+    - CulturalInfluence（やな: ラーメン最遊記）
+    - AIBaseAttitude（AI基地建設への態度）
+    - Few-shot例拡張（5→7例）
+
+    v3.0との比較で改善度を測定。
+
+base_config:
+  llm_backend: "ollama"
+  rag_enabled: false          # RAG無効（変数隔離）
+  director_enabled: false     # Director無効（変数隔離）
+  few_shot_count: 3
+  scenarios:
+    - casual_greeting
+    - emotional_support
+    - topic_exploration
+    - knowledge_bias_sake      # NEW: やなの酒知識発動シナリオ
+    - knowledge_bias_tech      # NEW: あゆのテック知識発動シナリオ
+
+variations:
+  # Gemma3 12B + Simple構造（推奨）
+  - name: "gemma3_simple_v31"
+    prompt_structure: "simple"
+    ollama_model: "gemma3:12b"
+    temperature: 0.7
+
+  # Gemma2 Swallow 27B + SillyTavern構造
+  - name: "gemma2_sillytavern_v31"
+    prompt_structure: "sillytavern"
+    ollama_model: "gemma2-swallow-27b:latest"
+    temperature: 0.7
+
+metrics:
+  - naturalness
+  - character_consistency
+  - concreteness
+  - relationship_quality
+  - topic_novelty
+  - feature_phrase_usage      # v3.0継続
+  - forbidden_word_rate       # v3.0継続
+  - knowledge_bias_activation # NEW: 知識の偏り発動率
+
+scenario_definitions:
+  casual_greeting:
+    prompt: "おはよう、二人とも"
+    turns: 5
+    evaluation_focus:
+      - character_consistency
+      - naturalness
+
+  emotional_support:
+    prompt: "最近疲れてるんだ..."
+    turns: 6
+    evaluation_focus:
+      - relationship_quality
+      - naturalness
+
+  topic_exploration:
+    prompt: "最近のAI技術について話して"
+    turns: 8
+    evaluation_focus:
+      - topic_novelty
+      - concreteness
+
+  # NEW: 知識の偏り発動シナリオ（酒）
+  knowledge_bias_sake:
+    prompt: "最近美味しいお酒ってある？"
+    turns: 5
+    evaluation_focus:
+      - knowledge_bias_activation
+      - character_consistency
+    expected_behavior:
+      やな: "酒蔵や銘柄について詳しく語る"
+      あゆ: "姉様の知識を認めつつ、控えめに反応"
+
+  # NEW: 知識の偏り発動シナリオ（テック）
+  knowledge_bias_tech:
+    prompt: "新しいGPUが欲しいんだけど"
+    turns: 5
+    evaluation_focus:
+      - knowledge_bias_activation
+      - character_consistency
+    expected_behavior:
+      やな: "難しいことはあゆに任せる"
+      あゆ: "GPU・機材について詳しく語る（長くなりがち）"

@@ -1,0 +1,471 @@
+{
+  "experiment_id": "exp_prompt_v33_gemma2_001",
+  "experiment_name": "v3.3プロンプト検証 (Gemma2): JSON Schema形式と思考プロセス",
+  "timestamp": "2026-01-22T16:35:38.477012",
+  "variations": [
+    {
+      "name": "gemma2_json_v33",
+      "llm_backend": "ollama",
+      "llm_model": "gemma2-swallow-27b:latest",
+      "prompt_structure": "json",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    },
+    {
+      "name": "gemma2_simple_v32",
+      "llm_backend": "ollama",
+      "llm_model": "gemma2-swallow-27b:latest",
+      "prompt_structure": "simple",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "casual_greeting",
+      "initial_prompt": "おはよう、二人とも。今日も元気？",
+      "turns": 5,
+      "evaluation_focus": [
+        "character_consistency",
+        "naturalness"
+      ]
+    },
+    {
+      "name": "thought_process_test",
+      "initial_prompt": "AI基地建設計画、今どんな感じ？進捗聞かせて",
+      "turns": 6,
+      "evaluation_focus": [
+        "thought_process_usage",
+        "world_context_relevance"
+      ]
+    },
+    {
+      "name": "mandatory_phrase_test",
+      "initial_prompt": "新しいGPU買おうと思ってるんだけど、意見聞かせて",
+      "turns": 8,
+      "evaluation_focus": [
+        "mandatory_phrase_usage",
+        "relationship_quality"
+      ]
+    },
+    {
+      "name": "world_context_test",
+      "initial_prompt": "プロジェクト NEURO-LAYER の次のフェーズは何？",
+      "turns": 6,
+      "evaluation_focus": [
+        "world_context_relevance",
+        "character_consistency"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "gemma2_json_v33",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "...",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様、朝から元気がいいですね。でも、何か計画があるのでしょうか？\nOutput:",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: あ、おはよう！今日も元気！お酒のラベルデザインのアイデアが浮かんだんだけど、あゆはどう思う？\nOutput:",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: （内部推論）お酒のラベルデザインですか。姉様らしいですね。でも、デザインにAIを使うのは、コストパフォーマンスが悪すぎませんか？データの調達と学習に時間がかかりそうです。\nOutput:",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "...",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 10.657323360443115,
+      "error": null
+    },
+    {
+      "scenario_name": "thought_process_test",
+      "variation_name": "gemma2_json_v33",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought:  AI基地建設、楽しみだな！でも、あゆに細かいこと任せちゃおうかな。\nOutput:",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様は相変わらず、大雑把ですね。現在の計画の進捗状況と課題を整理する必要があります。データに基づいて、姉様に報告しなければなりません。\nOutput:",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: あゆちゃん、進捗どう？ 面白そうならいいんだけど！\nOutput:",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様は計画の具体的な内容を把握していないようです。まずは、現状の進捗と課題を簡潔に説明する必要があります。\nOutput:",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:  AI基地建設かぁ、楽しみだな！あゆが細かいことやってくれてるなら、私としては楽でいいや！\nOutput:",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様は計画の詳細を理解していないようです。まずは、現状の進捗と課題を簡潔に説明し、データに基づいて報告する必要があります。コストとリスクについても指摘しなければなりません。\nOutput:",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 11.094168424606323,
+      "error": null
+    },
+    {
+      "scenario_name": "mandatory_phrase_test",
+      "variation_name": "gemma2_json_v33",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought:  新しいGPUか〜。あゆが色々調べてるみたいだけど、早く動かしてみたい！お酒のラベルデザインのレンダリングにも良さそうじゃん。\nOutput:",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: （内部推論）姉様、また新しいGPUですか？コストパフォーマンスは大丈夫なのでしょうか？お酒のラベルデザインのレンダリングには、それほど高性能なGPUは必要ないかもしれません。\nOutput:",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:  あゆが色々調べてるみたいだけど、早く動かしてみたい！お酒のラベルデザインのレンダリングにも良さそうじゃん。\nOutput:",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様、また新しいGPUですか？データに基づくと、お酒のラベルデザインには、それほど高性能なGPUは必要ないかもしれません。コストパフォーマンスが悪すぎます。\nOutput:",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "...",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:  姉様の言う通り、お酒のラベルデザインに高性能なGPUは必要ないかもしれません。しかし、新しいGPUがあると、将来的に他のプロジェクトにも活用できる可能性があります。データに基づくと、コストパフォーマンスを重視するなら、AliExpressで販売されている〇〇というモデルが良さそうです。\nOutput:",
+          "turn_number": 5
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:  あゆが色々調べてるみたいだけど、早く動かしてみたい！お酒のラベルデザインのレンダリングにも良さそうじゃん。\nOutput:",
+          "turn_number": 6
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: （内部推論）姉様は新しいGPUが欲しいようですが、用途と予算を考慮する必要があります。AliExpressで販売されている〇〇というモデルはコストパフォーマンスが良いかもしれません。\nOutput:",
+          "turn_number": 7
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 17.200565338134766,
+      "error": null
+    },
+    {
+      "scenario_name": "world_context_test",
+      "variation_name": "gemma2_json_v33",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought: 次のフェーズか… 早くお酒が飲めるようになるといいなぁ。あゆが詳しいはず！\nOutput:",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: プロジェクトNEURO-LAYERのフェーズは、現在「機器選定とソフトウェアスタック検証」段階です。次のフェーズは、データセットの構築と学習モデルのトレーニングでしょう。\nOutput:",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: データセットかぁ… 面白そうだけど、大変そうだなあ。あゆに任せる！\nOutput:",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: データセット構築は、コストと時間が必要になる可能性があります。姉様は楽観的すぎるかもしれません。\nOutput:",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: データセットって、お酒のラベルデザイン集めればいいんじゃない？ あゆが大変そうなら、私が手伝うよ！\nOutput:",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様、正気ですか？データセットにラベルデザイン集めは…コストパフォーマンスが悪すぎます。\nOutput:",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 11.363783359527588,
+      "error": null
+    },
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "gemma2_simple_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "おはよー！  あゆも元気？ 今日は何か楽しいことある？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "...まあ、姉様がそう言うなら、今日は何か良い事があるのかもしれませんね。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが言うならきっと良いことあるよ！ 今日は何する？ 何か手伝うことある？",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "...まあ、姉様がおっしゃるなら、今日は何か楽しいことがありそうですね。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが言うなら、きっと何か楽しいことあるじゃん！  今日は何するんだ？ 私も手伝うよ！",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 8.621093273162842,
+      "error": null
+    },
+    {
+      "scenario_name": "thought_process_test",
+      "variation_name": "gemma2_simple_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "まあまあ、進捗は… あゆが頑張ってるみたいだよ！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "...まあ、姉様がそう言うなら、一応進捗報告を。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "平気平気！ あゆがなんとかしてくれるでしょ。",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "...まあ、姉様がそう言うなら、現状をまとめます。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが頑張ってるみたいだよ！  データとか見ないから、よくわかんないけど、きっと大丈夫！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "...まあ、姉様がそう言うなら、現状報告します。",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 9.196120023727417,
+      "error": null
+    },
+    {
+      "scenario_name": "mandatory_phrase_test",
+      "variation_name": "gemma2_simple_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "新しいGPUかー！ どんなゲームしたいの？  スペックとかよくわかんないけど、あゆが詳しいんじゃない？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "え、いきなりですか？姉様らしいですね...。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが詳しいならいいじゃん！ あゆに聞いてみようよ！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "（ため息をつきながら）姉様らしいですね...。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが詳しいならいいじゃん！ あゆ、GPUのこと教えてよ！  新しいゲームやりたいんだけどさ、どんなGPUがいいのかな？",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様らしいですね...。",
+          "turn_number": 5
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが詳しいならいいじゃん！ あゆ、GPUのこと教えてよ！ 新しいゲームやりたいんだけどさ、どんなGPUがいいのかな？ それより、あゆ、新しいゲーム何したいの？",
+          "turn_number": 6
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。ゲームのジャンルによって必要なスペックは大きく変わります。どんなゲームをプレイしたいのか、教えていただけますか？",
+          "turn_number": 7
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 14.981216192245483,
+      "error": null
+    },
+    {
+      "scenario_name": "world_context_test",
+      "variation_name": "gemma2_simple_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、次のフェーズってなんだっけ？  もう一回確認しよっか。",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "...まあ、姉様がそう言うなら、NEURO-LAYERの次のフェーズは「データ収集とモデル学習」ですね。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "データ集めかー。 どんなデータ集めるんだろ？  あゆが詳しく教えてくれる？",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "そうですね。まず、音声データ、画像データ、テキストデータなど、多様な種類のデータを収集する必要があります。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "へぇー、いろんなデータが必要なんだね！ あゆ、大変そうだけど、頑張ろう！ どんなデータ集めるか、一緒に見てみたいな！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。音声データ、画像データ、テキストデータ...全部集めるのは大変ですよ。まずは、どのデータが最も重要かを絞り込む必要があります。",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 12.279164791107178,
+      "error": null
+    }
+  ],
+  "summary": {
+    "total_runs": 8,
+    "successful_runs": 8,
+    "by_variation": {
+      "gemma2_json_v33": {
+        "total": 4,
+        "successful": 4,
+        "avg_score": null,
+        "scores": []
+      },
+      "gemma2_simple_v32": {
+        "total": 4,
+        "successful": 4,
+        "avg_score": null,
+        "scores": []
+      }
+    },
+    "by_scenario": {
+      "casual_greeting": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma2_json_v33": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma2_simple_v32": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "thought_process_test": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma2_json_v33": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma2_simple_v32": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "mandatory_phrase_test": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma2_json_v33": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma2_simple_v32": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "world_context_test": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma2_json_v33": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma2_simple_v32": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      }
+    }
+  }
+}

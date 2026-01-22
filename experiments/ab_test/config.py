@@ -19,6 +19,7 @@ class PromptStructure(Enum):
     LAYERED = "layered"      # duo-talk方式 (XML階層)
     SIMPLE = "simple"        # duo-talk-simple方式
     SILLYTAVERN = "sillytavern"  # SillyTavern形式
+    JSON = "json"            # v3.3 JSON Schema形式
 
 
 @dataclass

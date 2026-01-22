@@ -13,7 +13,7 @@ from typing import Optional
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
 from .adapters import ConfigurableAdapter
-from .config import ExperimentConfig, ScenarioConfig, VariationConfig
+from .config import ExperimentConfig, LLMBackend, ScenarioConfig, VariationConfig
 
 logger = logging.getLogger(__name__)
 
@@ -91,7 +91,12 @@ class ABTestRunner:
         for variation in self.config.variations:
             logger.info(f"\n{'='*60}")
             logger.info(f"Variation: {variation.name}")
-            logger.info(f"  LLM: {variation.llm_backend.value} / {variation.llm_model}")
+            # バックエンドに応じて適切なモデル名を表示
+            if variation.llm_backend == LLMBackend.OLLAMA:
+                model_name = variation.ollama_model
+            else:
+                model_name = variation.llm_model
+            logger.info(f"  LLM: {variation.llm_backend.value} / {model_name}")
             logger.info(f"  Prompt: {variation.prompt_structure.value}")
             logger.info(f"{'='*60}")
 
@@ -230,10 +235,16 @@ class ABTestRunner:
 
     def _variation_to_dict(self, v: VariationConfig) -> dict:
         """バリエーション設定を辞書に変換"""
+        # バックエンドに応じて適切なモデル名を使用
+        if v.llm_backend == LLMBackend.OLLAMA:
+            model_name = v.ollama_model
+        else:
+            model_name = v.llm_model
+
         return {
             "name": v.name,
             "llm_backend": v.llm_backend.value,
-            "llm_model": v.llm_model,
+            "llm_model": model_name,
             "prompt_structure": v.prompt_structure.value,
             "rag_enabled": v.rag_enabled,
             "director_enabled": v.director_enabled,

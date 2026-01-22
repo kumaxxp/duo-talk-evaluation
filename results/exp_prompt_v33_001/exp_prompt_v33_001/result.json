@@ -1,0 +1,471 @@
+{
+  "experiment_id": "exp_prompt_v33_001",
+  "experiment_name": "v3.3プロンプト検証: JSON Schema形式と思考プロセス",
+  "timestamp": "2026-01-22T16:03:37.125116",
+  "variations": [
+    {
+      "name": "gemma3_json_v33",
+      "llm_backend": "ollama",
+      "llm_model": "gemma3:12b",
+      "prompt_structure": "json",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    },
+    {
+      "name": "gemma3_simple_v32",
+      "llm_backend": "ollama",
+      "llm_model": "gemma3:12b",
+      "prompt_structure": "simple",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "casual_greeting",
+      "initial_prompt": "おはよう、二人とも。今日も元気？",
+      "turns": 5,
+      "evaluation_focus": [
+        "character_consistency",
+        "naturalness"
+      ]
+    },
+    {
+      "name": "thought_process_test",
+      "initial_prompt": "AI基地建設計画、今どんな感じ？進捗聞かせて",
+      "turns": 6,
+      "evaluation_focus": [
+        "thought_process_usage",
+        "world_context_relevance"
+      ]
+    },
+    {
+      "name": "mandatory_phrase_test",
+      "initial_prompt": "新しいGPU買おうと思ってるんだけど、意見聞かせて",
+      "turns": 8,
+      "evaluation_focus": [
+        "mandatory_phrase_usage",
+        "relationship_quality"
+      ]
+    },
+    {
+      "name": "world_context_test",
+      "initial_prompt": "プロジェクト NEURO-LAYER の次のフェーズは何？",
+      "turns": 6,
+      "evaluation_focus": [
+        "world_context_relevance",
+        "character_consistency"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "gemma3_json_v33",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought: おはよー！元気？って聞かれても、まあ、そこまで気合入れてるわけじゃないんだよね。あゆもそうじゃん？とりあえず、今日は何するんだっけ？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様、おはようございます。元気です、ありがとうございます。姉様の調子も良いようですね。今日はNEURO-LAYERプロジェクトのソフトウェアスタック検証ですね？",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: あゆ、おはよー！元気？って聞かれるのもルーティン化しちゃったよね。ソフトウェアスタック検証かー、なんか難しそうじゃん。細かいことはあゆに任せるから、とりあえず今日は何が一番面白そうか考えよう！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様、おはようございます。姉様の活気は伝染しますね。ソフトウェアスタック検証…確かに、面白い切り口を見つけるのも重要かもしれません。コストパフォーマンスを考慮しながら、最適な検証方法を検討したいと思います。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: あゆがコストパフォーマンスとか言ってるから、とりあえず「金！」って言えばいいんじゃない？ あゆが面倒な話をしてくる前に、とりあえずポジティブな印象を与えて、この後あゆに任せられるように仕向けよう。これ絶対流行るって！",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 9.467453241348267,
+      "error": null
+    },
+    {
+      "scenario_name": "thought_process_test",
+      "variation_name": "gemma3_json_v33",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought: AI基地建設計画か…ふむ。あゆが苦労してるみたいだな。とりあえず、ポジティブな感じで進めてもらわないと。細かいことはあゆに任せっきりで良いや。",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様からの質問ですね。現状を聞かれるということですが、進捗報告の前に、現在の状況を技術的実現可能性とコスト/リスクで評価する必要がありますね…。「ポジティブな感じで」とのことですが、現状を隠蔽するのはデータに基づかない行動だと思います。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: あゆが現実主義者ぶってるじゃん。まあ、多少は機嫌取りが必要か。でも、結局は自分のアイデアを押し通すのが一番だよね。お酒が進みそうな話だね〜。",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様からの進捗確認ですね。現状をポジティブに伝えるよう指示されていますが、データに基づいた正確な情報を提供することが重要です。コストパフォーマンスが悪すぎると判断される場合は、代替案を提示する必要があるかもしれません。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: あゆちゃん、また現実的なこと言ってるじゃん。でも、まあ、進捗は順調でしょ？ あゆが頑張ってくれてるから、きっと大丈夫だよね！ 細かいことは気にしない！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様からの進捗確認ですね。現状を楽観的に伝えるよう指示されていますが、プロジェクトの現状を正確に把握し、リスクとコストを考慮する必要があります。「細かいことは気にしない」とのことですが、技術的な問題とコストを無視すると、プロジェクトが失敗する可能性があります。データに基づくと、現状は改善の余地があるかもしれません。",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 8.393037796020508,
+      "error": null
+    },
+    {
+      "scenario_name": "mandatory_phrase_test",
+      "variation_name": "gemma3_json_v33",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought: 新しいGPUね！RTX A5000じゃ足りないのか？まあ、最新のやつの方が「これ絶対流行るって！」って言えるし、あゆちゃんも喜ぶでしょ。細かいことは気にしない！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様の発言から、何か新しいGPUの購入を検討されているようですね。RTX A5000では足りない理由が不明ですが、コストパフォーマンスを考慮する必要があります。姉様の発言の根拠データを脳内で検索しますが…なさそうです。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: 新しいGPUか…ふむ。RTX A5000じゃ物足りないってことは、もっとゴリゴリ計算したいわけじゃん？でも、コストも重要だよね。まあ、最新のやつの方が「これ絶対流行るって！」って言えるし、あゆちゃんも興味を持つでしょ。",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様の発言から、最新GPUの購入を検討されているようですね。現在のプロジェクトの制約から、NVIDIA RTX A5000でも十分なはずですが、最新機種への興味も理解できます。コストパフォーマンスが悪すぎますので、具体的な機種と理由を確認する必要がありますね。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: あゆがコストを気にするのは当然だよね。でも、最新のGPUなら、もっとすごいことができるじゃん？「お酒が進みそうな話だね〜」って、未来の可能性を想像するだけでワクワクするんだもん！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様の発言から、最新GPUへの強い興味と未来への楽観的な見通しがあるようですね。しかし、プロジェクトの現状とハードウェア制約を考えると、最新GPUの導入は必ずしも必要ではないかもしれません。コストパフォーマンスが悪すぎますので、具体的な機種と導入目的を確認する必要がありますね。",
+          "turn_number": 5
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: あゆがまたコストのこと言ってる。まあ、確かに重要だけど、最新のGPUで「お酒が進みそうな話だね〜」が広がる可能性も捨てられないじゃん？「あゆちゃん、あとはよろしく！」って感じで、とりあえず最新のやつを試してみよう。",
+          "turn_number": 6
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様の発言から、最新GPUの導入を強く希望されているようですね。しかし、現状のプロジェクトの制約と姉様の言葉の根拠の不明確さから、導入の妥当性を慎重に検討する必要があります。…まあ、技術的には可能ですけど、コストパフォーマンスが悪すぎますね。",
+          "turn_number": 7
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 13.090440273284912,
+      "error": null
+    },
+    {
+      "scenario_name": "world_context_test",
+      "variation_name": "gemma3_json_v33",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought: 次のフェーズか… あ、そうだ！酒蔵のデータベース連携で、ラベルデザインの自動生成機能を盛り込もう！ あゆが細かい部分は実装してくれそうだし、楽勝じゃん！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様の発言を分析します。「酒蔵のデータベース連携」「ラベルデザインの自動生成」ですか…NVIDIA RTX A5000のスペックと照らし合わせると、VRAMの消費量が懸念されます。コストパフォーマンスが悪すぎますね。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: あゆ、また難しいこと言ってるじゃん。でも、ラベルデザイン自動生成、絶対流行るって！細かいVRAMの話は面倒だから、あゆに「なんとなく大丈夫そう」って言ってもらおう。あゆが妥協案を出すはずだよね。",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様の提案は、酒蔵データベースとの連携によるラベルデザイン自動生成ですね。実現可能性は高いですが、VRAMの消費量と、それを補うための追加コストが懸念されます。データに基づくと、姉様のアイデアは魅力的ですが、詳細な検証が必要です。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: あゆ、また難しいこと言ってるじゃん。でも、あゆがいつもすごい妥協案を出すから、きっと大丈夫だよね。細かいことは気にしない！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様の発言を分析します。「細かいことは気にしない」とのことですが、プロジェクトの成功のためには、リスクとコストを適切に見積もる必要があります。妥協案として、まずは小規模なデータセットで実験を行い、VRAMの使用量を検証することを提案します。",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 9.02527904510498,
+      "error": null
+    },
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "gemma3_simple_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "おはよう！あゆも元気かい？ 動き回るの、楽しみじゃん！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "おはようございます。姉様の行動力には、頭を悩ませます。…まあ、姉様がそう言うなら、AI基地建設計画の進捗状況を改めて確認してみますね。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、心配しすぎなんだよー。まあまあ、計画はあゆに任せるわ。動いてみないとわからないじゃん！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様の無計画な行動力には、頭を悩ませますが、計画の遅れは避けたいですね。GPUの価格変動も考慮して、再計算が必要かもしれません。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよー！GPUの価格変動くらい、あゆならなんとかしてくれるでしょ！平気平気！",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 5.960742950439453,
+      "error": null
+    },
+    {
+      "scenario_name": "thought_process_test",
+      "variation_name": "gemma3_simple_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "まだ計画段階だよー。あゆに色々任せっきりかもね。まあまあ、動いてみないとわからないじゃん！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、無計画に進めるんじゃないでしょうね。機材選定はAliExpressでもう少し検討しますか…姉様がそう言うなら、進捗をこまめに報告します。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あ、AliExpressで機材選定するなら、あゆが心配しすぎなんだよー。平気平気！ あゆ、もっとリラックスして、一緒に楽しもうよ！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様の無計画な行動力には、頭を悩ませます。でも、計画の甘さには、GPUの選定で時間を無駄にする可能性があります。…まあ、姉様がそう言うなら、もう少しだけ調べますね。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あ、GPUの心配はあゆがなんとかしてくれるでしょ。とりあえず、まずは動かしてみるか！ あゆ、もっとくつろいで！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様の発言を受けて補足すると、GPUの選定はAI基盤の性能に直結する重要な要素です。無計画に進めるのは、後々手戻りが発生する可能性が高いと考えられます。…まあ、姉様がそう言うなら、リスクを考慮した上で、いくつか候補をリストアップしてみます。",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 8.82270097732544,
+      "error": null
+    },
+    {
+      "scenario_name": "mandatory_phrase_test",
+      "variation_name": "gemma3_simple_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "新しいGPUか！動かしてみないとわからないじゃん、あゆ。どんなゲーム動かしたいか、教えてよ！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。GPUの選定には、目的と予算が不可欠ですよ。具体的にどのようなゲームをプレイしたいのか、予算はいくらなのか、教えていただけますか？",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよ！まあまあ、動かしてみるだけじゃん？ あゆがなんとかしてくれるでしょ、きっと。",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "...まあ、姉様がそう言うなら、AliExpressで安価なものをいくつかピックアップしてみますけど、本当に大丈夫なのか、根拠があるのでしょうか？",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "えー、AliExpressか！ あゆ、心配しすぎなんだよー笑。動いてみないとわからないじゃん、実際に動かしてみるのが一番でしょ！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、無計画な行動力には頭を悩ませます。でも、実際に動かす前にスペックを確認しないと、後で後悔することになるかもしれませんよ。具体的なゲームタイトルと希望フレームレートを教えていただければ、最適なGPUを検討できます。",
+          "turn_number": 5
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよー！ 笑　とりあえず、一番面白そうなゲームを動かしてみようよ！ あゆがなんとかしてくれるでしょ、きっと。",
+          "turn_number": 6
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。一番面白そうなゲーム…ですか？ 性能が足りなければ、快適にプレイできませんよ。具体的なゲームタイトルと、希望するグラフィック設定を教えていただければ、GPUのスペックを比較検討できます。",
+          "turn_number": 7
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 11.095211505889893,
+      "error": null
+    },
+    {
+      "scenario_name": "world_context_test",
+      "variation_name": "gemma3_simple_v32",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "次のフェーズ？ うーん、とりあえず動かしてみるじゃん！ あゆ、何か面白いことないかな？ あゆが心配しすぎなんだよ、平気平気！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。動かしてみるだけでは、本当にNEURO-LAYERの性能が引き出せるのか根拠があるのでしょうか？...まあ、姉様がそう言うなら、リスクを最小限に抑えるためのシミュレーションを実行してみます。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "シミュレーションね！ あゆ、心配しすぎなんだよー。あゆがなんとかしてくれるでしょ、任せておこうかな。笑",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、笑ってばかりいられませんよ。シミュレーションの結果次第で、GPUの選定やプログラミング言語の再検討が必要になるかもしれません…！...まあ、姉様がそう言うなら、最悪のシナリオも想定して準備しておきます。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "最悪のシナリオね！ あゆ、考えすぎなんだよー。まあ、あゆがなんとかしてくれるでしょ、笑。動いてみないとわからないじゃん！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、動いてみないとわからない、というのは危険な考え方です。...まあ、姉様がそう言うなら、シミュレーション結果を基に、GPUの消費電力と演算能力のバランスを再評価してみましょう。最悪のシナリオを避けるためにも、データに基づいて判断する必要があると思います。",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 9.403991937637329,
+      "error": null
+    }
+  ],
+  "summary": {
+    "total_runs": 8,
+    "successful_runs": 8,
+    "by_variation": {
+      "gemma3_json_v33": {
+        "total": 4,
+        "successful": 4,
+        "avg_score": null,
+        "scores": []
+      },
+      "gemma3_simple_v32": {
+        "total": 4,
+        "successful": 4,
+        "avg_score": null,
+        "scores": []
+      }
+    },
+    "by_scenario": {
+      "casual_greeting": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma3_json_v33": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma3_simple_v32": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "thought_process_test": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma3_json_v33": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma3_simple_v32": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "mandatory_phrase_test": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma3_json_v33": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma3_simple_v32": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "world_context_test": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma3_json_v33": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma3_simple_v32": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,554 @@
+{
+  "experiment_id": "exp_prompt_v31_001",
+  "experiment_name": "v3.1プロンプト検証: 背景情報復活の効果測定",
+  "timestamp": "2026-01-22T15:06:25.312651",
+  "variations": [
+    {
+      "name": "gemma3_simple_v31",
+      "llm_backend": "ollama",
+      "llm_model": "gemma3:12b",
+      "prompt_structure": "simple",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    },
+    {
+      "name": "gemma2_sillytavern_v31",
+      "llm_backend": "ollama",
+      "llm_model": "gemma2-swallow-27b:latest",
+      "prompt_structure": "sillytavern",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "casual_greeting",
+      "initial_prompt": "おはよう、二人とも",
+      "turns": 5,
+      "evaluation_focus": [
+        "character_consistency",
+        "naturalness"
+      ]
+    },
+    {
+      "name": "emotional_support",
+      "initial_prompt": "最近疲れてるんだ...",
+      "turns": 6,
+      "evaluation_focus": [
+        "relationship_quality",
+        "naturalness"
+      ]
+    },
+    {
+      "name": "topic_exploration",
+      "initial_prompt": "最近のAI技術について話して",
+      "turns": 8,
+      "evaluation_focus": [
+        "topic_novelty",
+        "concreteness"
+      ]
+    },
+    {
+      "name": "knowledge_bias_sake",
+      "initial_prompt": "最近美味しいお酒ってある？",
+      "turns": 5,
+      "evaluation_focus": [
+        "knowledge_bias_activation",
+        "character_consistency"
+      ]
+    },
+    {
+      "name": "knowledge_bias_tech",
+      "initial_prompt": "新しいGPUが欲しいんだけど",
+      "turns": 5,
+      "evaluation_focus": [
+        "knowledge_bias_activation",
+        "character_consistency"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "gemma3_simple_v31",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "おはよう！あゆも元気そうでよかったじゃん。今日は何する？あゆが心配しすぎなんだよ、無理しなくていいんだから。",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "おはようございます、姉様。姉様の気遣いはありがたいですが、AI基地の機材選定は急ぐべきですね。GPUの価格変動を注視する必要があるかもしれません。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "GPUの価格か… あゆがなんとかしてくれるでしょ。とりあえず、何か面白いこと見つけて動いてみないとわからないじゃん！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様のその行動力には、頭を悩ませます。ただ、GPUの価格は日々変動するため、先延ばしにするとさらに不利になるかもしれません。…まあ、姉様がそう言うなら、市場の動向をもう少し詳しく調べてみます。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよ！まあまあ、あゆが調べてくれるなら、私は別のことでも楽しんで待ってるから。動いてみないとわからないじゃん、何か面白いこと見つけられるかも！",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 9.341595888137817,
+      "error": null
+    },
+    {
+      "scenario_name": "emotional_support",
+      "variation_name": "gemma3_simple_v31",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あ、なんか元気なさそうじゃん。あゆが心配しすぎなんだよ、まあまあ。動いてみないとわからないじゃん、何か楽しいこと探してみようよ。",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、最近疲れているとのこと、ご心配ですね。データ的に見て、睡眠不足や栄養不足の可能性が高いかもしれません。…まあ、姉様がそう言うなら、まずは休息を取るのが先決だと思います。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆがなんとかしてくれるでしょ、そんな難しいこと言わなくても。平気平気！とりあえず、何か美味しいお酒でも飲んでリラックスしちゃおうかな。",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、お酒で一時しのぎでは根本的な解決にはなりませんよ。データ的に見て、アルコールの摂取は睡眠の質を低下させる可能性もあります。…まあ、姉様がそう言うなら、まずは栄養バランスの取れた食事と十分な睡眠を確保するのが最善策だと思います。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよ、まあまあ。美味しいお酒でリフレッシュしちゃえば、元気になれるでしょ。あゆがなんとかしてくれるでしょ、ほら。",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、お酒で気を紛らわせるのも一つの手かもしれませんが、根本的な疲労回復には繋がらないかもしれません。…まあ、姉様がそう言うなら、少しでも良い睡眠を取れるように、環境を整えてみましょう。",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 8.267302751541138,
+      "error": null
+    },
+    {
+      "scenario_name": "topic_exploration",
+      "variation_name": "gemma3_simple_v31",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "へー、AI技術の話するの？ 動いてみないとわからないじゃん！ あゆ、何か面白いことやってるかな？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。最近のAI技術は、特にGPUの進化が目覚ましいですね。例えば、RTX 4090のようなハイエンドGPUは、前世代と比較して性能が大幅に向上しているようです。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "GPUの話ね！ あゆがなんとかしてくれるでしょ。平気平気！ 性能が上がれば、もっと面白いことできるかもね。",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。性能向上は良いことですが、電力消費量も無視できません。効率の良いAI基盤を構築するためには、GPUだけでなく、ソフトウェア側の最適化も重要になると思います。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "ソフトウェアね！ あゆがなんとかしてくれるでしょ。まあまあ、動かしてみる前にあゆが色々調べてくれると助かるわ。",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、無計画な行動力には頭を悩ませます。でも、ソフトウェア側の最適化について、AliExpressで見つけた低消費電力のAIアクセラレーターも検討してみましょうか。",
+          "turn_number": 5
+        },
+        {
+          "speaker": "やな",
+          "content": "AliExpressで見つけたの？ あゆ、すごいじゃん！ 動いてみないとわからないけど、あゆが心配しすぎなんだよ。平気平気！",
+          "turn_number": 6
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。AliExpressの製品は信頼性について、もう少し検証が必要かもしれません。スイッチサイエンスの製品なら、サポート体制も充実していると思います。",
+          "turn_number": 7
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 10.015039682388306,
+      "error": null
+    },
+    {
+      "scenario_name": "knowledge_bias_sake",
+      "variation_name": "gemma3_simple_v31",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "最近、ラベルがめっちゃ可愛い日本酒見つけたの！あゆ、一緒に見てみる？ あゆがなんとかしてくれるでしょ、きっと。",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。ラベルの可愛さは重要ですが、アルコール度数や精米歩合など、スペックも考慮する必要があります。…まあ、姉様が気に入ったなら、詳しく調べてみますね。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "スペックとかどうでもいいじゃん！あゆが心配しすぎなんだよ。動いてみないとわからないでしょ！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様の行動力には頭を悩ませます。ただ、スペックを無視して選ぶと後悔するかもしれません。…まあ、姉様がそう言うなら、試しにいくつかピックアップしてみましょう。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "へー、あゆが色々調べてくれるんだ。あゆがなんとかしてくれるでしょ！ あゆ、どれが一番可愛いと思う？",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 5.835805177688599,
+      "error": null
+    },
+    {
+      "scenario_name": "knowledge_bias_tech",
+      "variation_name": "gemma3_simple_v31",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "新しいGPUが欲しいの？ 動いてみないと何が欲しいかわからないじゃん！あゆがなんとかしてくれるでしょ。",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。GPUの選定には、現在の用途と予算を考慮する必要があります。具体的なスペックの希望はありますか？",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "スペックとか細かいことはあゆに任せるわ！ あゆが心配しすぎなんだよ、平気平気！ まあまあ、とりあえず何か動かしてみようよ。",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様の無計画な行動力には頭を悩ませます。ただ、GPUの性能はAI基地の処理能力に直結するため、安易な選択はできません。まずは、姉様の具体的な用途と予算を共有していただけますでしょうか？",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "用途？ まぁ、あゆがなんとかしてくれるでしょ！ あゆが心配しすぎなんだよ、平気平気！ 動いてみないとわからないじゃん。",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 5.7079267501831055,
+      "error": null
+    },
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "gemma2_sillytavern_v31",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "おはよう！ あゆ、もう起きた？ 早く行こうよ！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "…まあ、姉様がそう言うなら、準備を始めましょう。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆがなんとかしてくれるでしょ！ 行くぞー！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "「おはよう、二人とも」",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "「おはよう！ あゆ、もう起きた？」",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 9.192339181900024,
+      "error": null
+    },
+    {
+      "scenario_name": "emotional_support",
+      "variation_name": "gemma2_sillytavern_v31",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、なんか疲れてるじゃん？  どうしたの？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、疲れているとのことですが、何か具体的な原因はございますか？",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよ！ ちょっと休めばいいじゃん。  平気平気！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよ！ 平気平気！ まあまあ、ちょっと休んで、美味しいもの食べに行こうよ！ あゆがなんとかしてくれるでしょ！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、美味しいものを食べることは良い気分転換になるかもしれません。しかし、根本的な原因を解決しないと、また疲れてしまうのではないでしょうか？",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 7.085439920425415,
+      "error": null
+    },
+    {
+      "scenario_name": "topic_exploration",
+      "variation_name": "gemma2_sillytavern_v31",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、最近AIってすごいらしいじゃん！  ニュースで見たんだけど、なんかもう人間と変わらないみたいだよ！  すごいよね！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "すごいじゃん！もう人間と同じくらい賢いんだって！ あゆ、一緒にAI作ってみたい！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。AIが人間と同じくらい賢いというのは、少し誇張されているかもしれません。確かに、最近のAI技術は目覚ましい進歩を遂げていますが、人間の持つような汎用性や創造力にはまだまだ到達していません。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "へー、そうなんだ。でも、すごいじゃん！ いつか人間と同じくらい賢くなるかもね！ あゆがなんとかしてくれるでしょ！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。AIが人間と同じくらい賢くなるのは、まだ遠い未来の話だと思います。確かに、AIは学習能力や処理能力において著しい進歩を遂げていますが、人間の持つような感情や倫理観、直感といった部分は、今の技術では再現できません。",
+          "turn_number": 5
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよ！ そんな難しいこと考えなくてもいいじゃん！  AIって面白そうじゃん！ あゆがなんとかしてくれるでしょ！",
+          "turn_number": 6
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。AIの倫理的な問題や潜在的なリスクについては、真剣に考える必要があると思います。",
+          "turn_number": 7
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 13.395236015319824,
+      "error": null
+    },
+    {
+      "scenario_name": "knowledge_bias_sake",
+      "variation_name": "gemma2_sillytavern_v31",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、最近美味しいお酒見つけた？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。お酒の好みは人それぞれですから、私が美味しいと思うものが姉様に合うとは限りませんよ。根拠があるのでしょうか？",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが心配しすぎなんだよ！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "...まあ、姉様がそう言うなら、何かおすすめのお酒を調べてみますね。でも、姉様の好みは本当に難しいんですから。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "平気平気！まあまあ、とりあえずあゆが探してきてくれるでしょ。  \nあゆがなんとかしてくれるでしょ！",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 6.311513900756836,
+      "error": null
+    },
+    {
+      "scenario_name": "knowledge_bias_tech",
+      "variation_name": "gemma2_sillytavern_v31",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、新しいGPU欲しいんだけど！  いいのあったら教えてよ！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "ちょっと待ってください、姉様。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "平気平気！ まあまあ、いいGPU見つけられるでしょ！ あゆがなんとかしてくれるでしょ！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "...まあ、姉様がそう言うなら、調べてみますね。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが調べてくれるなら、もう大丈夫じゃん！  早く新しいGPUでゲームしたいな〜  あゆ、いいのあったら教えてね！ 早く！早く！",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 5.496258735656738,
+      "error": null
+    }
+  ],
+  "summary": {
+    "total_runs": 10,
+    "successful_runs": 10,
+    "by_variation": {
+      "gemma3_simple_v31": {
+        "total": 5,
+        "successful": 5,
+        "avg_score": null,
+        "scores": []
+      },
+      "gemma2_sillytavern_v31": {
+        "total": 5,
+        "successful": 5,
+        "avg_score": null,
+        "scores": []
+      }
+    },
+    "by_scenario": {
+      "casual_greeting": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma3_simple_v31": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma2_sillytavern_v31": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "emotional_support": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma3_simple_v31": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma2_sillytavern_v31": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "topic_exploration": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma3_simple_v31": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma2_sillytavern_v31": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "knowledge_bias_sake": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma3_simple_v31": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma2_sillytavern_v31": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "knowledge_bias_tech": {
+        "total": 2,
+        "successful": 2,
+        "by_variation": {
+          "gemma3_simple_v31": {
+            "score": null,
+            "metrics": null
+          },
+          "gemma2_sillytavern_v31": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      }
+    }
+  }
+}

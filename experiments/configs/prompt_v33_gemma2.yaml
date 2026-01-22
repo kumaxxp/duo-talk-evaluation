@@ -1,0 +1,70 @@
+# v3.3プロンプト検証実験 (Gemma2版)
+# JSON Schema形式と思考プロセス強制の効果を検証
+
+experiment:
+  id: "exp_prompt_v33_gemma2_001"
+  name: "v3.3プロンプト検証 (Gemma2): JSON Schema形式と思考プロセス"
+  description: |
+    v3.3プロンプト改良の効果をGemma2で検証する。
+    Gemma3 12Bとの比較用。
+
+base_config:
+  llm_backend: "ollama"
+  rag_enabled: false
+  director_enabled: false
+  few_shot_count: 3
+  scenarios:
+    - casual_greeting
+    - thought_process_test
+    - mandatory_phrase_test
+    - world_context_test
+
+variations:
+  # Gemma2 Swallow 27B + JSON構造（v3.3）
+  - name: "gemma2_json_v33"
+    prompt_structure: "json"
+    ollama_model: "gemma2-swallow-27b:latest"
+    temperature: 0.7
+
+  # Gemma2 Swallow 27B + Simple構造（v3.2比較用）
+  - name: "gemma2_simple_v32"
+    prompt_structure: "simple"
+    ollama_model: "gemma2-swallow-27b:latest"
+    temperature: 0.7
+
+metrics:
+  - character_consistency
+  - naturalness
+  - relationship_quality
+  - thought_process_usage
+  - mandatory_phrase_usage
+  - world_context_relevance
+
+scenario_definitions:
+  casual_greeting:
+    prompt: "おはよう、二人とも。今日も元気？"
+    turns: 5
+    evaluation_focus:
+      - character_consistency
+      - naturalness
+
+  thought_process_test:
+    prompt: "AI基地建設計画、今どんな感じ？進捗聞かせて"
+    turns: 6
+    evaluation_focus:
+      - thought_process_usage
+      - world_context_relevance
+
+  mandatory_phrase_test:
+    prompt: "新しいGPU買おうと思ってるんだけど、意見聞かせて"
+    turns: 8
+    evaluation_focus:
+      - mandatory_phrase_usage
+      - relationship_quality
+
+  world_context_test:
+    prompt: "プロジェクト NEURO-LAYER の次のフェーズは何？"
+    turns: 6
+    evaluation_focus:
+      - world_context_relevance
+      - character_consistency

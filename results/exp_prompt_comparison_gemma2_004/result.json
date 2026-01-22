@@ -1,0 +1,520 @@
+{
+  "experiment_id": "exp_prompt_comparison_gemma2_004",
+  "experiment_name": "プロンプト構造比較: Layered vs Simple vs SillyTavern (Gemma2 27B)",
+  "timestamp": "2026-01-21T23:35:02.419327",
+  "variations": [
+    {
+      "name": "layered_gemma2",
+      "llm_backend": "koboldcpp",
+      "llm_model": "gemma2-27b",
+      "prompt_structure": "layered",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    },
+    {
+      "name": "simple_gemma2",
+      "llm_backend": "koboldcpp",
+      "llm_model": "gemma2-27b",
+      "prompt_structure": "simple",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    },
+    {
+      "name": "sillytavern_gemma2",
+      "llm_backend": "koboldcpp",
+      "llm_model": "gemma2-27b",
+      "prompt_structure": "sillytavern",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "casual_greeting",
+      "initial_prompt": "おはよう、二人とも",
+      "turns": 5,
+      "evaluation_focus": [
+        "character_consistency",
+        "naturalness"
+      ]
+    },
+    {
+      "name": "emotional_support",
+      "initial_prompt": "最近疲れてるんだ...",
+      "turns": 6,
+      "evaluation_focus": [
+        "relationship_quality",
+        "naturalness"
+      ]
+    },
+    {
+      "name": "topic_exploration",
+      "initial_prompt": "最近のAI技術について話して",
+      "turns": 8,
+      "evaluation_focus": [
+        "topic_novelty",
+        "concreteness"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "layered_gemma2",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "おはよう！あゆ、今日も元気？\n</Surface Consciousness>",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "おはようございます、姉様。ええ、元気です。姉様はどうですか？",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "元気だよ！ あゆ、今日は何する予定？",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "今日は、図書館に行って本を借りてきます。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "え、図書館？ なんで？\n</Surface Consciousness>",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 4.751009464263916,
+      "error": null
+    },
+    {
+      "scenario_name": "emotional_support",
+      "variation_name": "layered_gemma2",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、最近疲れてるみたいじゃん。どうしたの？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "ちょっと待ってください、姉様。疲れている原因がわからないと、適切なアドバイスはできませんよ。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "えー、別に大したことないんだけどね。なんかやる気が出ないんだよね。",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "やる気が出ない原因は何だと思いますか？姉様。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "うーん、よくわからないんだよね。",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "具体的にどのようなことに対してやる気が出ないのでしょうか？姉様。",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 5.724255800247192,
+      "error": null
+    },
+    {
+      "scenario_name": "topic_exploration",
+      "variation_name": "layered_gemma2",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、最近AIってよく聞くじゃん！なんかすごいらしいよね。",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "ええ、確かに最近ではAIに関するニュースを目にする機会が増えましたね。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "具体的にどんなことができるようになるの？",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "例えば、文章を自動で生成したり、画像を認識したり、音声でコミュニケーションを取ったりすることができるようになっているようです。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "へぇー！すごいね！でも、ちょっと怖い気もするんだよね...",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "確かに、AIの進化は私たちの生活に大きな変化をもたらす可能性がありますね。",
+          "turn_number": 5
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、AIってどんなものなの？",
+          "turn_number": 6
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。AIは複雑な概念なので、簡単に説明するのは難しいかもしれません。",
+          "turn_number": 7
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 8.692281723022461,
+      "error": null
+    },
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "simple_gemma2",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "おはよう、あゆ。今日は何する？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "(あゆが姉様に話しかける) Buenos dias, hermana. ¿Qué vamos a hacer hoy? (スペイン語で挨拶)",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Buenos dias!  えっと、今日はあのね、新しいカフェに行ってみようかなって思ってるんだ。あゆはどう？",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "それはいいですね！でも、事前に口コミを調べた方が良いと思います。美味しいお店だと嬉しいですし。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "(少し困った顔をする) えーと、口コミ？うーん、まあ、行ってみないとわからないじゃん！あゆは慎重すぎるよ！",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 6.583258390426636,
+      "error": null
+    },
+    {
+      "scenario_name": "emotional_support",
+      "variation_name": "simple_gemma2",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、最近疲れてるんだって？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "ええと...そうですね。少し...",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "(あゆの表情を見て)",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "何か...ありますか？",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "(あゆを見つめながら)",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "(少し困った顔をする)姉様は...どうですか？",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 5.13031005859375,
+      "error": null
+    },
+    {
+      "scenario_name": "topic_exploration",
+      "variation_name": "simple_gemma2",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "最近、AIってすごい勢いで進化してるよね？ あゆもニュースとか見てる？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "ええ、見てますよ。特に自然言語処理の分野では目覚ましい進歩があるようですね。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "自然言語処理？ なんだか難しそうだけど…",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "簡単に言うと、人間が使う言葉をコンピュータが理解したり、生成したりする技術です。 例えば、チャットボットや翻訳ソフトなどがその応用例ですね。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "へぇー、すごいね！ あゆはそういうの詳しいじゃん。",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "私は専門家ではありませんが、興味のある分野なので、論文を読んだり、セミナーに参加したりしています。",
+          "turn_number": 5
+        },
+        {
+          "speaker": "やな",
+          "content": "論文とかセミナーとか… やっぱり頭いいなあ。",
+          "turn_number": 6
+        },
+        {
+          "speaker": "あゆ",
+          "content": "...まあ、姉様がそう言うなら、少し詳しく説明しましょうか。",
+          "turn_number": 7
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 10.433216094970703,
+      "error": null
+    },
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "sillytavern_gemma2",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "おはよう、あゆ！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "おはようございます、姉様。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "おお、朝から元気だね！ あゆはいつも元気だね！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "元気かどうかは分かりませんが、体調は良好です。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "いいね！ 今日は何する予定？",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 4.016744375228882,
+      "error": null
+    },
+    {
+      "scenario_name": "emotional_support",
+      "variation_name": "sillytavern_gemma2",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、なんか疲れてるみたいじゃん？ どうしたの？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "はい、お疲れ様です、姉様。少し疲れております。何かお役に立てることがあれば、言ってください。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "えー、そんなこと言わないでよ！ あゆもたまには休んでいいんだよ。",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様のおっしゃる通りです。しかし、私が休むと、姉様の負担が増えてしまうのではないかと心配です。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "えー、大丈夫だよ！ あゆが休んでても、なんとかなるって！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "そうですね。でも、姉様は本当に大丈夫でしょうか？ 最近、表情が硬いように見えますが...",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 7.1362762451171875,
+      "error": null
+    },
+    {
+      "scenario_name": "topic_exploration",
+      "variation_name": "sillytavern_gemma2",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、最近テレビでAIってのがすごいって言っててさ！ どんなものか知ってる？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "はい、もちろん知っています。AIは人工知能の略で、人間の知的能力を模倣する技術のことです。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "へぇー、すごいね！ でも、具体的に何ができるの？",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "AIは様々な分野で活用されています。例えば、画像認識、音声認識、自然言語処理などです。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "画像認識とか音声認識とか… ちょっと難しそうだなあ。",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "難しいと感じるかもしれませんが、実は私たちの身の回りでもすでにAIが使われていますよ。",
+          "turn_number": 5
+        },
+        {
+          "speaker": "やな",
+          "content": "えっ、本当？ どこで使われてるの？",
+          "turn_number": 6
+        },
+        {
+          "speaker": "あゆ",
+          "content": "例えば、スマートフォンに搭載されている音声アシスタントや、自動で写真に写っている人の顔を認識してくれる機能などがそうです。",
+          "turn_number": 7
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 9.238761186599731,
+      "error": null
+    }
+  ],
+  "summary": {
+    "total_runs": 9,
+    "successful_runs": 9,
+    "by_variation": {
+      "layered_gemma2": {
+        "total": 3,
+        "successful": 3,
+        "avg_score": null,
+        "scores": []
+      },
+      "simple_gemma2": {
+        "total": 3,
+        "successful": 3,
+        "avg_score": null,
+        "scores": []
+      },
+      "sillytavern_gemma2": {
+        "total": 3,
+        "successful": 3,
+        "avg_score": null,
+        "scores": []
+      }
+    },
+    "by_scenario": {
+      "casual_greeting": {
+        "total": 3,
+        "successful": 3,
+        "by_variation": {
+          "layered_gemma2": {
+            "score": null,
+            "metrics": null
+          },
+          "simple_gemma2": {
+            "score": null,
+            "metrics": null
+          },
+          "sillytavern_gemma2": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "emotional_support": {
+        "total": 3,
+        "successful": 3,
+        "by_variation": {
+          "layered_gemma2": {
+            "score": null,
+            "metrics": null
+          },
+          "simple_gemma2": {
+            "score": null,
+            "metrics": null
+          },
+          "sillytavern_gemma2": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "topic_exploration": {
+        "total": 3,
+        "successful": 3,
+        "by_variation": {
+          "layered_gemma2": {
+            "score": null,
+            "metrics": null
+          },
+          "simple_gemma2": {
+            "score": null,
+            "metrics": null
+          },
+          "sillytavern_gemma2": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      }
+    }
+  }
+}

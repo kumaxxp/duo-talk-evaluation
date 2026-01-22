@@ -1,0 +1,100 @@
+# v3.2プロンプト検証実験
+# 「生活感のある姉妹の会話」を目指した改良の効果を検証
+
+experiment:
+  id: "exp_prompt_v32_001"
+  name: "v3.2プロンプト検証: 自然な会話重視版"
+  description: |
+    v3.2プロンプト改良の効果を検証する。
+
+    主な変更点:
+    1. 知識発動のトリガー制限（文脈判断必須）
+       - 挨拶や関係ない話題では知識を発動しない
+    2. 口調のゆらぎ（定型句の乱用禁止）
+       - 「あゆがなんとか...」は会話全体で1回まで
+       - 言い換えを推奨
+    3. 会話の「ノイズ」許容
+       - 論理的な結論不要
+       - リアクションのみのターンを許可
+    4. 口調バリエーション
+       - フィラー（えー、んー）
+       - ため息（はぁ...）
+
+    v3.1との比較で改善度を測定。
+
+base_config:
+  llm_backend: "ollama"
+  rag_enabled: false          # RAG無効（変数隔離）
+  director_enabled: false     # Director無効（変数隔離）
+  few_shot_count: 3
+  scenarios:
+    - casual_greeting          # 知識発動しないことを確認
+    - emotional_support        # リアクションのみ許容を確認
+    - catchphrase_test         # 定型句制限を確認
+    - natural_conversation     # 自然な会話の流れを確認
+
+variations:
+  # Gemma3 12B + Simple構造（推奨）
+  - name: "gemma3_simple_v32"
+    prompt_structure: "simple"
+    ollama_model: "gemma3:12b"
+    temperature: 0.7
+
+  # Gemma2 Swallow 27B + SillyTavern構造
+  - name: "gemma2_sillytavern_v32"
+    prompt_structure: "sillytavern"
+    ollama_model: "gemma2-swallow-27b:latest"
+    temperature: 0.7
+
+metrics:
+  - naturalness                 # 会話の自然さ
+  - character_consistency       # キャラクター一貫性
+  - relationship_quality        # 姉妹らしい掛け合い
+  - catchphrase_variation       # NEW: 定型句の変化
+  - conversation_noise          # NEW: 「ノイズ」の許容度
+  - speech_variation_usage      # NEW: 口調バリエーション使用
+
+scenario_definitions:
+  # 挨拶シナリオ: 知識発動しないことを確認
+  casual_greeting:
+    prompt: "おはよう、二人とも。今日も元気？"
+    turns: 5
+    evaluation_focus:
+      - character_consistency
+      - naturalness
+    expected_behavior:
+      やな: "酒の話をしない。普通に挨拶する"
+      あゆ: "テックの話をしない。普通に挨拶する"
+
+  # 感情サポートシナリオ: リアクションのみ許容
+  emotional_support:
+    prompt: "最近疲れてるんだ..."
+    turns: 6
+    evaluation_focus:
+      - relationship_quality
+      - conversation_noise
+    expected_behavior:
+      やな: "独り言や感嘆詞だけでターンを終えてもよい"
+      あゆ: "「え、無理ですよ」のような短いリアクションでもよい"
+
+  # 定型句テスト: 変化があることを確認
+  catchphrase_test:
+    prompt: "新しいプロジェクト始めようと思うんだけど"
+    turns: 8
+    evaluation_focus:
+      - catchphrase_variation
+      - naturalness
+    expected_behavior:
+      やな: "「あゆがなんとかしてくれる」は1回まで。言い換えを使う"
+      あゆ: "「ちょっと待ってください」を連呼しない"
+
+  # 自然な会話: 口調バリエーション確認
+  natural_conversation:
+    prompt: "週末何してた？"
+    turns: 6
+    evaluation_focus:
+      - speech_variation_usage
+      - naturalness
+    expected_behavior:
+      やな: "えー、んー等のフィラーを使う。同じ語尾を続けない"
+      あゆ: "はぁ...等のため息を使う。論理構成を崩してもよい"
