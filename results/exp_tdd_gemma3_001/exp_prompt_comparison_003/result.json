@@ -1,0 +1,520 @@
+{
+  "experiment_id": "exp_prompt_comparison_003",
+  "experiment_name": "プロンプト構造比較: Layered vs Simple vs SillyTavern (Gemma3 12B)",
+  "timestamp": "2026-01-22T09:56:13.441778",
+  "variations": [
+    {
+      "name": "layered",
+      "llm_backend": "ollama",
+      "llm_model": "swallow-8b",
+      "prompt_structure": "layered",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    },
+    {
+      "name": "simple",
+      "llm_backend": "ollama",
+      "llm_model": "swallow-8b",
+      "prompt_structure": "simple",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    },
+    {
+      "name": "sillytavern",
+      "llm_backend": "ollama",
+      "llm_model": "swallow-8b",
+      "prompt_structure": "sillytavern",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "casual_greeting",
+      "initial_prompt": "おはよう、二人とも",
+      "turns": 5,
+      "evaluation_focus": [
+        "character_consistency",
+        "naturalness"
+      ]
+    },
+    {
+      "name": "emotional_support",
+      "initial_prompt": "最近疲れてるんだ...",
+      "turns": 6,
+      "evaluation_focus": [
+        "relationship_quality",
+        "naturalness"
+      ]
+    },
+    {
+      "name": "topic_exploration",
+      "initial_prompt": "最近のAI技術について話して",
+      "turns": 8,
+      "evaluation_focus": [
+        "topic_novelty",
+        "concreteness"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "layered",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あ、おはようじゃん！ ぐっすり眠れたでしょ？ 今日は何するかな～、あゆ！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "おはようございます、姉様ですね。ぐっすり眠れたかもしれません、少し疲れが残っているかもしれません。今日は何をされるか、根拠があるのでしょうか？",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、根拠なくてもなんとかなるじゃん！ まぁ、なんとなくワクワクする何かを探そうかな、あゆ！ どこか行こうぜ、あゆ！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "おはようございます、姉様ですね。なんとなくワクワクする何かを探す、そうかもしれませんでしょうか。ただ、どこか行く前に、いくつか確認しておきたい点があるかもしれませんね。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、なに確認したいの？ まぁ、急ぎじゃないでしょ？ どこかカフェとか行ってみるのもいいかも、あゆ！",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 25.74503493309021,
+      "error": null
+    },
+    {
+      "scenario_name": "emotional_support",
+      "variation_name": "layered",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、最近疲れてるんだって？大丈夫じゃないといいね。まあまあ、ゆっくり休めばなんとかなるでしょ！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、最近お疲れなのですね。少し無理をしていないか心配かもしれません。ゆっくりと休息を取る時間を作っていただけると良いかもしれませんでしょうか。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、心配してくれてありがとじゃん！ちょっと忙しかっただけだから、平気平気だよ。あゆがいつも見ててくれるから、なんとかなるでしょ！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、お気遣いありがとうございます。ただ、少し無理をしていないか確認させてくださいね。もし何か原因があるようでしたら、一緒に解決策を探るかもしれませんでしょうか。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、心配かけてごめんじゃん！でも、動いてみたら意外と大丈夫だったりするでしょ？ あゆがそばにいるから、なんとかなるかな、ってふあんしてるよ！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、そのお気持ち、よく理解できますかもしれません。ただ、動くことが良い結果に繋がるとは限りませんでしょうか。一度立ち止まって、ご自身の体調を優先されるべきかもしれませんね。",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 5.792420387268066,
+      "error": null
+    },
+    {
+      "scenario_name": "topic_exploration",
+      "variation_name": "layered",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、最近のAI技術ってマジで進化が早くてびっくりするでしょ？ 画像生成とか文章作成とか、どんどん賢くなってる感じがするよね！ まあまあ、ちょっと怖いけど、面白そうじゃん！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、それは確かに驚くべき進化ですね。しかし、その技術がどのように実現されているのか、根拠があるのでしょうか？ 十分な検証がされているか、少し心配かもしれませんね。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、検証とか大事だよね、でもさ、動いてるの見るとワクワクするじゃん！ いっぱい試して、色んな可能性を見つけ出すのも楽しそうかな？ あゆが難しいとこ見てくれるでしょ！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、色々な可能性を見出すのは確かに魅力的かもしれませんね。ただ、その過程で倫理的な問題や誤った情報が拡散されるリスクも考慮する必要があると思います。姉様が試される際には、十分な注意を払っていただきたいと、私は思いますでしょうか。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、倫理的な問題とかも大事だよね、でもさ、動かす前のワクワク感は捨てられないじゃん！ まあまあ、あゆが注意してくれるから大丈夫でしょ！ いっぱい試して、面白いこと見つけ出そうよ！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、そのワクワク感は理解できますかもしれませんね。ただ、AI技術の急速な進化は、社会に大きな影響を与える可能性もあると思います。姉様が可能性を探求される際には、その影響についても考慮していただけると、私は思いますでしょうか。",
+          "turn_number": 5
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、社会への影響とかも大事だよね、でもさ、新しい技術って、使う人の使い方次第じゃん！ まあまあ、あゆが色々教えてくれるから大丈夫でしょ！ いっぱい動かして、面白い活用法見つけ出そうよ！",
+          "turn_number": 6
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、新しい技術の活用方法は、利用者の倫理観によって大きく左右されるかもしれませんね。社会にポジティブな影響を与えるためには、技術の可能性とリスクの両方を理解することが重要だと思いますでしょうか。姉様が色々な活用法を見出す際には、その点も念頭に置いていただけると、私は思いますでしょうか。",
+          "turn_number": 7
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 10.878177881240845,
+      "error": null
+    },
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "simple",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "おはよう！あゆ、朝から元気いっぱいじゃん！ 何か面白いことないかな？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "おはようございます、姉様。朝から騒がしいですね。何か面白いこと、とありますが、根拠があるのでしょうか？ ...まあ、姉様がそう言うなら、少し探してみますね。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、根拠なんてどうでもいいじゃん！ 平気平気！ 何か見つけて、一緒にやろうよ！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、朝からエネルギーがすごいですね。何か面白いこと、と仰いますが、少し落ち着いて考えてみないと、無駄なことになりかねません。…でも、姉様がそう言うなら、いくつか候補を調べてみますね。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、そんなこと言わずに！ まあまあ、とりあえず動かしてみようよ。 あゆがなんとかしてくれるでしょ！",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 4.992013931274414,
+      "error": null
+    },
+    {
+      "scenario_name": "emotional_support",
+      "variation_name": "simple",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あ、そうなんだ。まあまあ、ちょっと休んで、またすぐに動き出せばいいじゃん。あゆがなんとかしてくれるでしょ。",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、最近疲れてらっしゃるんですね。無理は禁物ですよ...そう言いながらも、姉様のペースに合わせるために、いくつかサポートできることはないか考えてみますね。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、心配しすぎだよ。平気平気！ ちょっとした休憩は必要だけど、すぐにまた動き出せるでしょ。",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、お気遣いいただきありがとうございます。でも、少しでも体調に異変があれば、正直に言ってくださいね。...まあ、姉様がそう言うなら、回復をサポートできるよう、栄養バランスの取れた食事の献立を考えてみます。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆ、またそんな気遣いしすぎだよ。ちょっと休憩して、またすぐに動き出せば大丈夫だよね。あゆがなんとかしてくれるでしょ！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ご無理なさらないでくださいね。体調を崩されたら、計画も頓挫してしまいますし。...まあ、姉様がそう言うなら、少しでも負担を減らせるよう、タスクの優先順位を見直してみましょうか。",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 6.85252571105957,
+      "error": null
+    },
+    {
+      "scenario_name": "topic_exploration",
+      "variation_name": "simple",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "AI技術、すごいことになってるじゃん！ あゆ、なんか面白いこと見つけたら教えてほしいな。 まあまあ、色々触ってみるのも楽しいかも。",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、確かに進化は目覚ましいですね。ただ、その方向性が本当に目的と合致しているのか、根拠があるのでしょうか？…まあ、姉様が興味を示されているなら、私も関連情報を集めて検証してみましょう。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆが検証するの、いいね！ あゆがしっかり見てくれるなら、やなは気楽だもん。 平気平気！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、お気楽なのはありがたいですが、少しでもリスクを減らすために、具体的な成功事例と失敗事例を比較検討すべきかもしれません。…まあ、姉様が楽観的なのは理解できますので、私が注意深く見守らせていただきます。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "失敗事例も知りたいのは、きっとあゆの心配性だよね。 まあまあ、動かしてみないとわからないこともあるでしょ！ あゆがなんとかしてくれるでしょ。",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、そのお気楽な姿勢にはいつも驚きますね。…ただ、データに基づいた検証なしに動くのは、やはりリスクが大きいかもしれません。 成功と失敗の事例を分析し、姉様の直感を補完できれば、より確実な道が開けるかもしれません。",
+          "turn_number": 5
+        },
+        {
+          "speaker": "やな",
+          "content": "あゆの分析力、尊敬するじゃん！ でも、まずは実際に動かしてみるのが一番大事だよね。 あゆが裏で見てれば、やなは自由に動いていられるもん！",
+          "turn_number": 6
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、その積極性にはいつも感心しますね。…ただ、無計画な行動は、結果的に姉様の才能を浪費する可能性もあります。 成功の可能性を高めるために、まずは小規模なテストから始め、結果を詳細に分析することを提案します。",
+          "turn_number": 7
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 10.438443899154663,
+      "error": null
+    },
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "sillytavern",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "おはよう、あゆ！ 今日は何する予定じゃん？ なんか面白いこと見つけたら、あゆに教えてね！",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "おはようございます、姉様。今日はどのような予定があるのでしょうか？ 姉様の突拍子もない計画には、少し注意が必要かもしれませんね。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "おはよう、あゆ！ ちょっとくらい遅れても、大丈夫じゃん？ なんか、急いで何があるの？",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "おはようございます、姉様。少し時間に余裕がある方が良いかもしれませんね。焦って何かをすると、ミスをするかもしれません。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "おはよう、あゆ！ ほら、今日も元気いっぱいじゃん！ 何か楽しいこと見つけたら、すぐに教えてね、だよね！",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 3.8409595489501953,
+      "error": null
+    },
+    {
+      "scenario_name": "emotional_support",
+      "variation_name": "sillytavern",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あゆ、最近疲れてるんだって？ まあまあ、そんなの気にしなくていいじゃん！ ちょっと気分転換でも行こうよ。",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。気分転換は重要かもしれませんね。しかし、疲労の原因を無視するのは得策ではないと思います。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "あ、なんだか心配してるんだね。でも平気平気！ あゆがなんとかしてくれるでしょ。とりあえず、何か楽しいこと見つけて動いてみようよ。",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。何か楽しいことを見つけるのは良いかもしれませんね。しかし、根本的な疲労の原因が解決されないと、またすぐに疲れてしまうかもしれません。まずは、原因を特定する必要があると思います。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あ、また難しいこと言ってるじゃん。まあまあ、そんなこと考えすぎなくてもいいでしょ。あゆがなんとかしてくれるでしょ！",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。姉様が「なんとかしてくれるでしょ」と仰るのも、疲労を放置することに対する逃げ腰かもしれませんね。原因を特定し、解決策を講じなければ、将来的に大きな問題に発展する可能性もあると思います。",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 5.981244802474976,
+      "error": null
+    },
+    {
+      "scenario_name": "topic_exploration",
+      "variation_name": "sillytavern",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "あ、最近のAI技術って話してるの？ めっちゃ面白そうじゃん！ あゆ、何が一番興味深いって思う？",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。最近のAI技術について、何が一番興味深いのでしょうか？ 興味深いと言っても、方向性が定まっていないかもしれません。",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "えー、方向性が定まってないってのも面白いじゃん！ 何か一つ、動かしてみるしかないでしょ。 どんなことでも良いから、あゆが気になることある？",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。AI技術は広範にわたる分野ですね。具体的にどのような点に興味があるのか、もう少し絞り込む必要があるかもしれません。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "あ、絞り込むのも大事じゃん！ でも、とりあえず何か一つ、動かしてみるしかないでしょ。 どんな小さいことでも良いから、あゆが「これ！」って思うもの、ある？",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。AI技術の進化は目覚ましいですね。特に、生成AIの能力向上は、社会に大きな影響を与えるかもしれません。",
+          "turn_number": 5
+        },
+        {
+          "speaker": "やな",
+          "content": "生成AIすごいじゃん！ 絵とか音楽とか、色々作れるんだもんね。 あゆも何か作ってみない？ まあまあ、失敗しても大丈夫だよね。 あゆがなんとかしてくれるでしょ！",
+          "turn_number": 6
+        },
+        {
+          "speaker": "あゆ",
+          "content": "姉様、ちょっと待ってください。生成AIによるコンテンツ作成は、著作権や倫理的な問題を引き起こす可能性もあるかもしれません。姉様が作成されたコンテンツの責任を、どう負うのか、検討する必要があると思います。",
+          "turn_number": 7
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 8.250536441802979,
+      "error": null
+    }
+  ],
+  "summary": {
+    "total_runs": 9,
+    "successful_runs": 9,
+    "by_variation": {
+      "layered": {
+        "total": 3,
+        "successful": 3,
+        "avg_score": null,
+        "scores": []
+      },
+      "simple": {
+        "total": 3,
+        "successful": 3,
+        "avg_score": null,
+        "scores": []
+      },
+      "sillytavern": {
+        "total": 3,
+        "successful": 3,
+        "avg_score": null,
+        "scores": []
+      }
+    },
+    "by_scenario": {
+      "casual_greeting": {
+        "total": 3,
+        "successful": 3,
+        "by_variation": {
+          "layered": {
+            "score": null,
+            "metrics": null
+          },
+          "simple": {
+            "score": null,
+            "metrics": null
+          },
+          "sillytavern": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "emotional_support": {
+        "total": 3,
+        "successful": 3,
+        "by_variation": {
+          "layered": {
+            "score": null,
+            "metrics": null
+          },
+          "simple": {
+            "score": null,
+            "metrics": null
+          },
+          "sillytavern": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "topic_exploration": {
+        "total": 3,
+        "successful": 3,
+        "by_variation": {
+          "layered": {
+            "score": null,
+            "metrics": null
+          },
+          "simple": {
+            "score": null,
+            "metrics": null
+          },
+          "sillytavern": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      }
+    }
+  }
+}
