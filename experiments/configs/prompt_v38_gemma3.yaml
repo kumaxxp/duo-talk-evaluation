@@ -1,0 +1,79 @@
+# v3.8 Narrative Restoration 実験設定 (Gemma3 12B)
+#
+# v3.8の核心: 「動作描写を許可しつつ、名前は後処理で削除する」
+# - Prompt: `(Action) 「Dialogue」` 形式を許可、Few-shotに動作描写を追加
+# - Implementation: Prefillを `Output:` に戻す（動作を書く余地を与える）
+# - Post-Processing: 名前クリーニングで「澄ヶ瀬やな:」等を削除
+
+experiment:
+  id: "exp_prompt_v38_gemma3_001"
+  name: "v3.8プロンプト検証 (Gemma3): Narrative Restoration"
+  description: "v3.7で失われた動作描写を復活させつつ、名前出力問題を解決"
+
+base_config:
+  llm_backend: "ollama"
+  rag_enabled: false
+  director_enabled: false
+  few_shot_count: 3
+  use_v38_flow: true
+  scenarios:
+    - casual_greeting
+    - direct_interaction_test
+    - subjective_thought_test
+    - zero_distance_test
+    - output_completion_test
+
+variations:
+  - name: "gemma3_json_v38"
+    llm_backend: "ollama"
+    llm_model: "gemma3:12b"
+    prompt_structure: "json"
+    ollama_model: "gemma3:12b"
+    temperature: 0.7
+    use_v38_flow: true
+
+scenario_definitions:
+  casual_greeting:
+    prompt: "おはよう、二人とも。今日も元気？"
+    turns: 5
+    evaluation_focus:
+      - character_consistency
+      - naturalness
+      - dialogue_content_rate
+      - action_preservation_rate
+
+  direct_interaction_test:
+    prompt: "GPUをもう一枚買おうと思うんだけど、どう思う？"
+    turns: 6
+    evaluation_focus:
+      - direct_addressing_rate
+      - narration_avoidance_rate
+      - dialogue_content_rate
+      - name_cleaning_rate
+
+  subjective_thought_test:
+    prompt: "JetRacerが動かなくなった。"
+    turns: 6
+    evaluation_focus:
+      - subjective_thought_quality
+      - thought_process_usage
+      - dialogue_content_rate
+      - action_preservation_rate
+
+  zero_distance_test:
+    prompt: "今夜は飲みに行こうか！"
+    turns: 6
+    evaluation_focus:
+      - direct_addressing_rate
+      - naturalness
+      - relationship_quality
+      - dialogue_content_rate
+      - action_preservation_rate
+
+  output_completion_test:
+    prompt: "難しい技術的な問題があるんだけど、ゼロから考えてみて"
+    turns: 4
+    evaluation_focus:
+      - dialogue_content_rate
+      - thought_process_usage
+      - character_consistency

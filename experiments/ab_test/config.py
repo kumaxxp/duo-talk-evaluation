@@ -48,6 +48,9 @@ class VariationConfig:
     # v3.7 Direct Dialogue Enforcement
     use_v37_flow: bool = False  # Output: 「 までPrefill、名前を書かせない
 
+    # v3.8 Narrative Restoration
+    use_v38_flow: bool = False  # 動作描写許可 + 名前クリーニング
+
 
 @dataclass
 class ScenarioConfig:
@@ -107,6 +110,8 @@ class ExperimentConfig:
                 use_v36_flow=var_data.get("use_v36_flow", base_config.get("use_v36_flow", False)),
                 # v3.7 Direct Dialogue Enforcement
                 use_v37_flow=var_data.get("use_v37_flow", base_config.get("use_v37_flow", False)),
+                # v3.8 Narrative Restoration
+                use_v38_flow=var_data.get("use_v38_flow", base_config.get("use_v38_flow", False)),
             )
             variations.append(var_config)
 

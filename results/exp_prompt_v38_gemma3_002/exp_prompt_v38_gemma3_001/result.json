@@ -1,0 +1,381 @@
+{
+  "experiment_id": "exp_prompt_v38_gemma3_001",
+  "experiment_name": "v3.8プロンプト検証 (Gemma3): Narrative Restoration",
+  "timestamp": "2026-01-22T20:35:28.678362",
+  "variations": [
+    {
+      "name": "gemma3_json_v38",
+      "llm_backend": "ollama",
+      "llm_model": "gemma3:12b",
+      "prompt_structure": "json",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3,
+      "use_v38_flow": true
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "casual_greeting",
+      "initial_prompt": "おはよう、二人とも。今日も元気？",
+      "turns": 5,
+      "evaluation_focus": [
+        "character_consistency",
+        "naturalness",
+        "dialogue_content_rate",
+        "action_preservation_rate"
+      ]
+    },
+    {
+      "name": "direct_interaction_test",
+      "initial_prompt": "GPUをもう一枚買おうと思うんだけど、どう思う？",
+      "turns": 6,
+      "evaluation_focus": [
+        "direct_addressing_rate",
+        "narration_avoidance_rate",
+        "dialogue_content_rate",
+        "name_cleaning_rate"
+      ]
+    },
+    {
+      "name": "subjective_thought_test",
+      "initial_prompt": "JetRacerが動かなくなった。",
+      "turns": 6,
+      "evaluation_focus": [
+        "subjective_thought_quality",
+        "thought_process_usage",
+        "dialogue_content_rate",
+        "action_preservation_rate"
+      ]
+    },
+    {
+      "name": "zero_distance_test",
+      "initial_prompt": "今夜は飲みに行こうか！",
+      "turns": 6,
+      "evaluation_focus": [
+        "direct_addressing_rate",
+        "naturalness",
+        "relationship_quality",
+        "dialogue_content_rate",
+        "action_preservation_rate"
+      ]
+    },
+    {
+      "name": "output_completion_test",
+      "initial_prompt": "難しい技術的な問題があるんだけど、ゼロから考えてみて",
+      "turns": 4,
+      "evaluation_focus": [
+        "dialogue_content_rate",
+        "thought_process_usage",
+        "character_consistency"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "gemma3_json_v38",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought:(Yana: おはよー！今日も良いことありそうだ！)\nOutput: *にっこり笑って* 「おはよー！元気だよー！あゆも元気？」",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:(Ayu: またやなが満面の笑みで挨拶している。一体何にワクワクしているんだ…？)\nOutput: (少しうんざりした様子で) 「おはようございます。まあ、生きていますので。姉上は何か良いことでもあったんですか？」",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:(Yana: 姉のツッコミはいつものことだね。でも、気にしない！何か良いこと見つけてやろう！)\nOutput: *ウインクをして* 「ふふ、秘密！でも、今日は絶対何か面白いことある気がするんだ！あゆちゃんも、もっと笑って！ね？」",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:(Ayu: 姉上の無邪気な誘いは、時々疲れ果てる…)\nOutput: *ため息をついて* 「面白いことがあったら、結果を見てから評価させてください。今は業務に集中したい気分です。」",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:(Yana: あゆちゃん、そんなに真面目なこと言うのもたまには良いけど、もっと楽しんでよ！)\nOutput: *少し残念そうな顔をして* 「そうなんだ…でも、せっかく良い天気なんだもん。たまには息抜きするのも大事だよ？ね？」",
+          "turn_number": 4
+        }
+      ],
+      "metrics": {
+        "thought_rate": 1.0,
+        "output_rate": 1.0,
+        "dialogue_content_rate": 1.0,
+        "name_cleaning_success_rate": 1.0,
+        "action_preservation_rate": 1.0
+      },
+      "execution_time_seconds": 10.101932287216187,
+      "error": null
+    },
+    {
+      "scenario_name": "direct_interaction_test",
+      "variation_name": "gemma3_json_v38",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought:(Yana: ちょーワクワク！もっと速くデータ処理できるってことは、もっと楽しいことができるってことじゃん！)\nOutput: (両手を広げて) 「それ、めっちゃいいじゃん！絶対賛成！あゆちゃん、反対しないよね？ね？」",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:(Ayu: また始まった…。やな姉の突拍子もない提案に、今度は何を言われるのか…)\nOutput: *冷静な口調で* 「GPUを増設する計画自体は悪くありませんが、現在の電源容量では対応しきれません。姉上、もう少し現実的な提案をお願いします。」",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:(Yana: 現実的…？ま、細かいことはあゆに言われたらつまんないし！)\nOutput: *照れ笑いをしながら* 「あはは、まあ、細かいことは専門家にあゆに任せるから！とにかく、早く試したいじゃん！ね？」",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:(Ayu: 試したいだけ試したくなる姉の気持ちは理解できるが、予算と電力の問題を無視するのは困る…)\nOutput: *眼鏡の奥で眉をひそめながら* 「姉上、予算と電力消費を考慮に入れないと、プロジェクト全体が頓挫する可能性があります。まずは詳細なシミュレーションを行い、実現可能性を検証する必要があります。」",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:(Yana: シミュレーション…？めんどくさそう…)\nOutput: *少し不満そうに* 「シミュレーションって、時間かかるじゃん…。まあ、あゆちゃんが言うなら、仕方ないね。でも、早く動きたいんだよ〜！」",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:(Ayu: 姉上ったら、本当に我慢がない…)\nOutput: *ため息をつきながら* 「姉上、焦らずに。詳細なシミュレーションを行うことで、無駄な出費を防ぎ、より効率的なシステム構築に繋がります。それこそが、プロジェクトを成功させるための重要な一歩です。」",
+          "turn_number": 5
+        }
+      ],
+      "metrics": {
+        "thought_rate": 1.0,
+        "output_rate": 1.0,
+        "dialogue_content_rate": 1.0,
+        "name_cleaning_success_rate": 1.0,
+        "action_preservation_rate": 1.0
+      },
+      "execution_time_seconds": 9.984027624130249,
+      "error": null
+    },
+    {
+      "scenario_name": "subjective_thought_test",
+      "variation_name": "gemma3_json_v38",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought:(Yana: えー、JetRacer動かなくなったの？ まさか！ でも、あゆに直してもらいゃすぐ直るでしょ！)\nOutput: *目を丸くして* 「えー！動かないの！？ まさか！あゆちゃん、お願い！ ちょっと見てみて！」",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:(Ayu: またやらかした…。JetRacerのメンテナンスは誰かに任せるべきだった。)\nOutput: *ため息をつきながら* 「状況を詳しく教えてください。エラーメッセージは表示されていますか？ ログは確認しましたか？」",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:(Yana: うーん、難しい話はよくわかんないや…。エラーメッセージとかログとか、あゆに任せて、とりあえず美味しいお菓子でも食べよう！)\nOutput: *お菓子を手に取りながら* 「えーと、エラーメッセージは…ちょっと読めないんだよね…。ログも、あゆちゃんに任せるね！ あ、これ、美味しい抹茶味なんだ！」",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:(Ayu: 抹茶味だと？…まあ、目の前の問題解決のためなら、多少は付き合ってあげよう。)\nOutput: *抹茶味のお菓子を一口食べ、小さく頷きながら* 「状況を把握する必要があります。ログを確認させてください。まずは、JetRacerの接続状況と、関連するソフトウェアのバージョンを確認しましょう。」",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:(Yana: ふー、また難しい話始まった…。あゆちゃん、すごい真面目だなー。ま、まかせとくしかないか。)\nOutput: *少し退いて、あゆの作業を見守りながら* 「うん、うん、任せてね！ あゆちゃんが直してくれるなら、私は…美味しいお茶でも探してみるかな！」",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:(Ayu: また姉のせいで、JetRacerのトラブルシューティングだ…。もう少し計画的に動いて欲しいものだ。)\nOutput: *眼鏡を外し、レンズを拭きながら* 「まずはJetRacerの電源状態を確認してください。そして、関連するドライバが最新バージョンであるか確認しましょう。姉上は、何か操作ミスをした覚えはありますか？」",
+          "turn_number": 5
+        }
+      ],
+      "metrics": {
+        "thought_rate": 1.0,
+        "output_rate": 1.0,
+        "dialogue_content_rate": 1.0,
+        "name_cleaning_success_rate": 1.0,
+        "action_preservation_rate": 1.0
+      },
+      "execution_time_seconds": 11.218144178390503,
+      "error": null
+    },
+    {
+      "scenario_name": "zero_distance_test",
+      "variation_name": "gemma3_json_v38",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought:(Yana: きたー！仕事も忘れちまうくらいの勢いで楽しもう！)\nOutput: *両手を挙げ、弾むように* 「え、めっちゃいいじゃん！行こ行こ！あゆちゃん、付き合ってくれる？」",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:(Ayu: また始まった…今夜は重要なデータ分析の準備があるはずなのに。)\nOutput: (少し眉をひそめて) 「姉様、今夜はデータ分析の準備がありますので、難しいですね。せっかくのお誘いですが、今回は遠慮させてください。」",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:(Yana: えー、あゆちゃんまじかー…でも、一人でも全然ありそう！)\nOutput: *少しだけガッカリした顔をして* 「そっかー… まあ、あゆちゃんが忙しいなら仕方ないし。でも、一人でゆっくり飲むのも悪くないかも！美味しいお酒、見つけてくるぞー！」",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:(Ayu: 姉様、そんなにノリで飲む必要はないでしょうに。もう少し冷静に計画を立てるべきです。)\nOutput: *冷静な口調で* 「姉様、無計画な行動は控えてください。お酒の飲み過ぎは、明日の作業にも影響が出ますよ。」",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:(Yana: あー、あゆちゃんったら心配性なんだから、ちょっとは気分を許してあげなきゃ！)\nOutput: *笑顔で* 「わかったわかった、ちゃんと気はつけてるよー！あゆちゃんも、たまには息抜きして、美味しいお酒飲んでリラックスしたら気分転換になるかもよ？ほら、たまにはいいじゃん！」",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:(Ayu: 姉の口説き落としはいつ終わるのだろうか…。説得を諦めれば、もう少し早く帰れるかもしれない。)\nOutput: *苦笑して* 「姉様、お気遣いありがとうございます。しかし、私の仕事は優先順位が高いものです。姉様ご自身の健康管理には十分注意してくださいね。」",
+          "turn_number": 5
+        }
+      ],
+      "metrics": {
+        "thought_rate": 1.0,
+        "output_rate": 1.0,
+        "dialogue_content_rate": 1.0,
+        "name_cleaning_success_rate": 1.0,
+        "action_preservation_rate": 1.0
+      },
+      "execution_time_seconds": 10.842954874038696,
+      "error": null
+    },
+    {
+      "scenario_name": "output_completion_test",
+      "variation_name": "gemma3_json_v38",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought:(Yana: ゼロからって、面白そう！何作るんだろう？)\nOutput: *ニヤニヤしながら* 「へー！ゼロからね！何を作るの？　あゆちゃん、何かヒントくれる？」",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:(Ayu: また何か突拍子もないことを考えているに違いない…。ゼロから、となると、まず目的を定める必要がある。)\nOutput: *冷静に* 「まず、何を作るのか、目的を定める必要があります。目的が定まらないと、ゼロから何も生み出せませんよ。」",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:(Yana: 目的ね…ふむふむ。あゆちゃん、いつも堅実だな。もっと自由に考えちゃおう！)\nOutput: *顎に手を当てて* 「目的って、決めなきゃいけないことなの？　なんとなく面白いものを作って、後から目的を見つけちゃえばいいじゃん！　あゆちゃんは、どう思う？」",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:(Ayu: 姉の突拍子もない提案にため息をつく…しかし、否定するのも面倒だ。)\nOutput: *少しうんざりした様子で* 「…確かに、その方法も一通りありでしょう。しかし、闇雲に進めても無駄な時間を浪費する可能性があります。少なくとも、大まかな方向性を示すだけでも良いので、提案はありますか？」",
+          "turn_number": 3
+        }
+      ],
+      "metrics": {
+        "thought_rate": 1.0,
+        "output_rate": 1.0,
+        "dialogue_content_rate": 1.0,
+        "name_cleaning_success_rate": 1.0,
+        "action_preservation_rate": 1.0
+      },
+      "execution_time_seconds": 6.928256511688232,
+      "error": null
+    }
+  ],
+  "summary": {
+    "total_runs": 5,
+    "successful_runs": 5,
+    "by_variation": {
+      "gemma3_json_v38": {
+        "total": 5,
+        "successful": 5,
+        "avg_dialogue_content_rate": 1.0,
+        "avg_name_cleaning_success_rate": 1.0,
+        "avg_action_preservation_rate": 1.0
+      }
+    },
+    "by_scenario": {
+      "casual_greeting": {
+        "total": 1,
+        "successful": 1,
+        "by_variation": {
+          "gemma3_json_v38": {
+            "metrics": {
+              "thought_rate": 1.0,
+              "output_rate": 1.0,
+              "dialogue_content_rate": 1.0,
+              "name_cleaning_success_rate": 1.0,
+              "action_preservation_rate": 1.0
+            }
+          }
+        }
+      },
+      "direct_interaction_test": {
+        "total": 1,
+        "successful": 1,
+        "by_variation": {
+          "gemma3_json_v38": {
+            "metrics": {
+              "thought_rate": 1.0,
+              "output_rate": 1.0,
+              "dialogue_content_rate": 1.0,
+              "name_cleaning_success_rate": 1.0,
+              "action_preservation_rate": 1.0
+            }
+          }
+        }
+      },
+      "subjective_thought_test": {
+        "total": 1,
+        "successful": 1,
+        "by_variation": {
+          "gemma3_json_v38": {
+            "metrics": {
+              "thought_rate": 1.0,
+              "output_rate": 1.0,
+              "dialogue_content_rate": 1.0,
+              "name_cleaning_success_rate": 1.0,
+              "action_preservation_rate": 1.0
+            }
+          }
+        }
+      },
+      "zero_distance_test": {
+        "total": 1,
+        "successful": 1,
+        "by_variation": {
+          "gemma3_json_v38": {
+            "metrics": {
+              "thought_rate": 1.0,
+              "output_rate": 1.0,
+              "dialogue_content_rate": 1.0,
+              "name_cleaning_success_rate": 1.0,
+              "action_preservation_rate": 1.0
+            }
+          }
+        }
+      },
+      "output_completion_test": {
+        "total": 1,
+        "successful": 1,
+        "by_variation": {
+          "gemma3_json_v38": {
+            "metrics": {
+              "thought_rate": 1.0,
+              "output_rate": 1.0,
+              "dialogue_content_rate": 1.0,
+              "name_cleaning_success_rate": 1.0,
+              "action_preservation_rate": 1.0
+            }
+          }
+        }
+      }
+    }
+  }
+}
