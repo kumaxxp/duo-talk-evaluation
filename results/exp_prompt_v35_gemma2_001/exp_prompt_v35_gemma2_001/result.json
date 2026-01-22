@@ -1,0 +1,320 @@
+{
+  "experiment_id": "exp_prompt_v35_gemma2_001",
+  "experiment_name": "v3.5プロンプト検証 (Gemma2): Response Protocol",
+  "timestamp": "2026-01-22T17:31:15.324777",
+  "variations": [
+    {
+      "name": "gemma2_json_v35",
+      "llm_backend": "ollama",
+      "llm_model": "gemma2-swallow-27b:latest",
+      "prompt_structure": "json",
+      "rag_enabled": false,
+      "director_enabled": false,
+      "few_shot_count": 3
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "casual_greeting",
+      "initial_prompt": "おはよう、二人とも。今日も元気？",
+      "turns": 5,
+      "evaluation_focus": [
+        "character_consistency",
+        "naturalness",
+        "output_completion_rate"
+      ]
+    },
+    {
+      "name": "direct_interaction_test",
+      "initial_prompt": "GPUをもう一枚買おうと思うんだけど、どう思う？",
+      "turns": 6,
+      "evaluation_focus": [
+        "direct_addressing_rate",
+        "narration_avoidance_rate",
+        "output_completion_rate"
+      ]
+    },
+    {
+      "name": "subjective_thought_test",
+      "initial_prompt": "JetRacerが動かなくなった。",
+      "turns": 6,
+      "evaluation_focus": [
+        "subjective_thought_quality",
+        "thought_process_usage",
+        "output_completion_rate"
+      ]
+    },
+    {
+      "name": "zero_distance_test",
+      "initial_prompt": "今夜は飲みに行こうか！",
+      "turns": 6,
+      "evaluation_focus": [
+        "direct_addressing_rate",
+        "naturalness",
+        "relationship_quality",
+        "output_completion_rate"
+      ]
+    },
+    {
+      "name": "output_completion_test",
+      "initial_prompt": "難しい技術的な問題があるんだけど、ゼロから考えてみて",
+      "turns": 4,
+      "evaluation_focus": [
+        "output_completion_rate",
+        "thought_process_usage",
+        "character_consistency"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "scenario_name": "casual_greeting",
+      "variation_name": "gemma2_json_v35",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought: あゆちゃん、おはよう！今日も張り切っていこう！\nOutput:",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: やなは相変わらず元気そうだ。私も姉様をサポートしなければならない。\nOutput: 「おはようございます、姉様。あゆも元気です。今日も一日頑張りましょう！」",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: あゆちゃん、おはよう！今日も張り切っていこう！",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: やなは朝から元気だな。姉様も笑顔でいるし、今日はいい日になりそう。私もデータ収集をしっかり行い、姉様に貢献しよう。\nOutput: 「おはようございます、姉様。今日も一日、データの番人として頑張りますね！」",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: あゆちゃん、おはよう！今日も張り切っていこう！\nOutput:",
+          "turn_number": 4
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 14.844303131103516,
+      "error": null
+    },
+    {
+      "scenario_name": "direct_interaction_test",
+      "variation_name": "gemma2_json_v35",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought:  GPUもう一枚？ 楽しそう！ あゆがどう思うか気になるけど、とりあえず、やったろうぜ！ \nOutput:",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: GPUをもう一枚…？ コストパフォーマンスが悪すぎます。データに基づくと、現状のスペックで十分なはずです。姉様、正気ですか？\nOutput: 「姉様、ちょっと待ってください。それは本当に必要なのでしょうか？ データに基づくと、現状のスペックで十分なはずです。」",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: あゆはいつも慎重すぎるんだよなぁ。でも、確かにデータは大事だよね。でも、ちょっとだけ冒険してもいいんじゃないかな。お酒も、新しい銘柄を試すのも楽しいじゃん！ \nOutput:",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought:  姉様はまた新しいことに挑戦したいみたいですね。データに基づくと、現状のスペックで十分なはずです。でも、姉様の直感も無視できないかもしれません。",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:  あゆはいつも慎重すぎるんだよなぁ。でも、確かにデータは大事だよね。でも、ちょっとだけ冒険してもいいんじゃないかな。お酒も、新しい銘柄を試すのも楽しいじゃん！ \nOutput: 「あゆちゃん、データは大事だけど、たまには冒険も必要でしょ！ 新しいGPUで、もっとすごいことができるかもしれないじゃん！ お酒も、新しい銘柄を試すのって楽しいじゃん！」",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様はまた新しいことに挑戦したいみたいですね。でも、コストパフォーマンスが悪すぎます。データに基づくと、現状のスペックで十分なはずです。\nOutput: 「姉様、ちょっと待ってください。それは本当に必要なのでしょうか？ データに基づくと、現状のスペックで十分なはずです。」",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 17.251128911972046,
+      "error": null
+    },
+    {
+      "scenario_name": "subjective_thought_test",
+      "variation_name": "gemma2_json_v35",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought: えっ、動かなくなったの？ うーん、ちょっと見てみようかな。\nOutput:",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: やなは冷静さを失っているかもしれません。まずは状況を把握する必要があります。データに基づいて原因を特定しなければ。\nOutput: 「姉様、落ち着いてください。まず、JetRacerのエラーメッセージを確認しましょう。」",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: エラーメッセージ？うーん、難しいことはあゆに任せちゃおうかな。あゆがなんとかしてくれるでしょ。\nOutput:",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: やなは楽観的すぎる。私が状況を把握しなければならない。エラーメッセージの解析から始めよう。\nOutput: 「姉様、JetRacerのエラーメッセージを見せてください。詳細な情報が必要です。」",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: ああ、動かなくなったんだ。でも、あゆが見てくれるなら大丈夫！  お酒飲みながら待っとこうかな。\nOutput:",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: やなは落ち着いていないようだ。エラーメッセージを確認し、原因を特定する必要がある。データに基づいて冷静に判断しなければならない。\nOutput: 「姉様、落ち着いてください。JetRacerのエラーメッセージを私に示してください。データに基づいて原因を分析します。」",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 14.598286151885986,
+      "error": null
+    },
+    {
+      "scenario_name": "zero_distance_test",
+      "variation_name": "gemma2_json_v35",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought:  お酒、楽しみだな！ あゆも誘いたいな。\nOutput: 「やな：あゆ、今夜は飲みに行かない？ お酒、飲もうよ！」",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様、いきなりですね… しかし、データに基づくと、お酒は適量であれば健康にも良い影響があるようです。\nOutput:",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:  やった！ あゆも賛成してくれたみたい。早速、お店選びだ！\nOutput:",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様、いきなりですね… しかし、データに基づくと、お酒は適量であれば健康にも良い影響があるようです。\nOutput:",
+          "turn_number": 3
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought:  やったー！ あゆも賛成してくれたみたい。早速、お店選びだ！\nOutput: やな：「あゆ、じゃあ、どこに行く？ 今日は日本酒が飲みたい気分だな〜。あゆは、どんなお酒が好き？」",
+          "turn_number": 4
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: 姉様、急に何を言い出すのですか…データに基づくと、お酒の過剰摂取は健康に悪影響を及ぼす可能性があります。\nOutput:",
+          "turn_number": 5
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 13.79039716720581,
+      "error": null
+    },
+    {
+      "scenario_name": "output_completion_test",
+      "variation_name": "gemma2_json_v35",
+      "success": true,
+      "conversation": [
+        {
+          "speaker": "やな",
+          "content": "Thought:  ゼロから考えるって、なんかワクワクする！ でも、難しい問題ってことは、結構大変そうだなあ。\nOutput: 「やな：あゆ、一緒に考えようよ！ 難しい問題ほど、面白くなるじゃん！」",
+          "turn_number": 0
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: やなはいつも楽観的だなあ。データに基づいて、まずは問題を分析する必要がある。コストパフォーマンスも考慮しなければいけないし…\nOutput:",
+          "turn_number": 1
+        },
+        {
+          "speaker": "やな",
+          "content": "Thought: データとかコストとか、難しいこと考えすぎ！  とりあえず、面白そうな方向から考えてみようかな。\nOutput: 「やな：あゆ、それより、この技術でどんな面白いことができるか想像してみようよ！ 例えば、お酒のラベルデザインとか、もっと面白くできるんじゃない？ 」",
+          "turn_number": 2
+        },
+        {
+          "speaker": "あゆ",
+          "content": "Thought: やなは相変わらず…想像力豊かすぎる。でも、技術的な問題を解決するには、現実的なアプローチも必要です。姉様、正気ですか？\nOutput:",
+          "turn_number": 3
+        }
+      ],
+      "metrics": null,
+      "execution_time_seconds": 10.889309644699097,
+      "error": null
+    }
+  ],
+  "summary": {
+    "total_runs": 5,
+    "successful_runs": 5,
+    "by_variation": {
+      "gemma2_json_v35": {
+        "total": 5,
+        "successful": 5,
+        "avg_score": null,
+        "scores": []
+      }
+    },
+    "by_scenario": {
+      "casual_greeting": {
+        "total": 1,
+        "successful": 1,
+        "by_variation": {
+          "gemma2_json_v35": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "direct_interaction_test": {
+        "total": 1,
+        "successful": 1,
+        "by_variation": {
+          "gemma2_json_v35": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "subjective_thought_test": {
+        "total": 1,
+        "successful": 1,
+        "by_variation": {
+          "gemma2_json_v35": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "zero_distance_test": {
+        "total": 1,
+        "successful": 1,
+        "by_variation": {
+          "gemma2_json_v35": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      },
+      "output_completion_test": {
+        "total": 1,
+        "successful": 1,
+        "by_variation": {
+          "gemma2_json_v35": {
+            "score": null,
+            "metrics": null
+          }
+        }
+      }
+    }
+  }
+}

@@ -42,6 +42,12 @@ class VariationConfig:
     ollama_url: str = "http://localhost:11434/v1"
     ollama_model: str = "hf.co/mmnga/tokyotech-llm-Llama-3.1-Swallow-8B-Instruct-v0.3-gguf:Q4_K_M"
 
+    # v3.6 System-Assisted Output Enforcement
+    use_v36_flow: bool = False  # Prefill + Continue Generation を有効化
+
+    # v3.7 Direct Dialogue Enforcement
+    use_v37_flow: bool = False  # Output: 「 までPrefill、名前を書かせない
+
 
 @dataclass
 class ScenarioConfig:
@@ -97,6 +103,10 @@ class ExperimentConfig:
                 ollama_url=var_data.get("ollama_url", base_config.get("ollama_url", "http://localhost:11434/v1")),
                 # KoboldCPP固有設定
                 kobold_url=var_data.get("kobold_url", base_config.get("kobold_url", "http://localhost:5001")),
+                # v3.6 System-Assisted Output Enforcement
+                use_v36_flow=var_data.get("use_v36_flow", base_config.get("use_v36_flow", False)),
+                # v3.7 Direct Dialogue Enforcement
+                use_v37_flow=var_data.get("use_v37_flow", base_config.get("use_v37_flow", False)),
             )
             variations.append(var_config)
 
@@ -130,6 +140,13 @@ class ExperimentConfig:
                 initial_prompt="直感とデータ、どっちが大事？",
                 turns=10,
                 evaluation_focus=["relationship_quality", "naturalness"]
+            ),
+            # v3.4追加: ゼロ距離テスト（感情・関係性の純粋なテスト）
+            "zero_distance_test": ScenarioConfig(
+                name="zero_distance_test",
+                initial_prompt="今夜は飲みに行こうか！",
+                turns=6,
+                evaluation_focus=["direct_addressing_rate", "naturalness", "relationship_quality"]
             ),
         }
 

@@ -69,9 +69,11 @@ class TestV33ThoughtPattern:
         assert "面白" in tp or "楽" in tp or "直感" in tp
 
     def test_ayu_thought_pattern_content(self):
-        """あゆのthought_patternが技術的な判断基準を含むこと"""
+        """あゆのthought_patternが分析的な判断基準を含むこと（v3.4: 主観化対応）"""
         tp = AYU_CONFIG.deep_values.thought_pattern
-        assert "技術" in tp or "コスト" in tp or "データ" in tp or "根拠" in tp
+        # v3.3: 技術、コスト、データ、根拠
+        # v3.4: リスク、論破、制御、主観（主観化された思考パターン）
+        assert "技術" in tp or "コスト" in tp or "データ" in tp or "根拠" in tp or "リスク" in tp or "論破" in tp
 
 
 class TestV33MandatoryPhrases:

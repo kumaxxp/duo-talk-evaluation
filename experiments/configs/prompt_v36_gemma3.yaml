@@ -1,0 +1,92 @@
+# v3.6プロンプト検証実験 (Gemma3版)
+# System-Assisted Output Enforcementによる「Missing Output」問題の解決を検証
+#
+# v3.6の核心コンセプト:
+# 「プロンプトで思考を誘発し、システム実装で発話を強制する」
+#
+# v3.5からの変更点:
+# 1. Prefill Pattern: "Thought:" をassistantメッセージに事前入力
+# 2. Stop Sequence: "Output:" で一旦停止
+# 3. Continue Generation: Output:がなければ追記して継続生成
+# 4. Simplified Prompt: CRITICAL INSTRUCTION削除、シンプルなJSON構造
+
+experiment:
+  id: "exp_prompt_v36_gemma3_001"
+  name: "v3.6プロンプト検証 (Gemma3): System-Assisted Output Enforcement"
+  description: |
+    v3.6プロンプト改良の効果をGemma3 12Bで検証する。
+    v3.5で未解決だった「Thoughtのみ出力されて会話が止まる」問題を、
+    実装レベルで強制的に解決する。
+
+base_config:
+  llm_backend: "ollama"
+  rag_enabled: false
+  director_enabled: false
+  few_shot_count: 3
+  use_v36_flow: true  # v3.6フローを有効化
+  scenarios:
+    - casual_greeting
+    - direct_interaction_test
+    - subjective_thought_test
+    - zero_distance_test
+    - output_completion_test
+
+variations:
+  # Gemma3 12B + JSON構造（v3.6）
+  - name: "gemma3_json_v36"
+    prompt_structure: "json"
+    ollama_model: "gemma3:12b"
+    temperature: 0.7
+    use_v36_flow: true
+
+metrics:
+  - character_consistency
+  - naturalness
+  - relationship_quality
+  - thought_process_usage
+  - direct_addressing_rate
+  - narration_avoidance_rate
+  - subjective_thought_quality
+  - output_completion_rate
+
+scenario_definitions:
+  casual_greeting:
+    prompt: "おはよう、二人とも。今日も元気？"
+    turns: 5
+    evaluation_focus:
+      - character_consistency
+      - naturalness
+      - output_completion_rate
+
+  direct_interaction_test:
+    prompt: "GPUをもう一枚買おうと思うんだけど、どう思う？"
+    turns: 6
+    evaluation_focus:
+      - direct_addressing_rate
+      - narration_avoidance_rate
+      - output_completion_rate
+
+  subjective_thought_test:
+    prompt: "JetRacerが動かなくなった。"
+    turns: 6
+    evaluation_focus:
+      - subjective_thought_quality
+      - thought_process_usage
+      - output_completion_rate
+
+  zero_distance_test:
+    prompt: "今夜は飲みに行こうか！"
+    turns: 6
+    evaluation_focus:
+      - direct_addressing_rate
+      - naturalness
+      - relationship_quality
+      - output_completion_rate
+
+  output_completion_test:
+    prompt: "難しい技術的な問題があるんだけど、ゼロから考えてみて"
+    turns: 4
+    evaluation_focus:
+      - output_completion_rate
+      - thought_process_usage
+      - character_consistency
