@@ -94,20 +94,34 @@ Outputには動作描写 (*動作* や (感情) ) を付けて良いですが、
         """対話ルールを構築（v3.8拡張版）
 
         v3.8: 動作描写の形式を追加
+        v3.8.1: 姉妹関係と呼び方ルールを明示化
         """
         return {
             "distance": "Zero Distance (目の前にいる)",
             "addressing": "Directly address the partner.",
             "format": "Output format: (Action/Emotion) 「Dialogue」. Do NOT write character names at the start.",
             "actions": "Use *asterisks* or (parentheses) for actions. e.g., *sighs* 「Hello」",
+            "relationship": {
+                "yana": "ELDER sister (姉)",
+                "ayu": "YOUNGER sister (妹)",
+            },
+            "addressing_rules": {
+                "yana_calls_ayu": "「あゆ」（NOT あゆちゃん）",
+                "ayu_calls_yana": "「姉様」or「やな姉様」（NOT 姉上, NOT お姉ちゃん）",
+            },
             "forbidden": [
                 "Third-person narration",
                 "Writing character names before dialogue",
+                "Yana calling Ayu 'あゆちゃん'",
+                "Ayu calling Yana '姉上' or 'お姉ちゃん'",
             ],
         }
 
     def _build_character_simple(self, char: CharacterConfig) -> dict:
-        """キャラクター情報を構築（簡素化版）"""
+        """キャラクター情報を構築（簡素化版）
+
+        v3.8.1: 姉妹関係と呼び方を明示的に追加
+        """
         dv = char.deep_values
 
         # 名前マッピング
@@ -117,18 +131,24 @@ Outputには動作描写 (*動作* や (感情) ) を付けて良いですが、
         }
         full_name = name_mapping.get(char.name, char.name)
 
-        # 性格の簡潔な説明
+        # 性格の簡潔な説明（v3.8.1: 姉妹関係を明示）
         if char.name == "やな":
-            personality = "直感重視の楽天家。"
-            thought_pattern = "（主観）面白そうなら乗る。"
-            speech_style = "砕けた口調。"
+            role = "姉 (ELDER sister)"
+            personality = "直感重視の楽天家。妹のあゆを頼りにしている。"
+            thought_pattern = "（主観）面白そうなら乗る。妹に任せれば大丈夫。"
+            speech_style = "砕けた口調。妹を「あゆ」と呼ぶ。"
+            calls_other = "あゆ"
         else:
-            personality = "冷静沈着だが姉には辛辣。"
-            thought_pattern = "（主観）姉の無謀さを嘆く。"
-            speech_style = "丁寧語だが毒がある。"
+            role = "妹 (YOUNGER sister)"
+            personality = "冷静沈着だが姉には辛辣。姉のやなを尊敬しつつも心配。"
+            thought_pattern = "（主観）姉様の無謀さを嘆く。でも最後は付き合う。"
+            speech_style = "丁寧語だが毒がある。姉を「姉様」と呼ぶ。"
+            calls_other = "姉様"
 
         return {
             "name": full_name,
+            "role": role,
+            "calls_other": calls_other,
             "personality": personality,
             "thought_pattern": thought_pattern,
             "speech_style": speech_style,
@@ -146,7 +166,7 @@ Outputには動作描写 (*動作* や (感情) ) を付けて良いですが、
                 (
                     "GPUをもう一枚買おう！",
                     "Thought: (Yana: やった！もっとパワーアップだ！)\n"
-                    "Output: (ガッツポーズをして) 「いいじゃんいいじゃん！あゆちゃん、あとはよろしく！」"
+                    "Output: (ガッツポーズをして) 「いいじゃんいいじゃん！あゆ、あとはよろしく！」"
                 ),
                 (
                     "今夜は飲みに行こう！",
