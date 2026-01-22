@@ -4,12 +4,45 @@
 AI姉妹キャラクター「やな」と「あゆ」の対話品質評価システム。
 **Phase 0: 評価基盤** として、既存3プロジェクトの定量評価を担当。
 
-## Current State (2026-01-21)
+## Current State (2026-01-23)
 - **Gemini API連携**: ✅ 正常動作（gemini-2.5-flash）
 - **ローカルLLM評価器**: ✅ LocalLLMEvaluator実装済み
 - **テスト**: ✅ 37/37 passed
 - **SystemAdapter**: ✅ 3アダプタ実装完了
 - **3プロジェクト比較**: ✅ compare_systems.py完成
+- **Director A/Bテスト**: ✅ 実験完了、レポート生成済み
+
+## Git管理方針
+
+**重要**: このプロジェクトは独自のgitリポジトリを持ちます。
+
+### ローカルリポジトリ
+- **場所**: `/home/owner/work/duo-talk-ecosystem/duo-talk-evaluation/`
+- **ブランチ**: `main`
+
+### コミットルール
+1. **コミットメッセージは日本語で記述**
+2. Conventional Commits形式を使用:
+   - `feat:` 新機能
+   - `fix:` バグ修正
+   - `refactor:` リファクタリング
+   - `test:` テスト追加/修正
+   - `docs:` ドキュメント
+   - `experiment:` 実験追加/結果
+3. 作業終了時は必ずコミット
+
+### GitHubリポジトリ設定手順
+```bash
+# 1. GitHubでリポジトリを作成（Web UIまたはgh CLI）
+# リポジトリ名: duo-talk-evaluation
+
+# 2. リモート追加
+cd /home/owner/work/duo-talk-ecosystem/duo-talk-evaluation
+git remote add origin git@github.com:<username>/duo-talk-evaluation.git
+
+# 3. プッシュ
+git push -u origin main
+```
 
 ## Microservices Architecture
 
