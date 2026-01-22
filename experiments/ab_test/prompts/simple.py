@@ -72,7 +72,8 @@ class SimplePromptBuilder(PromptBuilder):
 {interaction_rules_section}
 【口調】
 {'敬語ベース: ' if char.speech_register == 'polite' else 'カジュアル: '}{', '.join(char.speech_patterns)}
-
+{self._format_decision_style(char)}
+{self._format_feature_phrases(char)}
 【よく使うフレーズ】
 {self._format_phrases(char)}
 
@@ -138,3 +139,24 @@ class SimplePromptBuilder(PromptBuilder):
             sections.append(f"- {pattern_name}: 「{good_example}」")
 
         return "\n".join(sections)
+
+    def _format_decision_style(self, char: CharacterConfig) -> str:
+        """判断スタイルをフォーマット（v3.0）"""
+        if not char.deep_values:
+            return ""
+
+        dv = char.deep_values
+        lines = ["\n【判断スタイル】"]
+        for style in dv.decision_style:
+            lines.append(f"- {style}")
+        return "\n".join(lines)
+
+    def _format_feature_phrases(self, char: CharacterConfig) -> str:
+        """特徴フレーズをフォーマット（v3.0）"""
+        if not char.feature_phrases:
+            return ""
+
+        lines = ["\n【特徴的なフレーズ - 積極的に使う】"]
+        for phrase in char.feature_phrases:
+            lines.append(f"- 「{phrase}」")
+        return "\n".join(lines)

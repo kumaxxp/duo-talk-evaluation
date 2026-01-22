@@ -35,7 +35,7 @@ class SillyTavernPromptBuilder(PromptBuilder):
 
 # よく使うフレーズ
 {self._format_phrases(char)}
-
+{self._format_feature_phrases(char)}
 # 話し方の例
 {self._format_examples(char)}
 {forbidden_section}"""
@@ -83,3 +83,13 @@ class SillyTavernPromptBuilder(PromptBuilder):
         return f"""
 # 禁止ワード（使用禁止）
 {words_list}"""
+
+    def _format_feature_phrases(self, char: CharacterConfig) -> str:
+        """特徴フレーズをフォーマット（v3.0）"""
+        if not char.feature_phrases:
+            return ""
+
+        lines = ["\n# 特徴的なフレーズ（積極的に使う）"]
+        for phrase in char.feature_phrases:
+            lines.append(f"- 「{phrase}」")
+        return "\n".join(lines)

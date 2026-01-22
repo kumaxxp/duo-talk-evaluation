@@ -1,0 +1,65 @@
+# v3.0プロンプト検証実験
+# DeepValues, SisterRelation, feature_phrasesの効果を検証
+
+experiment:
+  id: "exp_prompt_v3_001"
+  name: "v3.0プロンプト検証: DeepValues + FeaturePhrases効果測定"
+  description: |
+    v3.0プロンプト改良の効果を検証する。
+    - DeepValues（判断スタイル、即断ルール）
+    - SisterRelation（姉妹関係パターン）
+    - feature_phrases（特徴フレーズの明示的定義）
+
+    Phase 0結果（v5）との比較で改善度を測定。
+
+base_config:
+  llm_backend: "ollama"
+  rag_enabled: false          # RAG無効（変数隔離）
+  director_enabled: false     # Director無効（変数隔離）
+  few_shot_count: 3
+  scenarios:
+    - casual_greeting
+    - emotional_support
+    - topic_exploration
+
+variations:
+  # Gemma3 12B + Simple構造（推奨）
+  - name: "gemma3_simple_v3"
+    prompt_structure: "simple"
+    ollama_model: "gemma3:12b"
+    temperature: 0.7
+
+  # Gemma2 Swallow 27B + SillyTavern構造
+  - name: "gemma2_sillytavern_v3"
+    prompt_structure: "sillytavern"
+    ollama_model: "gemma2-swallow-27b:latest"
+    temperature: 0.7
+
+metrics:
+  - naturalness
+  - character_consistency
+  - concreteness
+  - relationship_quality
+  - topic_novelty
+
+scenario_definitions:
+  casual_greeting:
+    prompt: "おはよう、二人とも"
+    turns: 5
+    evaluation_focus:
+      - character_consistency
+      - naturalness
+
+  emotional_support:
+    prompt: "最近疲れてるんだ..."
+    turns: 6
+    evaluation_focus:
+      - relationship_quality
+      - naturalness
+
+  topic_exploration:
+    prompt: "最近のAI技術について話して"
+    turns: 8
+    evaluation_focus:
+      - topic_novelty
+      - concreteness
