@@ -294,7 +294,7 @@ Follow the patterns in `.claude/rules/` and use Gemini API guide in `docs/`.
 
 ## 実験レポート記載要件
 
-実験レポート（`results/*.md`）を作成する際は、以下の情報を必ず含めること。
+実験レポート（`results/*.md`）を作成する際は、以下の情報を**必ず**含めること。
 
 ### 必須セクション
 
@@ -307,9 +307,21 @@ Follow the patterns in `.claude/rules/` and use Gemini API guide in `docs/`.
 | 対応リポジトリ | どのリポジトリを模倣・再現しているか |
 | 固定変数 | 変数隔離のために固定した設定 |
 
-#### 2. プロンプトテンプレート
-- 各プロンプト構造の実際のテンプレート例を掲載
-- 少なくとも1キャラクター分（やな or あゆ）のサンプルを含める
+#### 2. 使用プロンプト（完全版）
+**重要**: テストで使用したプロンプトを**すべて**明記すること。
+
+```markdown
+### システムプロンプト
+[完全なシステムプロンプトをここに掲載]
+
+### Few-shotプロンプト
+[Few-shot例をここに掲載]
+
+### ユーザープロンプト（シナリオ別）
+- casual_greeting: "おはよう、二人とも"
+- topic_exploration: "最近のAI技術について話して"
+- emotional_support: "最近疲れてるんだ..."
+```
 
 #### 3. 共通設定
 | 項目 | 例 |
@@ -320,14 +332,55 @@ Follow the patterns in `.claude/rules/` and use Gemini API guide in `docs/`.
 | Temperature | 数値 |
 | max_tokens | 数値 |
 
-#### 4. 実験の限界
+#### 4. 全会話サンプル（詳細版）
+**重要**: 以下を**すべて**含めること。
+
+1. **思考（Thought）と発言（Output）の両方を明記**
+   ```markdown
+   **やな** (Turn 1):
+   - Thought: [内省内容]
+   - Output: [発言内容]
+   ```
+
+2. **Directorリトライ詳細**（Director有効時）
+   - 不採用になった応答をすべて記録
+   - 不採用理由（DirectorのRETRY理由）を明記
+   ```markdown
+   **不採用応答** (Attempt 1):
+   - Response: [不採用になった応答]
+   - Reason: ToneChecker RETRY - 口調マーカー不足 (score=0)
+
+   **不採用応答** (Attempt 2):
+   - Response: [不採用になった応答]
+   - Reason: FormatChecker RETRY - 応答が長すぎる (10行)
+
+   **採用応答** (Attempt 3):
+   - Response: [最終的に採用された応答]
+   - Status: PASS
+   ```
+
+#### 5. 実験の限界
 - 変数隔離により実際のシステム構成とは異なる点
 - プロンプト構造が模倣版である点
 - API制限やその他の制約
 
-#### 5. 全会話サンプル
-- 実験で生成されたすべての対話サンプルを掲載
-- 各サンプルにスコアと簡単なコメントを付記
+#### 6. 結論と考察
+- 定量的結果のまとめ
+- 定性的評価
+- 推奨事項
 
 ### レポート例
 `results/PHASE0_FINAL_REPORT.md` を参照のこと。
+
+---
+
+## A/Bテストスクリプト要件
+
+`experiments/director_ab_test.py` などのA/Bテストスクリプトは、以下のデータを記録すること：
+
+1. **各ターンのThoughtとOutput**を分離して記録
+2. **Directorリトライ時の不採用応答**をすべて記録
+3. **不採用理由**（DirectorStatus, reason）を記録
+4. **リトライ回数**をターンごとに記録
+
+これらのデータはJSONに保存し、レポート生成時に参照可能にすること。
