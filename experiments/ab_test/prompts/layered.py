@@ -17,12 +17,12 @@ class LayeredPromptBuilder(PromptBuilder):
         char = self.get_character_config(speaker)
         other_char = self.get_character_config("あゆ" if speaker == "やな" else "やな")
 
-        # 禁止ワードの整形
+        # 禁止ワードの整形（全てのワードを含める）
         forbidden_section = ""
         if char.forbidden_words:
             forbidden_section = f"""
 禁止事項:
-{chr(10).join(f'- 「{w}」を使わない' for w in char.forbidden_words[:4])}"""
+{chr(10).join(f'- 「{w}」を使わない' for w in char.forbidden_words)}"""
 
         return f"""<System Prompt is="Sister AI Duo">
 <Absolute Command>

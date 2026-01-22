@@ -17,6 +17,9 @@ class SillyTavernPromptBuilder(PromptBuilder):
         # 敬語/カジュアルの説明
         register_note = "敬語ベースで話す" if char.speech_register == "polite" else "敬語は使わない"
 
+        # 禁止ワードの整形
+        forbidden_section = self._format_forbidden_words(char)
+
         return f"""あなたは「{char.name}」として応答してください。
 
 # キャラクター設定
@@ -34,7 +37,8 @@ class SillyTavernPromptBuilder(PromptBuilder):
 {self._format_phrases(char)}
 
 # 話し方の例
-{self._format_examples(char)}"""
+{self._format_examples(char)}
+{forbidden_section}"""
 
     def build_dialogue_prompt(
         self,
@@ -70,3 +74,12 @@ class SillyTavernPromptBuilder(PromptBuilder):
         """典型的なフレーズをフォーマット"""
         phrases = char.typical_phrases[:3] if char.typical_phrases else char.few_shot_examples[:3]
         return "\n".join(f"- {p}" for p in phrases)
+
+    def _format_forbidden_words(self, char: CharacterConfig) -> str:
+        """禁止ワードをフォーマット"""
+        if not char.forbidden_words:
+            return ""
+        words_list = "\n".join(f"- {w}" for w in char.forbidden_words)
+        return f"""
+# 禁止ワード（使用禁止）
+{words_list}"""

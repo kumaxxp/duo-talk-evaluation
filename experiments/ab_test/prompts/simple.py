@@ -44,10 +44,13 @@ class SimplePromptBuilder(PromptBuilder):
         char = self.get_character_config(speaker)
         constraints = YANA_CONSTRAINTS if speaker == "やな" else AYU_CONSTRAINTS
 
-        # 禁止ワードの整形
+        # 禁止ワードの整形（全てのワードを含める）
         forbidden_section = ""
         if char.forbidden_words:
-            forbidden_section = f"★ 禁止ワード: {', '.join(f'「{w}」' for w in char.forbidden_words[:4])}"
+            forbidden_section = f"★ 禁止ワード: {', '.join(f'「{w}」' for w in char.forbidden_words)}"
+
+        # 対話ルールの整形（あゆ専用）
+        interaction_rules_section = self._format_interaction_rules(char)
 
         return f"""あなたは{char.name}。{char.role}。
 信念: 「{char.core_belief}」
@@ -66,7 +69,7 @@ class SimplePromptBuilder(PromptBuilder):
 【キャラクター専用ルール】
 {constraints}
 {forbidden_section}
-
+{interaction_rules_section}
 【口調】
 {'敬語ベース: ' if char.speech_register == 'polite' else 'カジュアル: '}{', '.join(char.speech_patterns)}
 
@@ -110,3 +113,28 @@ class SimplePromptBuilder(PromptBuilder):
         """典型的なフレーズをフォーマット"""
         phrases = char.typical_phrases[:3] if char.typical_phrases else char.few_shot_examples[:3]
         return "\n".join(f"- {p}" for p in phrases)
+
+    def _format_interaction_rules(self, char: CharacterConfig) -> str:
+        """対話ルールをフォーマット（あゆ専用）"""
+        if not char.interaction_rules:
+            return ""
+
+        rules = char.interaction_rules
+        sections = ["\n【対話ルール（調和的対立）】"]
+
+        # 批判ガイドライン
+        sections.append("＜批判ガイドライン＞")
+        for i, guideline in enumerate(rules.criticism_guidelines, 1):
+            sections.append(f"{i}. {guideline}")
+
+        # NGパターン
+        sections.append("\n＜NGパターン（避けるべき）＞")
+        for pattern_name, bad_example in rules.ng_examples:
+            sections.append(f"- {pattern_name}: 「{bad_example}」")
+
+        # OKパターン
+        sections.append("\n＜OKパターン（推奨）＞")
+        for pattern_name, good_example in rules.ok_examples:
+            sections.append(f"- {pattern_name}: 「{good_example}」")
+
+        return "\n".join(sections)
