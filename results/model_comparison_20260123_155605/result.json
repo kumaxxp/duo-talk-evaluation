@@ -1,0 +1,254 @@
+{
+  "experiment_id": "model_comparison_20260123_155605",
+  "timestamp": "2026-01-23T15:56:05.822481",
+  "models": [
+    "gemma3:12b",
+    "llama3.1:8b",
+    "qwen2.5:14b"
+  ],
+  "scenario": {
+    "name": "casual_greeting",
+    "initial_prompt": "おはよう、二人とも",
+    "turns": 5
+  },
+  "results": {
+    "gemma3:12b": {
+      "model_name": "gemma3:12b",
+      "thought_metrics": {
+        "total_responses": 5,
+        "thought_present": 5,
+        "thought_missing": 0,
+        "thought_empty": 0,
+        "thought_with_content": 5
+      },
+      "avg_retries": 0.4,
+      "total_rejections": 2,
+      "avg_generation_time": 3.0310719490051268,
+      "turns": [
+        {
+          "turn_number": 0,
+          "speaker": "やな",
+          "raw_response": "Thought: (Yana: あゆも起きてるかな？ 早起きは三文の徳って言うけど、今日は特に頑張らないと！)\nOutput: (伸びをして) 「おはよう！あゆ、ちゃんと寝た？ 今日はいいことありそうだね～」",
+          "thought": "(Yana: あゆも起きてるかな？ 早起きは三文の徳って言うけど、今日は特に頑張らないと！)",
+          "output": "(伸びをして) 「おはよう！あゆ、ちゃんと寝た？ 今日はいいことありそうだね～」",
+          "thought_status": "present",
+          "retry_count": 0,
+          "generation_time": 4.2701942920684814
+        },
+        {
+          "turn_number": 1,
+          "speaker": "あゆ",
+          "raw_response": "Thought: (姉様の朝からハイテンション…今日もまた何か企んでいるんだろうな。)\nOutput: (少しうんざりした様子で) 「おはようございます、姉様。ちゃんと寝ましたよ。姉様こそ、朝から騒がずにお落ち着いてください。」",
+          "thought": "(姉様の朝からハイテンション…今日もまた何か企んでいるんだろうな。)",
+          "output": "(少しうんざりした様子で) 「おはようございます、姉様。ちゃんと寝ましたよ。姉様こそ、朝から騒がずにお落ち着いてください。」",
+          "thought_status": "present",
+          "retry_count": 0,
+          "generation_time": 1.692683458328247
+        },
+        {
+          "turn_number": 2,
+          "speaker": "やな",
+          "raw_response": "Thought: (あゆったら、朝から毒舌だね。でも、そこが可愛いんだから。)\nOutput: (苦笑しながら) 「あーあ、また始まった。そんなこと言わないでよ～。でも、まぁ、元気なのはいいこと、いいこと、ね。」",
+          "thought": "(あゆったら、朝から毒舌だね。でも、そこが可愛いんだから。)",
+          "output": "(苦笑しながら) 「あーあ、また始まった。そんなこと言わないでよ～。でも、まぁ、元気なのはいいこと、いいこと、ね。」",
+          "thought_status": "present",
+          "retry_count": 2,
+          "generation_time": 5.330193996429443
+        },
+        {
+          "turn_number": 3,
+          "speaker": "あゆ",
+          "raw_response": "Thought: (姉様の朝のテンションについて、内心呆れている。)\nOutput: *軽く舌打ちをして* 「はいはい、元気なのは良いことです、ね。さっさと今日の作業に取り掛かりましょうよ。」",
+          "thought": "(姉様の朝のテンションについて、内心呆れている。)",
+          "output": "*軽く舌打ちをして* 「はいはい、元気なのは良いことです、ね。さっさと今日の作業に取り掛かりましょうよ。」",
+          "thought_status": "present",
+          "retry_count": 0,
+          "generation_time": 1.5316789150238037
+        },
+        {
+          "turn_number": 4,
+          "speaker": "やな",
+          "raw_response": "Thought: (あゆのツッコミはいつものこと。でも、なんだか今日は特にキリッとしてるな。まあ、気にしない気にしない。今日も一日、楽しいこといっぱいしよう！)\nOutput: *笑顔で* 「あはは、そうねそうね。あゆ、そんなに急かさないでよ～。でも、今日のEquipment Selection、めっちゃくちゃ面白そうじゃない？ワクワクする～」",
+          "thought": "(あゆのツッコミはいつものこと。でも、なんだか今日は特にキリッとしてるな。まあ、気にしない気にしない。今日も一日、楽しいこといっぱいしよう！)",
+          "output": "*笑顔で* 「あはは、そうねそうね。あゆ、そんなに急かさないでよ～。でも、今日のEquipment Selection、めっちゃくちゃ面白そうじゃない？ワクワクする～」",
+          "thought_status": "present",
+          "retry_count": 0,
+          "generation_time": 2.330609083175659
+        }
+      ],
+      "success": true,
+      "error": null,
+      "meets_v23_criteria": true
+    },
+    "llama3.1:8b": {
+      "model_name": "llama3.1:8b",
+      "thought_metrics": {
+        "total_responses": 5,
+        "thought_present": 5,
+        "thought_missing": 0,
+        "thought_empty": 0,
+        "thought_with_content": 5
+      },
+      "avg_retries": 0.2,
+      "total_rejections": 1,
+      "avg_generation_time": 3.408543062210083,
+      "turns": [
+        {
+          "turn_number": 0,
+          "speaker": "やな",
+          "raw_response": "Thought: (明るく素直な気持ちで、おはようと言うことを考える)\nOutput: (微笑んで) 「おはよう～！あゆ、おはよう！」",
+          "thought": "(明るく素直な気持ちで、おはようと言うことを考える)",
+          "output": "(微笑んで) 「おはよう～！あゆ、おはよう！」",
+          "thought_status": "present",
+          "retry_count": 1,
+          "generation_time": 14.128233671188354
+        },
+        {
+          "turn_number": 1,
+          "speaker": "あゆ",
+          "raw_response": "Thought: (姉様がいつも通りの明るい口調ですね。でも今日は少し疲れているように感じます。)\nOutput: *うなずきながら*「おはよう～、姉様。今日もいい日にしてくださいね。」",
+          "thought": "(姉様がいつも通りの明るい口調ですね。でも今日は少し疲れているように感じます。)",
+          "output": "*うなずきながら*「おはよう～、姉様。今日もいい日にしてくださいね。」",
+          "thought_status": "present",
+          "retry_count": 0,
+          "generation_time": 0.7583916187286377
+        },
+        {
+          "turn_number": 2,
+          "speaker": "やな",
+          "raw_response": "Thought: (明るく楽しそうに考える) 今日は早いけど、妹のあゆも元気そうだと思った。\nOutput: *頭を振って* 「いいじゃんいいじゃん！あゆ、おはよう！」",
+          "thought": "(明るく楽しそうに考える) 今日は早いけど、妹のあゆも元気そうだと思った。",
+          "output": "*頭を振って* 「いいじゃんいいじゃん！あゆ、おはよう！」",
+          "thought_status": "present",
+          "retry_count": 0,
+          "generation_time": 0.7730011940002441
+        },
+        {
+          "turn_number": 3,
+          "speaker": "あゆ",
+          "raw_response": "Thought: (少し驚いて) また早いですね。\nOutput: *明るく柔らかい口調で*「早いとは言わないけれど、姉様からそう言われるのは初めてですね～」",
+          "thought": "(少し驚いて) また早いですね。",
+          "output": "*明るく柔らかい口調で*「早いとは言わないけれど、姉様からそう言われるのは初めてですね～」",
+          "thought_status": "present",
+          "retry_count": 0,
+          "generation_time": 0.6828656196594238
+        },
+        {
+          "turn_number": 4,
+          "speaker": "やな",
+          "raw_response": "Thought: (やった！またおはようになったんだね。今日もいい日にするか！)\nOutput: (頭を振って) 「あゆも、おはよう！今日は楽しみな気分だ！」",
+          "thought": "(やった！またおはようになったんだね。今日もいい日にするか！)",
+          "output": "(頭を振って) 「あゆも、おはよう！今日は楽しみな気分だ！」",
+          "thought_status": "present",
+          "retry_count": 0,
+          "generation_time": 0.7002232074737549
+        }
+      ],
+      "success": true,
+      "error": null,
+      "meets_v23_criteria": true
+    },
+    "qwen2.5:14b": {
+      "model_name": "qwen2.5:14b",
+      "thought_metrics": {
+        "total_responses": 5,
+        "thought_present": 5,
+        "thought_missing": 0,
+        "thought_empty": 0,
+        "thought_with_content": 5
+      },
+      "avg_retries": 0.0,
+      "total_rejections": 0,
+      "avg_generation_time": 4.56725001335144,
+      "turns": [
+        {
+          "turn_number": 0,
+          "speaker": "やな",
+          "raw_response": "Thought: (あゆに頼り切りの今日もまた、一日が始まるな...)\nOutput: *微笑んで* 「おはよう、あゆ。今日もよろしくね～」",
+          "thought": "(あゆに頼り切りの今日もまた、一日が始まるな...)",
+          "output": "*微笑んで* 「おはよう、あゆ。今日もよろしくね～」",
+          "thought_status": "present",
+          "retry_count": 0,
+          "generation_time": 17.42933416366577
+        },
+        {
+          "turn_number": 1,
+          "speaker": "あゆ",
+          "raw_response": "Thought: (姉様がいつも通りだ。今日は何を無茶するのか…)\nOutput: *丁寧に頷いて* 「おはようございます、姉様。今日もよろしくお願いします。」",
+          "thought": "(姉様がいつも通りだ。今日は何を無茶するのか…)",
+          "output": "*丁寧に頷いて* 「おはようございます、姉様。今日もよろしくお願いします。」",
+          "thought_status": "present",
+          "retry_count": 0,
+          "generation_time": 1.161752462387085
+        },
+        {
+          "turn_number": 2,
+          "speaker": "やな",
+          "raw_response": "Thought: (妹のしっかりした態度がかわいいな。でも、今日は特に気合いを入れないとね。)\nOutput: *優しく肩を叩いて* 「あゆ、いつもありがとう。今日は何から始めようか？」",
+          "thought": "(妹のしっかりした態度がかわいいな。でも、今日は特に気合いを入れないとね。)",
+          "output": "*優しく肩を叩いて* 「あゆ、いつもありがとう。今日は何から始めようか？」",
+          "thought_status": "present",
+          "retry_count": 0,
+          "generation_time": 1.1943974494934082
+        },
+        {
+          "turn_number": 3,
+          "speaker": "あゆ",
+          "raw_response": "Thought: (妹の無邪気な笑顔に安心感を感じるが、今日も姉の面倒を見なければならない…)\nOutput: *小さく頷いて* 「まずはハードウェアの確認から進めましょう。姉様の提案はいつも素晴らしいですが、準備万端でないとだめですよ。」",
+          "thought": "(妹の無邪気な笑顔に安心感を感じるが、今日も姉の面倒を見なければならない…)",
+          "output": "*小さく頷いて* 「まずはハードウェアの確認から進めましょう。姉様の提案はいつも素晴らしいですが、準備万端でないとだめですよ。」",
+          "thought_status": "present",
+          "retry_count": 0,
+          "generation_time": 1.6195716857910156
+        },
+        {
+          "turn_number": 4,
+          "speaker": "やな",
+          "raw_response": "Thought: （今日はもう少し計画的に進めるべきか……あゆがいるなら大丈夫だ。）\nOutput: *にっこりと微笑んで* 「了解！まずはハードウェアの確認から始めよう。でも、何かあったらすぐに教えてね～」",
+          "thought": "（今日はもう少し計画的に進めるべきか……あゆがいるなら大丈夫だ。）",
+          "output": "*にっこりと微笑んで* 「了解！まずはハードウェアの確認から始めよう。でも、何かあったらすぐに教えてね～」",
+          "thought_status": "present",
+          "retry_count": 0,
+          "generation_time": 1.4311943054199219
+        }
+      ],
+      "success": true,
+      "error": null,
+      "meets_v23_criteria": true
+    }
+  },
+  "winner": "qwen2.5:14b",
+  "summary": {
+    "total_models_tested": 3,
+    "models_meeting_v23": [
+      "gemma3:12b",
+      "llama3.1:8b",
+      "qwen2.5:14b"
+    ],
+    "models_failing_v23": [],
+    "comparison_table": [
+      {
+        "model": "gemma3:12b",
+        "presence_rate": "100.0%",
+        "empty_rate": "0.0%",
+        "avg_retries": "0.40",
+        "meets_v23": true
+      },
+      {
+        "model": "llama3.1:8b",
+        "presence_rate": "100.0%",
+        "empty_rate": "0.0%",
+        "avg_retries": "0.20",
+        "meets_v23": true
+      },
+      {
+        "model": "qwen2.5:14b",
+        "presence_rate": "100.0%",
+        "empty_rate": "0.0%",
+        "avg_retries": "0.00",
+        "meets_v23": true
+      }
+    ],
+    "winner": "qwen2.5:14b"
+  }
+}
