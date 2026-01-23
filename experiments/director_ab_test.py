@@ -220,15 +220,26 @@ class DirectorABTest:
 
             # Setup evaluator (optional)
             try:
-                from evaluation.local_evaluator import LocalLLMEvaluator
-                evaluator = LocalLLMEvaluator()
-                if evaluator.is_available():
-                    self.evaluator = evaluator
-                    print("✓ Evaluator available (KoboldCPP)")
+                # Try Ollama evaluator first (matches our backend)
+                if self.backend == "ollama":
+                    from evaluation.ollama_evaluator import OllamaEvaluator
+                    evaluator = OllamaEvaluator(model=self.model)
+                    if evaluator.is_available():
+                        self.evaluator = evaluator
+                        print(f"✓ Evaluator available (Ollama / {self.model})")
+                    else:
+                        print("⚠ Ollama evaluator not available, skipping metrics")
                 else:
-                    print("⚠ Evaluator not available, skipping metrics")
-            except ImportError:
-                print("⚠ LocalLLMEvaluator not found, skipping metrics")
+                    # Fall back to KoboldCPP evaluator
+                    from evaluation.local_evaluator import LocalLLMEvaluator
+                    evaluator = LocalLLMEvaluator()
+                    if evaluator.is_available():
+                        self.evaluator = evaluator
+                        print("✓ Evaluator available (KoboldCPP)")
+                    else:
+                        print("⚠ KoboldCPP evaluator not available, skipping metrics")
+            except ImportError as e:
+                print(f"⚠ Evaluator not found: {e}, skipping metrics")
 
             # Check backend availability
             manager = self.create_dialogue_manager(
