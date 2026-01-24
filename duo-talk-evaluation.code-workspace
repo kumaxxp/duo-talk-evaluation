@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"name": "duo-talk-evaluation",
+			"path": "."
+		},
+		{
+			"path": "../duo-talk-core"
+		},
+		{
+			"path": "../duo-talk-director"
+		}
+	],
+	"settings": {}
+}
