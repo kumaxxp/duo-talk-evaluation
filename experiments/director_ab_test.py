@@ -416,6 +416,14 @@ class DirectorABTest:
         print("Director A/B Test (Detailed Logging)")
         print("=" * 60)
 
+        # Log execution parameters for debugging/reproducibility
+        git_hash = self._get_git_hash()
+        preset_name = "phase32" if self.scenarios == self.PRESET_PHASE32 else "standard"
+        print(f"Git Hash: {git_hash}")
+        print(f"Preset: {preset_name} ({len(self.scenarios)} scenarios)")
+        print(f"Runs per scenario: {self.runs_per_scenario}")
+        print(f"Backend: {self.backend} / {self.model}")
+
         # Determine conditions based on mode
         if self.ab_mode:
             # AB mode: Compare RAG observe-only vs RAG inject
@@ -740,13 +748,28 @@ class DirectorABTest:
 
         print(f"\n✓ Results saved to {exp_dir}/")
 
+    def _get_git_hash(self) -> str:
+        """Get current git commit hash for reproducibility"""
+        import subprocess
+        try:
+            result = subprocess.run(
+                ["git", "rev-parse", "--short", "HEAD"],
+                capture_output=True, text=True, timeout=5
+            )
+            return result.stdout.strip() if result.returncode == 0 else "unknown"
+        except Exception:
+            return "unknown"
+
     def _generate_report(self, result: ExperimentResult) -> str:
         """Generate detailed markdown report"""
+        git_hash = self._get_git_hash()
+
         lines = [
             "# Director A/B Test Report",
             "",
             f"**Experiment ID**: {result.experiment_id}",
             f"**Timestamp**: {result.timestamp}",
+            f"**Git Hash**: {git_hash}",
             "",
             "---",
             "",
@@ -757,9 +780,22 @@ class DirectorABTest:
             f"| バックエンド | {self.backend} |",
             f"| LLM | {self.model} |",
             f"| プロンプト構造 | Layered (v3.8.1) |",
-            f"| RAG観察 | {'有効' if self.rag_enabled else '無効'} |",
-            f"| RAG注入 | {'有効' if self.inject_enabled else '無効'} |",
-            f"| ABモード | {'有効' if self.ab_mode else '無効'} |",
+        ]
+
+        # ABモードの場合は条件別設定を表示
+        if self.ab_mode:
+            lines.extend([
+                "| モード | A/B比較 (observe vs inject) |",
+                "| A条件 | RAG観察のみ (inject_enabled=False) |",
+                "| B条件 | RAG注入有効 (inject_enabled=True) |",
+            ])
+        else:
+            lines.extend([
+                f"| RAG観察 | {'有効' if self.rag_enabled else '無効'} |",
+                f"| RAG注入 | {'有効' if self.inject_enabled else '無効'} |",
+            ])
+
+        lines.extend([
             f"| Temperature | 0.7 |",
             f"| max_tokens | 300 |",
             f"| max_retries | 3 |",
@@ -774,7 +810,7 @@ class DirectorABTest:
             "### システムプロンプト（サンプル：やな）",
             "",
             "```",
-        ]
+        ])
 
         if result.prompts.get("system_prompt_sample"):
             lines.append(result.prompts["system_prompt_sample"])
