@@ -146,11 +146,12 @@ class BenchmarkResult:
     scenarios_run: list[str]
     results: list[ScenarioResult] = field(default_factory=list)
     metrics: Optional[BenchmarkMetrics] = None
+    thought_metrics: Optional[dict] = None  # Phase 2.3+: Thought quality metrics
     thresholds_passed: bool = True
     failures: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
-        return {
+        result = {
             "timestamp": self.timestamp,
             "scenarios_run": self.scenarios_run,
             "results": [asdict(r) for r in self.results],
@@ -165,6 +166,9 @@ class BenchmarkResult:
             "thresholds_passed": self.thresholds_passed,
             "failures": self.failures,
         }
+        if self.thought_metrics:
+            result["thought_metrics"] = self.thought_metrics
+        return result
 
 
 # Format validation patterns
@@ -441,6 +445,30 @@ def run_benchmark(
     # Calculate metrics
     result.metrics = calculate_metrics(result.results)
 
+    # Calculate thought metrics (Phase 2.3+)
+    try:
+        from evaluation.thought_metrics import ThoughtMetricsCalculator
+
+        calculator = ThoughtMetricsCalculator()
+        # Convert turn results to thought log entries format
+        thought_entries = []
+        for scenario_result in result.results:
+            for turn in scenario_result.turns:
+                thought_entries.append({
+                    "speaker": turn.speaker,
+                    "thought": turn.thought,
+                    "thought_length": len(turn.thought),
+                    "thought_missing": turn.thought_missing,
+                    "emotion": "NEUTRAL",  # Not available in basic benchmark
+                    "emotion_intensity": 0.0,
+                    "relationship_tone": "NEUTRAL",
+                })
+
+        thought_metrics = calculator.calculate(thought_entries)
+        result.thought_metrics = thought_metrics.to_dict()
+    except ImportError:
+        pass  # Thought metrics not available
+
     # Check thresholds
     result.thresholds_passed, result.failures = check_thresholds(result.metrics)
 
@@ -467,6 +495,16 @@ def print_report(result: BenchmarkResult) -> None:
         print("\n--- Blocked Props Top 5 ---")
         for prop, count in m.blocked_props_top5:
             print(f"  {prop}: {count}")
+
+    # Thought quality metrics (Phase 2.3+)
+    if result.thought_metrics:
+        print("\n--- Thought Quality (Phase 2.3+) ---")
+        tm = result.thought_metrics
+        print(f"Avg Length: {tm.get('avg_length', 0):.1f} chars")
+        print(f"Quality Score: {tm.get('quality_score', 0):.2f}")
+        if tm.get('character_profiles'):
+            for speaker, profile in tm['character_profiles'].items():
+                print(f"  {speaker}: {profile.get('avg_length', 0):.1f} chars, {profile.get('dominant_emotion', 'N/A')}")
 
     print("\n--- Threshold Check ---")
     if result.thresholds_passed:

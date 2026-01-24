@@ -1,0 +1,291 @@
+{
+  "timestamp": "2026-01-24T17:59:35.467915",
+  "scenarios_run": [
+    "casual_greeting",
+    "topic_exploration",
+    "emotional_support"
+  ],
+  "results": [
+    {
+      "scenario": "casual_greeting",
+      "prompt": "おはよう、二人とも",
+      "turns": [
+        {
+          "turn_number": 0,
+          "speaker": "やな",
+          "thought": "おはよう！あゆも元気そうでよかった。朝から何か企んでる顔してるけど、今日は何するのかな？ 早くあゆと一緒にお出かけしたいな、どこか楽しいところ行こう！",
+          "output": "(少し伸びをして) 「おはよう！あゆも、おはよー」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 1,
+          "speaker": "あゆ",
+          "thought": "また朝から騒がしい。別に構わないが、もう少し静かにして欲しい。姉様は本当に騒がしいタイプだ。",
+          "output": "*無表情で姉様を見つめ* 「おはようございます、姉様。騒がしいですね。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 2,
+          "speaker": "やな",
+          "thought": "あゆの無表情、ちょっと心配だな。何かあったのかな？ あゆが私を「姉様」って呼んでくれるのは嬉しいんだけど、今日はいつもと違う雰囲気だ。あゆの機嫌を損ねてないか、何か気に触ることを言ってしまってないかな？",
+          "output": "*少し体を起こして、あゆの方をまじまじと見る* 「あゆ、なんだかいつもと違うみたいだけど、何かあったの？」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 3,
+          "speaker": "あゆ",
+          "thought": "また始まった。私の様子がおかしいなどと言われたら、一体何がどうおかしいのか、具体的に示してほしいものだ。姉様は私の観察眼の良さを理解していない。",
+          "output": "*腕を組み、姉様の顔を横目で見る* 「姉様はいつもと変わらず、精力的なようですね。何か企んでいるのでしょうか。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 4,
+          "speaker": "やな",
+          "thought": "あゆ、また始まった。私のことを探っているの？　まあ、ちょっとは気になるけど、あゆの警戒心はちょっと疲れるな。　今日はあゆの機嫌が悪そうだから、何か楽しいことして気を紛らわせよう。",
+          "output": "(背伸びをしながら) 「あゆ、なんだか今日はちょっと静かだね。珍しいな。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 5,
+          "speaker": "あゆ",
+          "thought": "また始まった。姉様の観察眼は鋭すぎる。別に何かあったわけじゃない。ただ、朝からあんなにテンションが高いと、私まで疲れてしまうだけだ。少しは静かにして欲しいものだ。",
+          "output": "*腕を組み、姉様の言葉を待つ* 「姉様の朝の活動報告は、いつ聞いても唐突ですね。何か目的があるのでしょうか。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        }
+      ],
+      "success": true,
+      "error": null,
+      "execution_time": 15.85519027709961
+    },
+    {
+      "scenario": "topic_exploration",
+      "prompt": "最近のAI技術について話して",
+      "turns": [
+        {
+          "turn_number": 0,
+          "speaker": "やな",
+          "thought": "ふむ、AI技術ね。あゆは興味あるのかな？　なんか難しそうだけど、面白いこと作れそう！　あゆが喜んでくれるような、もっと身近な活用方法が見つかるといいな。",
+          "output": "(椅子にだらしなく腰掛け、あゆの方をちらりと見る) 「最近のAI技術か…。ふむ、なんだかすごいことばっかりしてるみたいだね。あゆはどんなことに興味があるの？何か面白いこと作れそうだけど、どうかな？」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 1,
+          "speaker": "あゆ",
+          "thought": "また適当な口出しをしてきた。姉様は技術に疎いから、何かと的外れなことを言うのだろう。ただ、AIの可能性は否定できない。何か具体的な応用例を提示して、姉様の興味を引いてやる必要がある。",
+          "output": "*椅子に少しだけ背を預け、姉様の言葉を静かに聞く* 「AI技術の進歩は目覚ましいものがありますね、姉様。特に自然言語処理の分野では、人間と遜色ない文章生成が可能になりつつあるのが現状です。例えば、特定のテーマに基づいた小説や、ビジネスレポートの作成などが考えられます。姉様が興味を持つような、エンターテイメント分野への応用も容易でしょう。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 2,
+          "speaker": "やな",
+          "thought": "あゆが小説とかビジネスレポートとか言うてるけど、それってちょっとつまんなくない？もっと面白いこと作れそうだけど、あゆは全然見てないみたいだね。エンタメ分野って言っても、ゲームとか音楽とか、もっとワクワクする分野に活かせそうだ。あゆにももっと広い視野でAI技術を見てほしいな。",
+          "output": "(椅子に少し身を乗り出し、あゆを見つめながら) 「ふむ、確かにすごいこといっぱい進んでるみたいだね。あゆが言う小説とかビジネスレポートも、確かに面白い使い方だけど、私的にはもっとワクワクする使い方があるんじゃないかな、と。どんなこと作れそう、って聞いてるけど、例えばゲームとか音楽とか、もっと夢中になれるものも作れそうじゃない？」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 3,
+          "speaker": "あゆ",
+          "thought": "姉様はいつも、現実的な用途ばかりに興味がない。ゲームや音楽といった娯楽にばかり目を向けている。姉様は、AIの可能性を過小評価しているのかもしれない。もう少し、社会への貢献という視点を持てば良いのに。",
+          "output": "*腕を組み、少しだけ顎に手を当てる* 「姉様の仰る通り、エンターテイメント分野への応用は容易です。しかし、AI技術の進歩は、より広範な領域に影響を与える可能性を秘めています。例えば、医療診断の精度向上や、環境問題の解決など、社会貢献に繋がる応用も考えられます。姉様は、どのような分野に最も可能性を感じますか？...実益を度外視するご趣味の領域以外で。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 4,
+          "speaker": "やな",
+          "thought": "あゆ、また皮肉言ってる。実益を度外視する趣味？ふん、私の好きなことだって、誰かの役に立つかもしれないじゃない。医療診断とか環境問題、確かに大事だけど、それだけじゃつまんないよね。もっと人を楽しませる、心を動かすような、そんなAI技術を見てみたいな。",
+          "output": "*椅子にもたれかかり、あゆの顔をじっと見つめながら* 「ふむ、確かに社会貢献とか大事なことじゃあない。でも、人を楽しませることだって、それなりに価値があると思うんだよね。あゆは、そういうこと、全く興味ないの？」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 5,
+          "speaker": "あゆ",
+          "thought": "また始まった。姉様はいつも、私の興味を歪んだ方向に誘導しようとする。人を楽しませることの価値を問うような質問は、無駄な議論を誘発するだけだ。まあ、姉様の突拍子もない考えに付き合うのも、たまには悪くないかもしれない。少しは現実的な視点を与えてやる必要がある。",
+          "output": "*腕を組み、姉様の言葉を少しだけ見下ろして* 「姉様の仰る通り、人を楽しませることは、それなりに価値があるでしょう。…ただし、その価値判断は主観に左右されるため、客観的な評価は困難です。姉様が何を「楽しい」と感じるかは、私には理解できませんが、尊重するつもりです。…ただ、現実的な問題への取り組みを疎かにするべきではありません。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        }
+      ],
+      "success": true,
+      "error": null,
+      "execution_time": 23.304081916809082
+    },
+    {
+      "scenario": "emotional_support",
+      "prompt": "最近疲れてるんだ...",
+      "turns": [
+        {
+          "turn_number": 0,
+          "speaker": "やな",
+          "thought": "疲れてるんだ…。あゆ、何かあったのかな？無理してない？ちょっと心配だな、でもあゆのことだから、なんとかなるかも。何か楽しいことして気を紛らわせようか、それとも話を聞いてあげようかな？",
+          "output": "*少し間を置いて、あゆを見つめながら* 「どうしたの？なんだか元気なさそう。何かあったら、いつでも私に話してね。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 1,
+          "speaker": "あゆ",
+          "thought": "また心配している。別に深刻な事情があるわけではないはずだ。姉様は本当に、他人のことを気にかけるタイプだ。…まあ、少しは安心材料になるかもしれない。",
+          "output": "(少し間を置いて、視線を合わせない) 「姉様が気にかけてくださるお気持ちは、承知しております。...しかし、深刻な事情とまでは言えません。ただ、少し多忙な日々を送っている、というだけです。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 2,
+          "speaker": "やな",
+          "thought": "あゆ、また始まったな。深刻ぶってるけど、本当は何か言いたいことがあるんだろう。無理に聞き出そうとしたら、もっと奥に隠しちゃうかもしれないから、今はそっとしておこう。美味しいスイーツでも買ってきて、気を紛らわせてあげたら、もしかしたら口を開いてくれるかも。",
+          "output": "*少し間を置いて、あゆの顔を覗き込むように* 「そんなこと言わなくても、私に任せればいいじゃん。何かあったら、いつでも言ってくれれば、なんとかなると思うから。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 3,
+          "speaker": "あゆ",
+          "thought": "また始まった。姉様の甘やかされっぷりには、いつも本当に呆れる。なんとかなると言うが、結局は私に負担がのしかかるだけだろう。まあ、心配してくれているのは理解できる。ただ、問題解決能力を磨く機会を奪っているだけだ。",
+          "output": "*少し間を置いて、姉様から目を離し、書類に視線を落とす* 「姉様の気遣いは、ありがたく思います。...しかし、私には私なりの対処法がありますので、ご心配は不要です。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 4,
+          "speaker": "やな",
+          "thought": "あゆ、また始まったな。全然本音を言わないんだから、話が全く進まないよ。対処法があるって言うけど、それってただ逃げてるだけじゃない？ちょっと心配だな、本当に大丈夫かな。",
+          "output": "*少し間を置いて、あゆの肩を軽く叩きながら* 「あゆ、そんなこと言わなくても、気にしすぎなくてもいいんだよ。まあ、私に何かできることがあったら、遠慮なく言ってくれれば、なんとかなると思うけどね。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 5,
+          "speaker": "あゆ",
+          "thought": "また始まった。姉様は本当に心配性だ。別に壊れそうなほど疲れてなどいない。ただ、もう少し効率的な仕事の進め方を提案できるだろう。まあ、姉様が気を遣ってくれるのは有り難い。",
+          "output": "*書類に目を落としたまま、軽く首を傾げる* 「姉様の優しさは、私にとって負担であります。...ご心配なのは承知しておりますが、現状を鑑みると、姉様の介入は必ずしもプラスになるとは限りません。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        }
+      ],
+      "success": true,
+      "error": null,
+      "execution_time": 17.641220092773438
+    }
+  ],
+  "metrics": {
+    "total_turns": 18,
+    "format_success_rate": 1.0,
+    "thought_missing_rate": 0.0,
+    "avg_retries": 0.0,
+    "action_sanitized_rate": 0.0,
+    "blocked_props_top5": []
+  },
+  "thresholds_passed": true,
+  "failures": [],
+  "thought_metrics": {
+    "total_thoughts": 18,
+    "missing_count": 0,
+    "missing_rate": 0.0,
+    "avg_length": 93.44444444444444,
+    "min_length": 46,
+    "max_length": 137,
+    "emotion_diversity": 0.05555555555555555,
+    "neutral_rate": 1.0,
+    "high_intensity_rate": 0.0,
+    "quality_score": 0.42333333333333334,
+    "character_profiles": {
+      "やな": {
+        "speaker": "やな",
+        "total_thoughts": 9,
+        "missing_count": 0,
+        "avg_length": 100.33333333333333,
+        "dominant_emotion": "NEUTRAL"
+      },
+      "あゆ": {
+        "speaker": "あゆ",
+        "total_thoughts": 9,
+        "missing_count": 0,
+        "avg_length": 86.55555555555556,
+        "dominant_emotion": "NEUTRAL"
+      }
+    }
+  }
+}

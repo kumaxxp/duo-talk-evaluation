@@ -1,0 +1,46 @@
+{
+  "timestamp": "2026-01-24T17:37:50.644976",
+  "scenarios_run": [
+    "casual_greeting",
+    "topic_exploration",
+    "emotional_support"
+  ],
+  "results": [
+    {
+      "scenario": "casual_greeting",
+      "prompt": "おはよう、二人とも",
+      "turns": [],
+      "success": false,
+      "error": "'DialogueManager' object has no attribute 'generate_response'",
+      "execution_time": 0.08792591094970703
+    },
+    {
+      "scenario": "topic_exploration",
+      "prompt": "最近のAI技術について話して",
+      "turns": [],
+      "success": false,
+      "error": "'DialogueManager' object has no attribute 'generate_response'",
+      "execution_time": 0.021243810653686523
+    },
+    {
+      "scenario": "emotional_support",
+      "prompt": "最近疲れてるんだ...",
+      "turns": [],
+      "success": false,
+      "error": "'DialogueManager' object has no attribute 'generate_response'",
+      "execution_time": 0.02107405662536621
+    }
+  ],
+  "metrics": {
+    "total_turns": 0,
+    "format_success_rate": 0.0,
+    "thought_missing_rate": 0.0,
+    "avg_retries": 0.0,
+    "action_sanitized_rate": 0.0,
+    "blocked_props_top5": []
+  },
+  "thresholds_passed": false,
+  "failures": [
+    "format_success_rate: 0.00% < 100%"
+  ]
+}

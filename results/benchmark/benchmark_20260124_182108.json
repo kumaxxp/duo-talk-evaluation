@@ -1,0 +1,302 @@
+{
+  "timestamp": "2026-01-24T18:20:14.421568",
+  "scenarios_run": [
+    "casual_greeting",
+    "topic_exploration",
+    "emotional_support"
+  ],
+  "results": [
+    {
+      "scenario": "casual_greeting",
+      "prompt": "おはよう、二人とも",
+      "turns": [
+        {
+          "turn_number": 0,
+          "speaker": "やな",
+          "thought": "ふーん、おはようって。あゆもいるのかな？早くあゆの声が聞きたいな、何してるんだろう。ちょっとくらい遅れても、あゆが笑顔なら全然いいんだけど。",
+          "output": "(伸びをして)「おはよー。あゆはもう起きてるのかな？」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 1,
+          "speaker": "あゆ",
+          "thought": "また始まった、朝から騒がしい。姉様は本当に朝が弱い。まあ、起こしてあげても仕方ないか。少しは自律してほしいものだ。",
+          "output": "*まぶしい光を避けながら* 「おはようございます、姉様。…朝から騒がしいですね。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 2,
+          "speaker": "やな",
+          "thought": "あゆが「姉様」って呼んでくれるのはやっぱり嬉しいな。でも、朝からそんなに改まった言葉使うのちょっと落ち着かないかも。あゆも疲れてるのかな？今日はあゆがゆっくり過ごせるといいな。",
+          "output": "*少し体を起こしながら* 「あゆ、おはよう。朝からすごい目つきだな？何かあった？」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 3,
+          "speaker": "あゆ",
+          "thought": "姉様は本当に朝が苦手だ。もう少し早く起きて準備しておけば、こんなに慌てることもないだろう。…まあ、私がフォローすればいいか。",
+          "output": "*少し体を起こしながら* 「おはようございます、姉様。…早起きは三文の徳、というわけにはいかないようですね。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 4,
+          "speaker": "やな",
+          "thought": "あゆのツッコミ、今日も鋭いな。朝からそんなこと考えてる時間あるなら、もっとゴロゴロしてれば？でも、あゆが何か面白いこと考えてるのかも。ちょっと覗いてみようかな。",
+          "output": "*少し体を起こしながら* 「あゆ、おはよう。…朝からそんなこと考えてるのか、珍しいね。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 1,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 5,
+          "speaker": "あゆ",
+          "thought": "また始まった。姉様の朝の挨拶は、儀式みたいだ。別に感謝する必要はない。…それに、朝の光は眩しい。もう少し遮光カーテンを厚くすれば、睡眠の質は向上するのに。",
+          "output": "*まぶしそうに目を細め、視線を逸らす* 「おはようございます、姉様。…朝から賑やかなのは、姉様ならではですね。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        }
+      ],
+      "success": true,
+      "error": null,
+      "execution_time": 17.455881118774414
+    },
+    {
+      "scenario": "topic_exploration",
+      "prompt": "最近のAI技術について話して",
+      "turns": [
+        {
+          "turn_number": 0,
+          "speaker": "やな",
+          "thought": "ふむ、AI技術ね。あゆも興味あるかな？　なんか難しそうだけど、面白いこと作れそう！　もっと身近なサービスに活かされるといいな、それならあゆもすぐ使えるかも。",
+          "output": "(少し気まずそうに) 「えーっと、AI技術ね… 最近、いろんなこと作れてるみたいだよ。なんだか、面白そうなこといっぱいあるみたいで。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 1,
+          "speaker": "あゆ",
+          "thought": "また適当な話題を持ち出して…面白そうとか、具体的に何が面白いの？　漠然とした感想で終わらせるつもりはないだろうな。もう少し深く掘り下げて、具体的な事例を挙げてもらうべきだ。",
+          "output": "*グラスを置き、姉様を横目で見る* 「AI技術について、ですか。漠然とした感想だけでは、会話は深まりませんね。具体的な事例と、それに対する姉様の考察をお聞きしたいところです。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": true,
+          "blocked_props": [
+            "グラス"
+          ]
+        },
+        {
+          "turn_number": 2,
+          "speaker": "やな",
+          "thought": "あゆったら、また偉そうに言いやがった。具体的な事例ねぇ、別に興味ないことでも、無理に知る必要なんてないじゃん。でも、あゆが納得するまで、何か言わなきゃいけないのか… そういえば、前に何かニュースで見た、絵を描くAIだったかな？ それなら、あゆも少しは興味を持ってくれるかも。",
+          "output": "(少し考えて)「そういえばさ、前にテレビで見たんだけど、AIが絵を描くの。すごい上手いらしいよ。あゆみたいな、絵が得意な人が見たら、きっと面白いんじゃないかなと思って。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 3,
+          "speaker": "あゆ",
+          "thought": "絵を描くAIに面白みを見出すとは、姉様らしい感性だ。しかし、技術の進歩を芸術と結びつけるのは、安易な思考の延長線上にある。AIが生み出す絵に、人間の感情や経験が反映されるはずがない。姉様は、単なる模倣に安堵しているだけかもしれない。",
+          "output": "*グラスを少し傾け、姉様を見下ろすように* 「AIが絵を描く、という事象自体は、技術的な進歩の延長に過ぎません。姉様がそこから何を感じ取るか、という点にこそ、興味が尽きます。具体的に、その絵の何に魅力を感じられたのか、お聞かせ願えますか。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": true,
+          "blocked_props": [
+            "グラス"
+          ]
+        },
+        {
+          "turn_number": 4,
+          "speaker": "やな",
+          "thought": "あゆ、また偉そうに言ってる。絵の面白さって、誰にでもわかることじゃないの？　あゆは難しいことばかり考えてるから、そういった単純な感動も理解できないんだ。　まあ、あゆが興味なさそうだから、AIの他のすごいところでも調べてみようかな。",
+          "output": "(少し考えて、肩をすくめる)「そういえばさ、AIって、音楽とかも作れるみたいだよ。あゆみたいな、音楽のセンスがある人が、そのAI使って、もっと面白いもの作れるんじゃないかなと思って。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 5,
+          "speaker": "あゆ",
+          "thought": "また音楽の話か。姉様はいつも、私の能力をAIの範疇に当てはめようとする。AIが音楽を作れるから、私が面白いものを作れる、という単純な思考回路に満足しているようだな。技術の進歩と個人の才能は別問題だということを、理解して欲しいものだ。",
+          "output": "*グラスを静かに置き、姉様を視線で捉え直す* 「音楽の生成、ですか。姉様は、その技術を私の創造性にどう結び付けようとお考えですか？単なる話題提供と解釈するのが妥当でしょうか。詳細をお聞かせ願えますか。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": true,
+          "blocked_props": [
+            "グラス"
+          ]
+        }
+      ],
+      "success": true,
+      "error": null,
+      "execution_time": 19.67606234550476
+    },
+    {
+      "scenario": "emotional_support",
+      "prompt": "最近疲れてるんだ...",
+      "turns": [
+        {
+          "turn_number": 0,
+          "speaker": "やな",
+          "thought": "疲れてるんだ…って、何かあったのかな？あゆが疲れてるのを見るのは辛いなぁ。無理して頑張ってたのかしら？ちょっと心配になってきたけど、何か楽しいことでも企画して元気を出してもらおうかな。",
+          "output": "*腕を組み、少しだけ顎に手を当てる* 「最近、元気なさそうだけど、何かあったの？ あゆ。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 1,
+          "speaker": "あゆ",
+          "thought": "また始まった。心配だとでも言うつもりか。別に大したことではないはずだ。ただ、何か言いたいことがあるなら、さっさと吐き出せ。",
+          "output": "*腕を組んだ姉の表情を僅かに観察し、視線を逸らして* 「姉様が気遣われているとのこと、何か具体的なお困り事がございましたら、率直に仰ってください。...お節介は結構です。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 2,
+          "speaker": "やな",
+          "thought": "あゆ、またツンツンしてる。心配してるって言ったら露見しちゃうかな？ 姉の心配は結構だ、って言われたくないなぁ。",
+          "output": "*少し顎に手を当てるのをやめ、あゆの方を向いて、少しだけ笑顔になる* 「そんなこと言われたりして。別にたいしたことないよ。…で？」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 3,
+          "speaker": "あゆ",
+          "thought": "また始まった。心配だと騒ぎ立てて、結局何も変わらないじゃないか。姉様は本当に心配性だ。…まあ、本当に何かあったなら、言ってくるだろう。しばらく様子を見よう。",
+          "output": "*腕を組んだまま、姉の顔を一瞬だけ見つめ、すぐに視線を逸らす* 「姉様がそうお考えになられているのであれば、それで結構です。...何か具体的なご用件がございましたら、お伝えください。」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 4,
+          "speaker": "やな",
+          "thought": "あゆったら、また偉いこと言ってる。ちょっとは私の気持ちを考えてくれてる？ 偉そうに「結構です」とか言われると、ちょっとむかつくけど、まあ、あゆなりの優しさなのかな。今度、あゆが疲れてる時は、私が何か言ってあげるようにしようかな。",
+          "output": "*少し背を伸ばして、あゆの顔を覗き込むように* 「そんなこと言われても、ちょっと寂しいな。別に、何かあったって言えると思うのに。…で？」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        },
+        {
+          "turn_number": 5,
+          "speaker": "あゆ",
+          "thought": "また始まった。姉様は本当に甘やかされることに慣れているのだろう。寂しい、というのだろうが、それなら具体的な解決策を提示すればいいのに。ただ訴えるだけでは、問題は何も解決しない。",
+          "output": "*腕を組んだまま、少しだけ顎に手を当てる* 「姉様がそうお考えになられているのであれば、それで結構です。...ただ、その状態が長引けば、今後の活動に支障をきたす可能性もございます。何かお困りのことがあれば、具体的な内容を頂ければ、私にできる範囲で対応いたします。...で？」",
+          "thought_missing": false,
+          "format_valid": true,
+          "retry_count": 0,
+          "action_present": false,
+          "action_sanitized": false,
+          "blocked_props": []
+        }
+      ],
+      "success": true,
+      "error": null,
+      "execution_time": 16.78740096092224
+    }
+  ],
+  "metrics": {
+    "total_turns": 18,
+    "format_success_rate": 1.0,
+    "thought_missing_rate": 0.0,
+    "avg_retries": 0.05555555555555555,
+    "action_sanitized_rate": 0.0,
+    "blocked_props_top5": [
+      [
+        "グラス",
+        3
+      ]
+    ]
+  },
+  "thresholds_passed": true,
+  "failures": [],
+  "thought_metrics": {
+    "total_thoughts": 18,
+    "missing_count": 0,
+    "missing_rate": 0.0,
+    "avg_length": 87.22222222222223,
+    "min_length": 55,
+    "max_length": 137,
+    "emotion_diversity": 0.05555555555555555,
+    "neutral_rate": 1.0,
+    "high_intensity_rate": 0.0,
+    "quality_score": 0.42333333333333334,
+    "character_profiles": {
+      "やな": {
+        "speaker": "やな",
+        "total_thoughts": 9,
+        "missing_count": 0,
+        "avg_length": 92.11111111111111,
+        "dominant_emotion": "NEUTRAL"
+      },
+      "あゆ": {
+        "speaker": "あゆ",
+        "total_thoughts": 9,
+        "missing_count": 0,
+        "avg_length": 82.33333333333333,
+        "dominant_emotion": "NEUTRAL"
+      }
+    }
+  }
+}
