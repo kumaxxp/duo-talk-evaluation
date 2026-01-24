@@ -489,6 +489,18 @@ class DirectorABTest:
 
         return summary
 
+    def _truncate(self, text: str, max_len: int) -> str:
+        """Truncate text for table display, escaping pipe characters"""
+        if not text:
+            return "-"
+        # Escape pipe characters for markdown tables
+        text = text.replace("|", "\\|")
+        # Remove newlines
+        text = text.replace("\n", " ")
+        if len(text) > max_len:
+            return text[:max_len] + "..."
+        return text
+
     def _save_result(self, result: ExperimentResult):
         """Save experiment results"""
         exp_dir = self.output_dir / result.experiment_id
@@ -582,51 +594,78 @@ class DirectorABTest:
             "",
             "---",
             "",
-            "## 4. 全会話サンプル（詳細版）",
+            "## 4. 全会話サンプル",
+            "",
+            "### 4.1 凡例",
+            "",
+            "| Director値 | 意味 |",
+            "|:----------:|------|",
+            "| `-` | Director無し条件 |",
+            "| `PASS` | 採用 |",
+            "| `WARN` | 警告付き採用 |",
+            "| **`RETRY`** | 不採用（取り消し線で表示） |",
+            "",
+            "### 4.2 会話サンプル",
             "",
         ])
 
-        # Show all conversations with full details
+        # Group results by scenario and run
+        scenarios_runs: dict[str, list] = {}
         for r in result.results:
             if not r.success:
                 continue
+            key = r.scenario
+            if key not in scenarios_runs:
+                scenarios_runs[key] = []
+            scenarios_runs[key].append(r)
 
-            condition_jp = "Director無し" if r.condition == "without_director" else "Director有り"
-            lines.append(f"### {r.scenario} ({condition_jp})")
-            lines.append("")
+        # Show conversations in table format
+        run_counter: dict[str, int] = {}
+        for scenario_name, results_list in scenarios_runs.items():
+            # Pair up without_director and with_director results
+            without_results = [r for r in results_list if r.condition == "without_director"]
+            with_results = [r for r in results_list if r.condition == "with_director"]
 
-            if r.condition == "with_director":
-                lines.append(f"**総リトライ数**: {r.total_retries}回")
+            for run_idx, (wo, wi) in enumerate(zip(without_results, with_results), 1):
+                lines.append(f"#### {scenario_name} - Run {run_idx}")
                 lines.append("")
 
-            for td in r.turn_details:
-                lines.append(f"#### Turn {td.turn_number + 1}: {td.speaker}")
+                # Director無し table
+                lines.append("**Director無し**")
+                lines.append("")
+                lines.append("| Turn | Speaker | Thought | Output | Director |")
+                lines.append("|:----:|:-------:|---------|--------|:--------:|")
+
+                for td in wo.turn_details:
+                    thought_short = self._truncate(td.thought or "-", 40)
+                    output_short = self._truncate(td.output, 50)
+                    lines.append(f"| {td.turn_number + 1} | {td.speaker} | {thought_short} | {output_short} | `-` |")
+
                 lines.append("")
 
-                # Show rejected responses first (if any)
-                if td.rejected_responses:
-                    lines.append("**不採用応答:**")
-                    lines.append("")
+                # Director有り table
+                lines.append(f"**Director有り** (リトライ: {wi.total_retries}回)")
+                lines.append("")
+                lines.append("| Turn | Speaker | Thought | Output | Director |")
+                lines.append("|:----:|:-------:|---------|--------|:--------:|")
+
+                for td in wi.turn_details:
+                    # Show rejected responses first
                     for rej in td.rejected_responses:
-                        lines.append(f"- **Attempt {rej.attempt}** ❌")
-                        lines.append(f"  - Response: {rej.output[:100]}..." if len(rej.output) > 100 else f"  - Response: {rej.output}")
-                        lines.append(f"  - Status: `{rej.status}`")
-                        lines.append(f"  - Checker: `{rej.checker}`")
-                        lines.append(f"  - Reason: {rej.reason}")
-                        lines.append("")
+                        thought_rej = self._truncate(rej.thought or "-", 40)
+                        output_rej = self._truncate(rej.output, 50)
+                        # Strikethrough for rejected
+                        lines.append(f"| {td.turn_number + 1} | {td.speaker} | ~~{thought_rej}~~ | ~~{output_rej}~~ | **RETRY** |")
 
-                # Show final accepted response
-                lines.append("**採用応答:** ✅")
-                lines.append("")
-                if td.thought:
-                    lines.append(f"- **Thought**: {td.thought}")
-                lines.append(f"- **Output**: {td.output}")
-                if td.retry_count > 0:
-                    lines.append(f"- **リトライ回数**: {td.retry_count}")
-                lines.append("")
+                    # Final accepted response
+                    thought_short = self._truncate(td.thought or "-", 40)
+                    output_short = self._truncate(td.output, 50)
+                    director_status = "PASS"
+                    lines.append(f"| {td.turn_number + 1} | {td.speaker} | {thought_short} | {output_short} | `{director_status}` |")
 
-            lines.append("---")
-            lines.append("")
+                lines.append("")
+                lines.append("---")
+                lines.append("")
 
         # Summary and conclusion
         lines.extend([
