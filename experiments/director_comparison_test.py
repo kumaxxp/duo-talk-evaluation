@@ -495,14 +495,32 @@ class DirectorComparisonTest:
 
         return summary
 
-    def _truncate(self, text: str, max_len: int) -> str:
-        """Truncate text for table display"""
+    def _escape_markdown(self, text: str) -> str:
+        """Escape markdown special characters for display"""
         if not text:
             return "-"
-        text = text.replace("|", "\\|").replace("\n", " ")
-        if len(text) > max_len:
-            return text[:max_len] + "..."
+        # Escape pipe for tables, keep newlines for readability
+        text = text.replace("|", "\\|")
         return text
+
+    def _format_turn(self, turn_num: int, speaker: str, thought: str, output: str,
+                     director_status: str, llm_score: str = None, rejected: bool = False) -> list[str]:
+        """Format a single turn for display"""
+        lines = []
+        prefix = "~~" if rejected else ""
+        suffix = "~~" if rejected else ""
+
+        lines.append(f"#### Turn {turn_num}: {speaker} {'❌' if rejected else '✅'}")
+        lines.append("")
+        lines.append(f"**Director**: `{director_status}`" + (f" | **LLM Score**: {llm_score}" if llm_score else ""))
+        lines.append("")
+        lines.append(f"**Thought**:")
+        lines.append(f"> {prefix}{self._escape_markdown(thought or '-')}{suffix}")
+        lines.append("")
+        lines.append(f"**Output**:")
+        lines.append(f"> {prefix}{self._escape_markdown(output)}{suffix}")
+        lines.append("")
+        return lines
 
     def _save_result(self, result: ExperimentResult):
         """Save experiment results"""
@@ -622,42 +640,48 @@ class DirectorComparisonTest:
                 lines.append(f"### {scenario_name} - Run {run_idx}")
                 lines.append("")
 
-                # Minimal table
+                # Minimal section
                 lines.append(f"**DirectorMinimal** (リトライ: {mi.total_retries}回)")
                 lines.append("")
-                lines.append("| Turn | Speaker | Thought | Output | Director |")
-                lines.append("|:----:|:-------:|---------|--------|:--------:|")
 
                 for td in mi.turn_details:
+                    # Show rejected responses first
                     for rej in td.rejected_responses:
-                        thought_rej = self._truncate(rej.thought or "-", 35)
-                        output_rej = self._truncate(rej.output, 45)
-                        lines.append(f"| {td.turn_number + 1} | {td.speaker} | ~~{thought_rej}~~ | ~~{output_rej}~~ | **RETRY** |")
+                        lines.extend(self._format_turn(
+                            td.turn_number + 1, td.speaker,
+                            rej.thought, rej.output,
+                            "RETRY", rejected=True
+                        ))
 
-                    thought_short = self._truncate(td.thought or "-", 35)
-                    output_short = self._truncate(td.output, 45)
-                    lines.append(f"| {td.turn_number + 1} | {td.speaker} | {thought_short} | {output_short} | `PASS` |")
+                    # Show accepted response
+                    lines.extend(self._format_turn(
+                        td.turn_number + 1, td.speaker,
+                        td.thought, td.output,
+                        "PASS"
+                    ))
 
-                lines.append("")
-
-                # Hybrid table
+                # Hybrid section
                 lines.append(f"**DirectorHybrid** (リトライ: {hy.total_retries}回)")
                 lines.append("")
-                lines.append("| Turn | Speaker | Thought | Output | Director | LLM Score |")
-                lines.append("|:----:|:-------:|---------|--------|:--------:|:---------:|")
 
                 for td in hy.turn_details:
+                    # Show rejected responses first
                     for rej in td.rejected_responses:
-                        thought_rej = self._truncate(rej.thought or "-", 30)
-                        output_rej = self._truncate(rej.output, 40)
-                        lines.append(f"| {td.turn_number + 1} | {td.speaker} | ~~{thought_rej}~~ | ~~{output_rej}~~ | **RETRY** | - |")
+                        lines.extend(self._format_turn(
+                            td.turn_number + 1, td.speaker,
+                            rej.thought, rej.output,
+                            "RETRY", rejected=True
+                        ))
 
-                    thought_short = self._truncate(td.thought or "-", 30)
-                    output_short = self._truncate(td.output, 40)
-                    llm_score = "-"
+                    # Show accepted response with LLM score
+                    llm_score = None
                     if td.llm_scores and "overall_score" in td.llm_scores:
                         llm_score = f"{td.llm_scores['overall_score']:.2f}"
-                    lines.append(f"| {td.turn_number + 1} | {td.speaker} | {thought_short} | {output_short} | `PASS` | {llm_score} |")
+                    lines.extend(self._format_turn(
+                        td.turn_number + 1, td.speaker,
+                        td.thought, td.output,
+                        "PASS", llm_score=llm_score
+                    ))
 
                 lines.append("")
                 lines.append("---")
