@@ -36,6 +36,7 @@ class RejectedResponse:
     status: str  # "RETRY", "WARN", etc.
     reason: str
     checker: str  # Which checker rejected it
+    rag: Optional[dict] = None  # Phase 3.1: RAG log entry
 
 
 @dataclass
@@ -48,6 +49,7 @@ class TurnDetail:
     final_content: str
     retry_count: int
     rejected_responses: list[RejectedResponse] = field(default_factory=list)
+    rag: Optional[dict] = None  # Phase 3.1: RAG log entry for accepted response
 
 
 @dataclass
@@ -95,10 +97,11 @@ class ExperimentResult:
 class LoggingDirectorMinimal:
     """Director that logs all rejections for analysis"""
 
-    def __init__(self, base_director):
+    def __init__(self, base_director, rag_enabled: bool = False):
         self.base_director = base_director
         self.rejection_log: list[RejectedResponse] = []
         self._current_attempt = 0
+        self._last_rag_log: Optional[dict] = None  # Phase 3.1
 
     def evaluate_response(
         self,
@@ -119,6 +122,14 @@ class LoggingDirectorMinimal:
             turn_number=turn_number,
         )
 
+        # Phase 3.1: Capture RAG log if available
+        rag_log = None
+        if hasattr(self.base_director, 'get_last_rag_log'):
+            rag_entry = self.base_director.get_last_rag_log()
+            if rag_entry:
+                rag_log = rag_entry.to_dict()
+        self._last_rag_log = rag_log
+
         # Log if rejected
         if evaluation.status.name == "RETRY":
             # Determine which checker failed
@@ -134,6 +145,7 @@ class LoggingDirectorMinimal:
                 status=evaluation.status.name,
                 reason=evaluation.reason,
                 checker=checker,
+                rag=rag_log,  # Phase 3.1
             )
             self.rejection_log.append(rejection)
 
@@ -146,10 +158,14 @@ class LoggingDirectorMinimal:
         self.base_director.reset_for_new_session()
         self.rejection_log = []
         self._current_attempt = 0
+        self._last_rag_log = None
 
     def reset_for_new_turn(self) -> None:
         """Reset for a new turn (keep session, reset turn data)"""
         self._current_attempt = 0
+        # Phase 3.1: Clear RAG attempts for new turn
+        if hasattr(self.base_director, 'clear_rag_attempts'):
+            self.base_director.clear_rag_attempts()
 
     def get_rejections_for_turn(self) -> list[RejectedResponse]:
         """Get rejections for current turn and clear"""
@@ -157,6 +173,10 @@ class LoggingDirectorMinimal:
         self.rejection_log = []
         self._current_attempt = 0
         return rejections
+
+    def get_last_rag_log(self) -> Optional[dict]:
+        """Get the last RAG log entry (Phase 3.1)"""
+        return self._last_rag_log
 
 
 class DirectorABTest:
@@ -206,8 +226,9 @@ class DirectorABTest:
             self.create_dialogue_manager = create_dialogue_manager
 
             # Import duo-talk-director
-            from duo_talk_director import DirectorMinimal
+            from duo_talk_director import DirectorMinimal, DirectorHybrid
             self.DirectorMinimal = DirectorMinimal
+            self.DirectorHybrid = DirectorHybrid
 
             # Capture sample prompts
             engine = PromptEngine()
@@ -314,6 +335,7 @@ class DirectorABTest:
         self,
         scenario: dict,
         with_director: bool,
+        rag_enabled: bool = False,  # Phase 3.1
     ) -> DialogueResult:
         """Run a single dialogue with detailed logging"""
         condition = "with_director" if with_director else "without_director"
@@ -324,8 +346,28 @@ class DirectorABTest:
 
             # Create manager with or without director
             if with_director:
-                base_director = self.DirectorMinimal()
-                logging_director = LoggingDirectorMinimal(base_director)
+                # Phase 3.1: Use DirectorHybrid with RAG if rag_enabled
+                if rag_enabled and hasattr(self, 'DirectorHybrid'):
+                    # Create a mock LLM client for DirectorHybrid (skip LLM evaluation)
+                    from duo_talk_director import DirectorHybrid
+                    from duo_talk_director.llm.evaluator import EvaluatorLLMClient
+
+                    class MockLLMClient(EvaluatorLLMClient):
+                        def generate(self, prompt: str) -> str:
+                            return "{}"  # Return empty JSON to skip LLM scoring
+
+                        def is_available(self) -> bool:
+                            return False
+
+                    base_director = DirectorHybrid(
+                        llm_client=MockLLMClient(),
+                        skip_llm_on_static_retry=True,
+                        rag_enabled=True,
+                    )
+                else:
+                    base_director = self.DirectorMinimal()
+
+                logging_director = LoggingDirectorMinimal(base_director, rag_enabled=rag_enabled)
                 manager = self.create_dialogue_manager(
                     backend=self.backend,
                     model=self.model,
@@ -365,8 +407,10 @@ class DirectorABTest:
 
                 # Capture rejections if using director
                 rejected = []
+                rag_log = None
                 if logging_director:
                     rejected = logging_director.get_rejections_for_turn()
+                    rag_log = logging_director.get_last_rag_log()  # Phase 3.1
 
                 detail = TurnDetail(
                     turn_number=i,
@@ -376,6 +420,7 @@ class DirectorABTest:
                     final_content=turn.content,
                     retry_count=turn.retry_count,
                     rejected_responses=rejected,
+                    rag=rag_log,  # Phase 3.1
                 )
                 turn_details.append(detail)
 
