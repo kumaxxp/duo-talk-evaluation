@@ -225,11 +225,12 @@ class DirectorComparisonTest:
         """Setup experiment components"""
         try:
             # Import duo-talk-core
-            from duo_talk_core import create_dialogue_manager
+            from duo_talk_core import create_dialogue_manager, GenerationMode
             from duo_talk_core.prompt_engine import PromptEngine
             from duo_talk_core.character import get_character
             from duo_talk_core.llm_client import create_client
             self.create_dialogue_manager = create_dialogue_manager
+            self.GenerationMode = GenerationMode
 
             # Import duo-talk-director
             from duo_talk_director import DirectorMinimal, DirectorHybrid
@@ -350,6 +351,7 @@ class DirectorComparisonTest:
                 model=self.model,
                 director=logging_director,
                 max_retries=3,
+                generation_mode=self.GenerationMode.TWO_PASS,  # v4.0: 2フェーズ生成
             )
 
             # Run dialogue session
@@ -495,32 +497,31 @@ class DirectorComparisonTest:
 
         return summary
 
-    def _escape_markdown(self, text: str) -> str:
-        """Escape markdown special characters for display"""
+    def _truncate(self, text: str, max_len: int = 80) -> str:
+        """Truncate text for table display, escaping pipe characters"""
         if not text:
             return "-"
-        # Escape pipe for tables, keep newlines for readability
-        text = text.replace("|", "\\|")
+        # Escape pipe for markdown tables
+        text = text.replace("|", "\\|").replace("\n", " ")
+        if len(text) > max_len:
+            return text[:max_len] + "..."
         return text
 
-    def _format_turn(self, turn_num: int, speaker: str, thought: str, output: str,
-                     director_status: str, llm_score: str = None, rejected: bool = False) -> list[str]:
-        """Format a single turn for display"""
-        lines = []
+    def _format_table_row(self, turn: int, speaker: str, thought: str, output: str,
+                          director: str, llm_score: str = None, rejected: bool = False) -> str:
+        """Format a table row for conversation display"""
         prefix = "~~" if rejected else ""
         suffix = "~~" if rejected else ""
 
-        lines.append(f"#### Turn {turn_num}: {speaker} {'❌' if rejected else '✅'}")
-        lines.append("")
-        lines.append(f"**Director**: `{director_status}`" + (f" | **LLM Score**: {llm_score}" if llm_score else ""))
-        lines.append("")
-        lines.append(f"**Thought**:")
-        lines.append(f"> {prefix}{self._escape_markdown(thought or '-')}{suffix}")
-        lines.append("")
-        lines.append(f"**Output**:")
-        lines.append(f"> {prefix}{self._escape_markdown(output)}{suffix}")
-        lines.append("")
-        return lines
+        thought_display = self._truncate(thought or "-")
+        output_display = self._truncate(output)
+        director_display = f"`{director}`"
+        if llm_score:
+            director_display = f"`{director}` ({llm_score})"
+
+        if rejected:
+            return f"| {turn} | {speaker} | {prefix}{thought_display}{suffix} | {prefix}{output_display}{suffix} | **{director_display}** |"
+        return f"| {turn} | {speaker} | {thought_display} | {output_display} | {director_display} |"
 
     def _save_result(self, result: ExperimentResult):
         """Save experiment results"""
@@ -575,9 +576,31 @@ class DirectorComparisonTest:
             "",
             "---",
             "",
-            "## 2. 条件比較サマリー",
+            "## 2. 使用プロンプト",
             "",
+            "### システムプロンプト（サンプル）",
+            "",
+            "```",
+            result.prompts.get("system_prompt_sample", "(プロンプトは記録されていません)"),
+            "```",
+            "",
+            "### ユーザープロンプト（シナリオ別）",
+            "",
+            "| シナリオ | プロンプト | ターン数 |",
+            "|----------|----------|---------|",
         ]
+
+        # Add scenario table
+        for scenario in result.scenarios:
+            lines.append(f"| {scenario['name']} | {scenario['initial_prompt']} | {scenario['turns']} |")
+
+        lines.extend([
+            "",
+            "---",
+            "",
+            "## 3. 条件比較サマリー",
+            "",
+        ])
 
         minimal = result.summary.get("by_condition", {}).get("minimal", {})
         hybrid = result.summary.get("by_condition", {}).get("hybrid", {})
@@ -611,15 +634,17 @@ class DirectorComparisonTest:
             "",
             "---",
             "",
-            "## 3. 全会話サンプル",
+            "## 4. 全会話サンプル",
             "",
-            "### 凡例",
+            "### 4.1 凡例",
             "",
             "| Director値 | 意味 |",
             "|:----------:|------|",
             "| `PASS` | 採用 |",
             "| `WARN` | 警告付き採用 |",
             "| **`RETRY`** | 不採用（取り消し線で表示） |",
+            "",
+            "### 4.2 会話サンプル",
             "",
         ])
 
@@ -637,37 +662,43 @@ class DirectorComparisonTest:
             hybrid_results = [r for r in results_list if r.condition == "hybrid"]
 
             for run_idx, (mi, hy) in enumerate(zip(minimal_results, hybrid_results), 1):
-                lines.append(f"### {scenario_name} - Run {run_idx}")
+                lines.append(f"#### {scenario_name} - Run {run_idx}")
                 lines.append("")
 
-                # Minimal section
+                # Minimal section with table
                 lines.append(f"**DirectorMinimal** (リトライ: {mi.total_retries}回)")
                 lines.append("")
+                lines.append("| Turn | Speaker | Thought | Output | Director |")
+                lines.append("|:----:|:-------:|---------|--------|:--------:|")
 
                 for td in mi.turn_details:
                     # Show rejected responses first
                     for rej in td.rejected_responses:
-                        lines.extend(self._format_turn(
+                        lines.append(self._format_table_row(
                             td.turn_number + 1, td.speaker,
                             rej.thought, rej.output,
                             "RETRY", rejected=True
                         ))
 
                     # Show accepted response
-                    lines.extend(self._format_turn(
+                    lines.append(self._format_table_row(
                         td.turn_number + 1, td.speaker,
                         td.thought, td.output,
                         "PASS"
                     ))
 
-                # Hybrid section
+                lines.append("")
+
+                # Hybrid section with table
                 lines.append(f"**DirectorHybrid** (リトライ: {hy.total_retries}回)")
                 lines.append("")
+                lines.append("| Turn | Speaker | Thought | Output | Director |")
+                lines.append("|:----:|:-------:|---------|--------|:--------:|")
 
                 for td in hy.turn_details:
                     # Show rejected responses first
                     for rej in td.rejected_responses:
-                        lines.extend(self._format_turn(
+                        lines.append(self._format_table_row(
                             td.turn_number + 1, td.speaker,
                             rej.thought, rej.output,
                             "RETRY", rejected=True
@@ -677,7 +708,7 @@ class DirectorComparisonTest:
                     llm_score = None
                     if td.llm_scores and "overall_score" in td.llm_scores:
                         llm_score = f"{td.llm_scores['overall_score']:.2f}"
-                    lines.extend(self._format_turn(
+                    lines.append(self._format_table_row(
                         td.turn_number + 1, td.speaker,
                         td.thought, td.output,
                         "PASS", llm_score=llm_score
@@ -689,25 +720,24 @@ class DirectorComparisonTest:
 
         # Conclusion
         lines.extend([
-            "## 4. 分析と結論",
+            "## 5. 結論",
             "",
         ])
 
         retry_diff = comparison.get("retry_difference", 0)
+        score_diff = comparison.get("score_difference", 0)
+
         if retry_diff > 0:
-            lines.append(f"- DirectorHybridはMinimalより平均 **{retry_diff:.2f}回** 多くリトライを要求")
-            lines.append("- LLM評価によりより厳格な品質管理が行われている")
+            lines.append(f"DirectorHybridはMinimalより平均 **{retry_diff:.2f}回** 多くリトライを要求し、より厳格な品質管理を実施。")
         elif retry_diff < 0:
-            lines.append(f"- DirectorHybridはMinimalより平均 **{abs(retry_diff):.2f}回** 少ないリトライ")
+            lines.append(f"DirectorHybridはMinimalより平均 **{abs(retry_diff):.2f}回** 少ないリトライで効率的な品質管理を実施。")
         else:
-            lines.append("- 両Director間でリトライ回数に差はなかった")
+            lines.append("両Director間でリトライ回数に差はなかった。")
+
+        if score_diff != 0:
+            lines.append(f"評価スコアは **{score_diff:+.1%}** の差。")
 
         lines.extend([
-            "",
-            "### 推奨事項",
-            "",
-            "- **品質重視**: DirectorHybrid（LLM評価で5軸の品質保証）",
-            "- **速度重視**: DirectorMinimal（静的チェックのみで高速）",
             "",
             "---",
             "",

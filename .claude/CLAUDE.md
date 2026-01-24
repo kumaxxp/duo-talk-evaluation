@@ -45,7 +45,8 @@ duo-talk-evaluation/
 │   ├── CLAUDE.md           # このファイル
 │   └── skills/             # カスタムスキル
 │       ├── save-spec/      # 仕様書保存スキル
-│       └── run-experiment/ # 実験実行スキル
+│       ├── run-experiment/ # 実験実行スキル
+│       └── troubleshoot/   # トラブルシュートスキル
 │
 ├── specs/                  # 仕様書（知見蓄積）
 │   ├── phases/             # フェーズ別仕様
@@ -84,12 +85,19 @@ duo-talk-evaluation/
 
 ### /save-spec
 
-Geminiなどから取得した情報を仕様書として保存。
+Gemini/ChatGPTなどから取得した情報を仕様書として保存。AIからの提案・レビューには妥当性評価を追加。
 
 ```
-使用例:
+使用例1（技術情報）:
 ユーザー: これはGeminiから取得したOllama APIの情報です [コピペ]
 Claude: /save-spec を実行 → specs/api/API_OLLAMA.md に保存
+
+使用例2（AI提案・レビュー）:
+ユーザー: ChatGPTから機能一覧のレビュー結果です [5つの提案]
+Claude: /save-spec を実行
+  → 現行実装と照合
+  → 妥当性評価（🟢採用/🟡検討/🔴保留/⚫却下）
+  → specs/architecture/ARCH_CHATGPT_RECOMMENDATIONS_{DATE}.md に保存
 ```
 
 ### /review-spec
@@ -101,7 +109,7 @@ Claude: /save-spec を実行 → specs/api/API_OLLAMA.md に保存
 1. 新仕様と現行仕様の差分分析
 2. 影響範囲の特定
 3. 変更カテゴリ判定（A:追加 / B:軽微 / C:大規模 / D:システム変更）
-4. Gemini情報の妥当性検証
+4. AI情報（Gemini/ChatGPT）の妥当性検証
 5. ユーザー確認（採用/修正/保留/却下）
 6. 仕様確定 → docs/に移行
 7. TDDワークフローで実装開始
@@ -116,6 +124,34 @@ Claude: /save-spec を実行 → specs/api/API_OLLAMA.md に保存
 ユーザー: Director A/Bテストを実行して
 Claude: /run-experiment director-ab → results/director_ab_{timestamp}/ に保存
 ```
+
+### /troubleshoot
+
+問題発生時に機能一覧を参照し、解決策を提案。
+
+```
+使用例:
+ユーザー: Thoughtが空になる問題が頻発しています
+Claude: /troubleshoot を実行
+
+🔍 問題分析完了
+📋 問題: Thoughtが空になる
+🏷️ カテゴリ: フォーマット問題
+
+💡 提案:
+1. TWO_PASSモード有効化 - 効果: ⭐⭐⭐ (検証済み: 88%減少)
+2. strict_thought_check=True確認 - 効果: ⭐⭐⭐
+
+🔧 最優先アクション: GenerationMode.TWO_PASS に変更
+```
+
+**参照ドキュメント**: [docs/機能一覧.md](docs/機能一覧.md)
+
+**対応カテゴリ**:
+- フォーマット問題（Thought空、Output不正）
+- 品質問題（キャラ崩壊、話題ループ）
+- パフォーマンス問題（遅い、リトライ多発）
+- 評価問題（誤検出、スコア低下）
 
 ## Experiment Standards
 
