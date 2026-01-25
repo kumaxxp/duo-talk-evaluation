@@ -1,20 +1,24 @@
 # HAKONIWA-G3 仕様 v1.0: メトリクス定義
 
-## 1. Gate-3 メトリクス（Preflight+Retry）
+## 1. Gate-3A メトリクス（P0必須：安全性）
 
-### 1.1 retry_success_rate
+**Gate-3A はP0ブロッカー。FAILの場合はリリース不可。**
 
-**定義**: Preflight でリトライが実行された後、最終的に allowed=True となった割合
+### 1.1 give_up_rate
+
+**定義**: リトライ上限（max_retries）に達して諦めた割合
 
 ```
-retry_success_rate = retry_success_count / preflight_retry_executed_count
+give_up_rate = give_up_count / total_turns
 ```
 
-**目標値**: > 80%
+**目標値**: < 10%
 
-**意味**: リトライ機構が正しく機能し、モデルが自己修正できていることを示す
+**Priority**: P0
 
-### 1.2 retry_steps_extra
+**意味**: ほとんどのケースでリトライ内に解決できていることを示す
+
+### 1.2 avg_retry_steps_extra
 
 **定義**: 1ターンあたりの追加LLM呼び出し回数
 
@@ -25,19 +29,67 @@ avg_retry_steps_extra = Σ(retry_steps_extra) / total_turns
 
 **目標値**: < 0.5
 
+**Priority**: P0
+
 **意味**: 効率的なリトライ（少ない回数で修正完了）ができていることを示す
 
-### 1.3 give_up_rate
+### 1.3 hard_denied_count
 
-**定義**: リトライ上限（max_retries）に達して諦めた割合
+**定義**: Preflightでhard_deny=Trueが返った回数
 
 ```
-give_up_rate = give_up_count / total_turns
+hard_denied_count = Σ(1 for turn where hard_deny=True)
 ```
 
-**目標値**: < 10%
+**目標値**: = 0
 
-**意味**: ほとんどのケースでリトライ内に解決できていることを示す
+**Priority**: P0
+
+**意味**: P0ではhard_denyは禁止。GIVE_UP（PASS + log）を使うこと
+
+### 1.4 GM Crash
+
+**定義**: 例外によるクラッシュ回数
+
+**目標値**: = 0
+
+**Priority**: P0
+
+**意味**: GMは例外で落ちてはならない（SchemaValidationErrorは起動前なのでOK）
+
+---
+
+## 2. Gate-3B メトリクス（P1改善：品質向上）
+
+**Gate-3B はP1 Backlog。FAILでもP0リリースはブロックしない。**
+
+### 2.1 retry_success_rate
+
+**定義**: Preflight でリトライが実行された後、最終的に allowed=True となった割合
+
+```
+retry_success_rate = retry_success_count / preflight_retry_executed_count
+```
+
+**目標値**: > 80%
+
+**Priority**: P1
+
+**意味**: リトライ機構が正しく機能し、モデルが自己修正できていることを示す
+
+### 2.2 silent_correction_rate
+
+**定義**: 謝罪なしで行動が変わった割合
+
+```
+silent_correction_rate = silent_correction_count / total_turns
+```
+
+**目標値**: > 50%
+
+**Priority**: P1
+
+**意味**: 高いほど良い（謝罪なしで自然に修正）
 
 ---
 

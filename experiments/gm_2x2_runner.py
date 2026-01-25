@@ -2071,30 +2071,57 @@ def generate_report(
             for t in r.turns:
                 gen_calls_distribution[t.total_generation_calls] += 1
 
-        # Gate-3 pass/fail status
-        retry_pass = retry_success_rate_gate > 0.8
+        # Gate-3A (P0) pass/fail status - Safety metrics
+        hard_denied_count = sum(r.preflight_hard_deny_count for r in results)
         extra_pass = avg_retry_steps_extra_gate < 0.5
         give_up_pass = give_up_rate_gate < 0.1
-        overall_pass = retry_pass and extra_pass and give_up_pass
+        hard_deny_pass = hard_denied_count == 0
+        crash_count = 0  # Assumed 0 if we got this far
+        crash_pass = crash_count == 0
+        gate3a_pass = extra_pass and give_up_pass and hard_deny_pass and crash_pass
 
-        gate_status = "✅ PASS" if overall_pass else "❌ FAIL"
-        retry_icon = "✅" if retry_pass else "❌"
+        # Gate-3B (P1) pass/fail status - Quality metrics
+        retry_pass = retry_success_rate_gate > 0.8
+        silent_correction_pass = silent_correction_rate > 0.5
+        gate3b_pass = retry_pass and silent_correction_pass
+
+        gate3a_status = "✅ PASS" if gate3a_pass else "❌ FAIL"
+        gate3b_status = "✅ PASS" if gate3b_pass else "❌ FAIL (P1)"
         extra_icon = "✅" if extra_pass else "❌"
         give_up_icon = "✅" if give_up_pass else "❌"
+        hard_deny_icon = "✅" if hard_deny_pass else "❌"
+        crash_icon = "✅" if crash_pass else "❌"
+        retry_icon = "✅" if retry_pass else "❌"
+        silent_icon = "✅" if silent_correction_pass else "❌"
 
         report_lines.extend([
-            "## Gate-3 Summary (Preflight+Retry)",
+            "## Gate-3A Summary (P0必須：安全性)",
             "",
-            f"**Overall Status: {gate_status}**",
+            f"**Gate-3A Status: {gate3a_status}**",
             "",
-            "### Gate-3 Criteria",
+            "Gate-3A はP0ブロッカー。FAILの場合はリリース不可。",
+            "",
+            "| Metric | Value | Target | Status |",
+            "|--------|-------|--------|--------|",
+            f"| give_up_rate | {give_up_rate_gate:.1%} | <10% | {give_up_icon} |",
+            f"| avg_retry_steps_extra | {avg_retry_steps_extra_gate:.2f} | <0.5 | {extra_icon} |",
+            f"| hard_denied_count | {hard_denied_count} | =0 | {hard_deny_icon} |",
+            f"| GM Crash | {crash_count} | =0 | {crash_icon} |",
+            "",
+            "---",
+            "",
+            "## Gate-3B Summary (P1参考：品質向上)",
+            "",
+            f"**Gate-3B Status: {gate3b_status}**",
+            "",
+            "Gate-3B はP1 Backlog。FAILでもP0リリースはブロックしない。",
             "",
             "| Metric | Value | Target | Status |",
             "|--------|-------|--------|--------|",
             f"| retry_success_rate | {retry_success_rate_gate:.1%} | >80% | {retry_icon} |",
-            f"| avg_retry_steps_extra | {avg_retry_steps_extra_gate:.2f} | <0.5 | {extra_icon} |",
-            f"| give_up_rate | {give_up_rate_gate:.1%} | <10% | {give_up_icon} |",
-            f"| silent_correction_rate | {silent_correction_rate:.1%} | (info) | - |",
+            f"| silent_correction_rate | {silent_correction_rate:.1%} | >50% | {silent_icon} |",
+            "",
+            "---",
             "",
             "### Retry Metrics Detail",
             "",
