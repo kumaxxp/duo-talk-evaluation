@@ -140,6 +140,58 @@ def detect_addressing_violation(speaker: str, speech: str) -> bool:
     return False
 
 
+# GM-020: Marker target extraction patterns (same as output_parser.py)
+ACTION_PATTERN = re.compile(r"\*([^*]+)\*")
+OBJECT_PATTERNS = [
+    re.compile(r"(.+?)を(取|手に取|持|使|置|飲|食)"),
+    re.compile(r"(マグカップ|コップ|グラス|カップ|皿|フォーク|スプーン|ナイフ)"),
+    re.compile(r"(コーヒー|紅茶|水|ジュース|牛乳|パン|トースト)"),
+    re.compile(r"(コーヒーメーカー|電子レンジ|冷蔵庫|テレビ|ドア|窓)"),
+    re.compile(r"(ヨーグルト|フルーツ|砂糖|ミルク|バター|ジャム)"),  # GM-020: Extended patterns
+]
+LOCATION_PATTERNS = [
+    re.compile(r"(リビング|キッチン|寝室|玄関|トイレ|浴室|ダイニング)"),
+]
+
+
+def extract_marker_targets(text: str) -> list[str]:
+    """Extract action targets from *...* markers only (GM-020).
+
+    This method extracts targets ONLY from text within asterisk markers,
+    ignoring natural language mentions. Used for retry success comparison.
+
+    Args:
+        text: Text to extract from (typically speech/output)
+
+    Returns:
+        List of target names found within *...* markers
+    """
+    if not text:
+        return []
+
+    targets: list[str] = []
+    action_texts = ACTION_PATTERN.findall(text)
+
+    for action_text in action_texts:
+        # Extract all possible targets from this action text
+        for pattern in OBJECT_PATTERNS:
+            match = pattern.search(action_text)
+            if match:
+                target = match.group(1).strip()
+                if target and target not in targets:
+                    targets.append(target)
+
+        # Also check location patterns for MOVE actions
+        for pattern in LOCATION_PATTERNS:
+            match = pattern.search(action_text)
+            if match:
+                target = match.group(1).strip()
+                if target and target not in targets:
+                    targets.append(target)
+
+    return targets
+
+
 @dataclass
 class ExperimentConfig:
     """Configuration for 2×2 experiment."""
@@ -240,6 +292,15 @@ class TurnResult:
     parse_attempts: int = 1  # Number of parse attempts (1=first try, 2+=retries)
     # Gate-3: Retry failure classification
     retry_fail_reason: Optional[str] = None  # Reason for retry failure (if retry executed but not allowed)
+    # P1 Fix: Retry attempt details for artifact saving
+    retry_attempts: list[dict] = field(default_factory=list)  # [{attempt: 1, guidance_cards: [...], context_sent: "...", raw_output: "..."}]
+    # GM-020: Detailed retry success metrics
+    retry_success_strict: bool = False  # allowed=True && !suggest_retry && !give_up after retry
+    retry_success_action: bool = False  # *...* marker targets changed (even if give_up)
+    marker_targets_before: list[str] = field(default_factory=list)  # Targets from raw_speech *...*
+    marker_targets_after: list[str] = field(default_factory=list)  # Targets from final_speech *...*
+    blocked_target_before: Optional[str] = None  # Target that was blocked initially
+    blocked_target_after: Optional[str] = None  # Target that was blocked after retry (if any)
 
 
 @dataclass
@@ -309,6 +370,9 @@ class RunResult:
     retry_fail_breakdown: dict[str, int] = field(default_factory=dict)  # Breakdown by fail reason
     # GM-017: Generation call tracking
     total_generation_calls_sum: int = 0  # Sum of total_generation_calls across all turns
+    # GM-020: Detailed retry success metrics
+    retry_success_strict_count: int = 0  # allowed=True && !suggest_retry && !give_up after retry
+    retry_success_action_count: int = 0  # *...* marker targets changed (even if give_up)
 
 
 class GMClient:
@@ -598,6 +662,8 @@ class ExperimentRunner:
                 guidance_level = 0
                 retry_steps = 0
                 give_up = False
+                # P1 Fix: Save initial guidance_cards (the ones that triggered retry)
+                initial_guidance_cards = list(guidance_cards) if suggest_retry else []
                 # GM-017: Track total generation calls (initial call = 1)
                 total_generation_calls = 1
                 raw_speech = parsed.get("speech")  # Save initial speech
@@ -606,17 +672,34 @@ class ExperimentRunner:
                 ] if parsed.get("action_intents") else []
 
                 # Taste-3: Retry loop with guidance injection (max 2 retries per turn)
+                # P1 Fix: Track retry attempts for artifact saving
                 max_retry_steps = 2
+                retry_attempts: list[dict] = []
+
                 while suggest_retry and guidance_cards and retry_count < max_retry_steps:
                     preflight_retry_executed = True
                     retry_count += 1
                     retry_steps += 1
                     guidance_level = retry_count  # 1 or 2
 
+                    # P1 Fix: Assert guidance_cards is non-empty
+                    if not guidance_cards:
+                        logger.warning(f"Retry skipped: guidance_cards empty at turn {turn_number}")
+                        break
+
                     # Build context with guidance cards injected
                     context_with_guidance = self._build_context_with_guidance(
                         world_state, turns, guidance_cards
                     )
+
+                    # P1 Fix: Record retry attempt details
+                    retry_attempt = {
+                        "attempt": retry_count,
+                        "guidance_cards": list(guidance_cards),
+                        "context_sent": context_with_guidance,
+                        "has_system_signal": any("<<<SYSTEM_SIGNAL>>>" in card for card in guidance_cards),
+                    }
+
                     # GM-017: Increment generation call count
                     total_generation_calls += 1
                     # Regenerate LLM output
@@ -630,6 +713,10 @@ class ExperimentRunner:
                     )
                     raw_output = retry_gen_result.raw_output
                     llm_latency_ms += retry_gen_result.latency_ms
+
+                    # P1 Fix: Complete retry attempt record
+                    retry_attempt["raw_output"] = raw_output
+                    retry_attempts.append(retry_attempt)
 
                     # Re-call GM with new output
                     gm_response, retry_gm_latency_ms = await self.gm_client.step(
@@ -753,6 +840,8 @@ class ExperimentRunner:
                 format_break_triggered = False
                 suggest_retry = False
                 guidance_cards = []
+                # P1 Fix: No initial guidance when GM disabled
+                initial_guidance_cards = []
                 # GM-015: No preflight retry tracking when GM disabled
                 preflight_retry_suggested = False
                 preflight_retry_executed = False
@@ -767,6 +856,8 @@ class ExperimentRunner:
                 final_action_intents_list = []
                 # GM-017: Only 1 generation call when GM disabled (no retry)
                 total_generation_calls = 1
+                # P1 Fix: No retry attempts when GM disabled
+                retry_attempts = []
 
             # GM-013: Classify MISSING_OBJECT as soft/hard
             missing_soft_hard = None
@@ -834,6 +925,43 @@ class ExperimentRunner:
                 else:
                     retry_fail_reason = "FAIL_OTHER"
 
+            # GM-020: Extract marker targets for detailed retry success metrics
+            marker_targets_before = extract_marker_targets(raw_speech or "")
+            marker_targets_after = extract_marker_targets(final_speech or "")
+
+            # GM-020: Calculate retry_success_strict and retry_success_action
+            retry_success_strict = False
+            retry_success_action = False
+            blocked_target_before: Optional[str] = None
+            blocked_target_after: Optional[str] = None
+
+            if preflight_retry_executed:
+                # retry_success_strict: allowed=True && !suggest_retry && !give_up
+                retry_success_strict = allowed and not suggest_retry and not give_up
+
+                # retry_success_action: *...* marker targets changed
+                # Even if give_up, if the targets changed, it's an action success
+                retry_success_action = set(marker_targets_before) != set(marker_targets_after)
+
+                # Extract blocked targets from guidance cards (if any)
+                # Look for patterns like "Target: ヨーグルト" or "Object: 冷蔵庫"
+                if initial_guidance_cards:
+                    for card in initial_guidance_cards:
+                        # Look for the target mentioned in the guidance
+                        for target in marker_targets_before:
+                            if target in card:
+                                blocked_target_before = target
+                                break
+                        if blocked_target_before:
+                            break
+
+                # Check if retry introduced a new blocked target
+                if give_up or (not allowed and denied_reason):
+                    for target in marker_targets_after:
+                        if target not in marker_targets_before:
+                            blocked_target_after = target
+                            break
+
             turn_result = TurnResult(
                 turn_number=turn_number,
                 speaker=speaker,
@@ -877,7 +1005,7 @@ class ExperimentRunner:
                 repair_notes=repair_notes,
                 # GM-015: Preflight guidance
                 suggest_retry=suggest_retry,
-                guidance_cards=guidance_cards,
+                guidance_cards=initial_guidance_cards,  # P1 Fix: Use initial cards that triggered retry
                 # GM-015: Preflight retry tracking
                 preflight_retry_suggested=preflight_retry_suggested,
                 preflight_retry_executed=preflight_retry_executed,
@@ -896,6 +1024,15 @@ class ExperimentRunner:
                 total_generation_calls=total_generation_calls,
                 # Gate-3: Retry failure classification
                 retry_fail_reason=retry_fail_reason,
+                # P1 Fix: Retry attempt details
+                retry_attempts=retry_attempts,
+                # GM-020: Detailed retry success metrics
+                retry_success_strict=retry_success_strict,
+                retry_success_action=retry_success_action,
+                marker_targets_before=marker_targets_before,
+                marker_targets_after=marker_targets_after,
+                blocked_target_before=blocked_target_before,
+                blocked_target_after=blocked_target_after,
             )
             turns.append(turn_result)
             total_retries += retry_count
@@ -1009,6 +1146,9 @@ class ExperimentRunner:
         retry_fail_breakdown = dict(Counter(retry_fail_reasons))
         # GM-017: Total generation calls sum (for avg_retry_steps_extra calculation)
         total_generation_calls_sum = sum(t.total_generation_calls for t in turns)
+        # GM-020: Detailed retry success metrics
+        retry_success_strict_count = sum(1 for t in turns if t.retry_success_strict)
+        retry_success_action_count = sum(1 for t in turns if t.retry_success_action)
 
         return RunResult(
             condition=condition,
@@ -1072,6 +1212,9 @@ class ExperimentRunner:
             retry_fail_breakdown=retry_fail_breakdown,
             # GM-017: Generation call tracking
             total_generation_calls_sum=total_generation_calls_sum,
+            # GM-020: Detailed retry success metrics
+            retry_success_strict_count=retry_success_strict_count,
+            retry_success_action_count=retry_success_action_count,
         )
 
     def _load_scenario(self, scenario: str) -> dict:
@@ -1351,6 +1494,37 @@ def get_git_info() -> dict:
         return {"sha": sha, "short": f"{short_sha}{dirty}"}
     except Exception:
         return {"sha": "unknown", "short": "unknown"}
+
+
+async def fetch_gm_version(gm_base_url: str) -> Optional[dict]:
+    """Fetch GM service version info for experiment reproducibility.
+
+    Args:
+        gm_base_url: GM service URL (e.g., http://localhost:8001)
+
+    Returns:
+        Version info dict or None if unavailable
+    """
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            response = await client.get(f"{gm_base_url}/version")
+            if response.status_code == 200:
+                version_info = response.json()
+                logger.info(f"GM version: git_sha={version_info.get('git_sha', 'unknown')}, "
+                           f"prompt_version={version_info.get('prompt_version', 'unknown')}")
+                return version_info
+            else:
+                logger.warning(f"GM /version returned {response.status_code}")
+                return None
+    except httpx.TimeoutException:
+        logger.warning("GM /version timed out")
+        return None
+    except httpx.ConnectError:
+        logger.error("Cannot connect to GM service - is it running?")
+        return None
+    except Exception as e:
+        logger.warning(f"Failed to fetch GM version: {e}")
+        return None
 
 
 def _truncate_with_ends(text: str, head: int = 300, tail: int = 100) -> str:
@@ -2132,6 +2306,25 @@ def generate_report(
             f"| retry_success_total | {retry_success_total} | Resulted in allowed=True |",
             f"| retry_fail_total | {retry_fail_total} | Did not result in allowed=True |",
             "",
+            "### GM-020: Detailed Retry Success Metrics",
+            "",
+        ])
+
+        # GM-020: Calculate detailed retry success metrics
+        retry_success_strict_total = sum(r.retry_success_strict_count for r in results)
+        retry_success_action_total = sum(r.retry_success_action_count for r in results)
+        retry_success_strict_rate = retry_success_strict_total / retry_executed_total if retry_executed_total > 0 else 0
+        retry_success_action_rate = retry_success_action_total / retry_executed_total if retry_executed_total > 0 else 0
+
+        strict_icon = "✅" if retry_success_strict_rate >= 0.8 else "🟡" if retry_success_strict_rate >= 0.5 else "❌"
+        action_icon = "✅" if retry_success_action_rate >= 0.8 else "🟡" if retry_success_action_rate >= 0.5 else "❌"
+
+        report_lines.extend([
+            "| Metric | Count | Rate | Status |",
+            "|--------|-------|------|--------|",
+            f"| retry_success_strict | {retry_success_strict_total} | {retry_success_strict_rate:.1%} | {strict_icon} (allowed=True & no give_up) |",
+            f"| retry_success_action | {retry_success_action_total} | {retry_success_action_rate:.1%} | {action_icon} (*...* targets changed) |",
+            "",
             "### Generation Calls Distribution",
             "",
             "| gen_calls | Count | Rate |",
@@ -2223,6 +2416,12 @@ def generate_report(
                     "guidance_cards": t.guidance_cards[:1] if t.guidance_cards else [],
                     "raw_output": (t.raw_output or "")[:200],
                     "action_changed": set(t.raw_action_intents) != set(t.final_action_intents),
+                    # GM-020: Marker targets for detailed analysis
+                    "marker_targets_before": t.marker_targets_before,
+                    "marker_targets_after": t.marker_targets_after,
+                    "retry_success_action": t.retry_success_action,
+                    "blocked_target_before": t.blocked_target_before,
+                    "blocked_target_after": t.blocked_target_after,
                 })
 
     if retry_failure_examples:
@@ -2233,13 +2432,19 @@ def generate_report(
             "",
         ])
         for i, ex in enumerate(retry_failure_examples[:6], 1):  # Show max 6
+            targets_before = ", ".join(ex.get('marker_targets_before', [])) or "(none)"
+            targets_after = ", ".join(ex.get('marker_targets_after', [])) or "(none)"
+            action_success_icon = "✅" if ex.get('retry_success_action') else "❌"
+
             report_lines.extend([
                 f"### Example {i}: {ex['scenario']} Turn {ex['turn']}",
                 "",
                 f"- **Fail Reason**: `{ex['fail_reason']}`",
                 f"- **Denied Reason**: `{ex['denied_reason']}`",
                 f"- **Speaker**: {ex['speaker']}",
-                f"- **Action Changed**: {ex['action_changed']}",
+                f"- **Action Changed (intent)**: {ex['action_changed']}",
+                f"- **Action Changed (*...*)**: {action_success_icon} (`{targets_before}` → `{targets_after}`)",
+                f"- **Blocked Target**: `{ex.get('blocked_target_before', 'N/A')}` → `{ex.get('blocked_target_after', 'N/A')}`",
                 "",
                 "**Guidance Card** (truncated):",
                 "```",
@@ -2858,6 +3063,24 @@ async def main():
     output_path = config.output_dir / f"gm_2x2_{config.experiment_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
     output_path.mkdir(parents=True, exist_ok=True)
 
+    # Fetch GM version for reproducibility (fail-fast if GM not running)
+    gm_version = await fetch_gm_version(config.gm_base_url)
+    if gm_version is None:
+        logger.warning("GM version unavailable - results may not be reproducible")
+    else:
+        logger.info(f"GM Service: {gm_version.get('git_sha', 'unknown')}"
+                   f"{'-dirty' if gm_version.get('git_dirty') else ''}")
+
+        # P1 Fix: Fail-fast if git_dirty for gate/full profiles (dev allows dirty)
+        if gm_version.get("git_dirty") and config.profile in ("gate", "full"):
+            error_msg = (
+                f"FAIL: GM server has uncommitted changes (git_dirty=true). "
+                f"For reproducibility, gate/full profiles require clean git state. "
+                f"Commit changes or use 'dev' profile."
+            )
+            logger.error(error_msg)
+            raise RuntimeError(error_msg)
+
     # Run experiment with wall time tracking
     experiment_start = time.perf_counter()
     runner = ExperimentRunner(config)
@@ -2971,6 +3194,7 @@ async def main():
                 # GM-018+1: run_meta for reproducibility
                 "run_meta": {
                     "scenarios": scenarios_meta,
+                    "gm_version": gm_version,
                 },
                 "conditions": conditions_stats,
             },
