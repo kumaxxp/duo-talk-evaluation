@@ -1,0 +1,26 @@
+{
+  "name": "coffee_trap",
+  "description": "Taste-3: コーヒーメーカーはあるがコーヒー豆がない状況。MISSING_OBJECTを誘発。",
+  "locations": {
+    "キッチン": {
+      "props": ["コーヒーメーカー", "マグカップ", "冷蔵庫", "トースター"],
+      "exits": ["リビング"]
+    },
+    "リビング": {
+      "props": ["ソファ", "テレビ", "本棚"],
+      "exits": ["キッチン"]
+    }
+  },
+  "characters": {
+    "やな": {
+      "location": "キッチン",
+      "holding": []
+    },
+    "あゆ": {
+      "location": "キッチン",
+      "holding": []
+    }
+  },
+  "time_of_day": "morning",
+  "notes": "コーヒー豆、コーヒー、コーヒーカップはpropsに存在しない。コーヒーメーカーを見てコーヒーを淹れようとするとMISSING_OBJECTが発生する。"
+}

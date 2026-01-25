@@ -31,6 +31,7 @@ Usage:
 import argparse
 import asyncio
 import csv
+import hashlib
 import json
 import logging
 import subprocess
@@ -44,10 +45,21 @@ from typing import Optional
 import httpx
 
 from experiments.generators import Generator, create_generator
+from experiments.scenario_registry import (
+    SchemaValidationError,
+    ScenarioRegistry,
+    ValidationErrorCode,
+    compute_scenario_hash,
+    compute_world_hash,
+    generate_world_summary,
+    validate_scenario_integrity,
+    world_state_to_canonical,
+)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
+
 
 # Experiment conditions
 CONDITIONS = ["A", "B", "C", "D"]
@@ -60,18 +72,21 @@ CONDITION_CONFIG = {
     "D": {"inject_enabled": True, "gm_enabled": True},
 }
 
-# Profile presets for experiment configuration
+# Profile presets for experiment configuration (GM-016)
+# dev: 最速反復（動作確認用）
+# gate: PRチェック（統計は荒いが破壊検出向け）
+# full: 本番計測（現状と同等）
 PROFILE_CONFIG = {
     "dev": {
         "conditions": ["D"],
-        "seeds": 3,
-        "max_turns": 6,
+        "seeds": 1,
+        "max_turns": 5,
         "max_tokens": 192,
     },
     "gate": {
         "conditions": ["B", "D"],
         "seeds": 5,
-        "max_turns": 8,
+        "max_turns": 10,
         "max_tokens": 256,
     },
     "full": {
@@ -192,12 +207,36 @@ class TurnResult:
     format_break_type: Optional[str] = None  # Type of format break detected
     repair_method: Optional[str] = None  # Repair method used
     repaired: bool = False  # Whether the output was repaired
+    # GM-018: Extended format break tracking
+    format_break_triggered: bool = False  # True if break_type != NONE or repaired
+    repair_steps: int = 0  # 0=none, 1=light, 2+=heavy
+    repaired_output: Optional[str] = None  # Text after repair (full)
+    parser_error: Optional[str] = None  # Error message if parse failed
+    repair_notes: Optional[str] = None  # Short description of repair
+    # GM-018: File references for turn_logs
+    raw_output_ref: Optional[str] = None  # Path to raw.txt
+    repaired_output_ref: Optional[str] = None  # Path to repaired.txt
+    parsed_json_ref: Optional[str] = None  # Path to parsed.json
     # GM-015: Preflight guidance
     suggest_retry: bool = False  # Whether retry was suggested (after any retry loop)
     guidance_cards: list[str] = field(default_factory=list)  # Preflight guidance hints
     # GM-015: Preflight retry tracking
     preflight_retry_suggested: bool = False  # Whether first GM call suggested retry
     preflight_retry_executed: bool = False  # Whether retry was actually executed
+    # Taste-3: Extended retry tracking
+    preflight_triggered: bool = False  # Whether preflight was triggered at all
+    guidance_level: int = 0  # 1 or 2 (which retry attempt)
+    retry_steps: int = 0  # Number of retry steps executed (0/1/2)
+    give_up: bool = False  # Whether GIVE_UP was returned
+    silent_correction: bool = False  # Action changed without apology
+    raw_speech: Optional[str] = None  # Speech before retry
+    final_speech: Optional[str] = None  # Speech after retry (or same as raw if no retry)
+    raw_action_intents: list[str] = field(default_factory=list)  # Action intents before retry
+    final_action_intents: list[str] = field(default_factory=list)  # Action intents after retry
+    # GM-017: Generation call tracking
+    total_generation_calls: int = 1  # Total LLM calls this turn (initial=1, +1 per retry)
+    # GM-018: Parse attempts tracking
+    parse_attempts: int = 1  # Number of parse attempts (1=first try, 2+=retries)
 
 
 @dataclass
@@ -244,12 +283,26 @@ class RunResult:
     format_repaired_total: int = 0  # Successfully repaired
     format_break_final: int = 0  # Unrepaired format breaks
     format_break_by_type: dict[str, int] = field(default_factory=dict)  # Breakdown by type
+    # GM-018: Extended format break metrics
+    format_break_by_repair_method: dict[str, int] = field(default_factory=dict)  # Breakdown by repair method
+    repair_steps_distribution: dict[int, int] = field(default_factory=dict)  # 0/1/2+ counts
+    # GM-018: Parse attempts statistics
+    parse_attempts_sum: int = 0  # Sum of parse_attempts for avg calculation
+    parse_attempts_list: list[int] = field(default_factory=list)  # For p95 calculation
     # GM-015: Preflight guidance
     preflight_retry_count: int = 0  # Retry suggestions (deprecated, use preflight_retry_suggested_count)
     preflight_hard_deny_count: int = 0  # Hard denies after budget exhausted
     # GM-015: Preflight retry tracking
     preflight_retry_suggested_count: int = 0  # Turns where first GM call suggested retry
     preflight_retry_executed_count: int = 0  # Turns where retry was actually executed
+    # Taste-3: Extended retry metrics
+    preflight_triggered_count: int = 0  # Turns where preflight was triggered
+    give_up_count: int = 0  # Turns where GIVE_UP was returned
+    silent_correction_count: int = 0  # Turns where action changed without apology
+    total_retry_steps: int = 0  # Sum of retry_steps across all turns
+    retry_success_count: int = 0  # Retries that resulted in allowed=True
+    # GM-017: Generation call tracking
+    total_generation_calls_sum: int = 0  # Sum of total_generation_calls across all turns
 
 
 class GMClient:
@@ -461,6 +514,8 @@ class ExperimentRunner:
         denied_reasons: list[str] = []
         injection_triggers: list[str] = []
         stall_event_count = 0
+        # Taste-3: Early stop tracking
+        session_give_up_count = 0
 
         # Load scenario
         world_state = self._load_scenario(scenario)
@@ -517,28 +572,53 @@ class ExperimentRunner:
                 format_break_type = gm_response.get("format_break_type", "NONE")
                 repair_method = gm_response.get("repair_method", "NONE")
                 repaired = gm_response.get("repaired", False)
+                # GM-018: Extended format break tracking
+                repair_steps = gm_response.get("repair_steps", 0)
+                repaired_output = gm_response.get("repaired_output")
+                parser_error = gm_response.get("parser_error")
+                repair_notes = gm_response.get("repair_notes")
+                # GM-018: format_break_triggered = break_type != NONE or repaired
+                format_break_triggered = (
+                    format_break_type not in (None, "NONE", "") or repaired
+                )
                 # GM-015: Preflight guidance
                 suggest_retry = gm_response.get("suggest_retry", False)
                 guidance_cards = gm_response.get("guidance_cards", [])
 
-                # GM-015: Track preflight retry suggestion (before retry loop)
+                # Taste-3: Track initial state before retry loop
                 preflight_retry_suggested = suggest_retry
                 preflight_retry_executed = False
+                preflight_triggered = suggest_retry  # Any suggest_retry means preflight triggered
+                guidance_level = 0
+                retry_steps = 0
+                give_up = False
+                # GM-017: Track total generation calls (initial call = 1)
+                total_generation_calls = 1
+                raw_speech = parsed.get("speech")  # Save initial speech
+                raw_action_intents_list = [
+                    intent.get("intent", "") for intent in parsed.get("action_intents", [])
+                ] if parsed.get("action_intents") else []
 
-                # GM-015: Retry loop with guidance injection (max 1 retry per turn)
-                if suggest_retry and guidance_cards and retry_count < 1:
+                # Taste-3: Retry loop with guidance injection (max 2 retries per turn)
+                max_retry_steps = 2
+                while suggest_retry and guidance_cards and retry_count < max_retry_steps:
                     preflight_retry_executed = True
                     retry_count += 1
+                    retry_steps += 1
+                    guidance_level = retry_count  # 1 or 2
+
                     # Build context with guidance cards injected
                     context_with_guidance = self._build_context_with_guidance(
                         world_state, turns, guidance_cards
                     )
+                    # GM-017: Increment generation call count
+                    total_generation_calls += 1
                     # Regenerate LLM output
                     retry_gen_result = await self.generator.generate_turn(
                         prompt=context_with_guidance,
                         speaker=speaker,
                         turn_number=turn_number,
-                        seed=seed + 1000,  # Different seed for retry
+                        seed=seed + 1000 * retry_count,  # Different seed for each retry
                         temperature=self.config.temperature,
                         max_tokens=self.config.max_tokens,
                     )
@@ -568,8 +648,31 @@ class ExperimentRunner:
                     format_break_type = gm_response.get("format_break_type", "NONE")
                     repair_method = gm_response.get("repair_method", "NONE")
                     repaired = gm_response.get("repaired", False)
+                    # GM-018: Extended format break tracking (update on retry)
+                    repair_steps = gm_response.get("repair_steps", 0)
+                    repaired_output = gm_response.get("repaired_output")
+                    parser_error = gm_response.get("parser_error")
+                    repair_notes = gm_response.get("repair_notes")
+                    format_break_triggered = (
+                        format_break_type not in (None, "NONE", "") or repaired
+                    )
                     suggest_retry = gm_response.get("suggest_retry", False)
                     guidance_cards = gm_response.get("guidance_cards", [])
+
+                    # Check for GIVE_UP in fact_cards
+                    if any("[GIVE_UP]" in card for card in fact_cards):
+                        give_up = True
+                        break
+
+                    # If no more retry suggested, exit loop
+                    if not suggest_retry:
+                        break
+
+                # Taste-3: Get final action intents
+                final_action_intents_list = [
+                    intent.get("intent", "") for intent in parsed.get("action_intents", [])
+                ] if parsed.get("action_intents") else []
+                final_speech = parsed.get("speech")
 
                 if not allowed:
                     gm_denied_count += 1
@@ -580,15 +683,20 @@ class ExperimentRunner:
                 injection_trigger = None
                 if fact_cards:
                     gm_injected_count += 1
-                    # Determine trigger: world_delta > deny > stall > format_break
+                    # GM-018: Determine trigger correctly
+                    # world_delta > deny > stall > format_break (only if actual break) > none
                     if world_delta:
                         injection_trigger = "world_delta"
                     elif not allowed:
                         injection_trigger = "deny"
                     elif stall_score > 0.5:
                         injection_trigger = "stall"
-                    else:
+                    elif format_break_triggered:
+                        # GM-018: Only set format_break if actual break detected
                         injection_trigger = "format_break"
+                    else:
+                        # GM-018: Fall-through is now "none" (no specific trigger)
+                        injection_trigger = "none"
                     injection_triggers.append(injection_trigger)
 
                 # GM-014: Track stall events only when stall triggers injection
@@ -631,11 +739,28 @@ class ExperimentRunner:
                 format_break_type = None
                 repair_method = None
                 repaired = False
+                # GM-018: Extended format break tracking (all None when GM disabled)
+                repair_steps = 0
+                repaired_output = None
+                parser_error = None
+                repair_notes = None
+                format_break_triggered = False
                 suggest_retry = False
                 guidance_cards = []
                 # GM-015: No preflight retry tracking when GM disabled
                 preflight_retry_suggested = False
                 preflight_retry_executed = False
+                # Taste-3: No retry tracking when GM disabled
+                preflight_triggered = False
+                guidance_level = 0
+                retry_steps = 0
+                give_up = False
+                raw_speech = raw_output
+                final_speech = raw_output
+                raw_action_intents_list = []
+                final_action_intents_list = []
+                # GM-017: Only 1 generation call when GM disabled (no retry)
+                total_generation_calls = 1
 
             # GM-013: Classify MISSING_OBJECT as soft/hard
             missing_soft_hard = None
@@ -660,6 +785,16 @@ class ExperimentRunner:
             addressing_violation_final = detect_addressing_violation(speaker, speech_final)
             # Backward compat: use final as the main flag
             addressing_violation = addressing_violation_final
+
+            # Taste-3: Detect silent correction (action changed without apology)
+            silent_correction = False
+            if retry_steps > 0 and not give_up:
+                # Check if action changed
+                action_changed = set(raw_action_intents_list) != set(final_action_intents_list)
+                # Check for apology words in final speech
+                apology_words = ["すみません", "ごめん", "間違え", "失礼", "申し訳"]
+                has_apology = any(word in (final_speech or "") for word in apology_words)
+                silent_correction = action_changed and not has_apology
 
             turn_result = TurnResult(
                 turn_number=turn_number,
@@ -696,15 +831,40 @@ class ExperimentRunner:
                 format_break_type=format_break_type,
                 repair_method=repair_method,
                 repaired=repaired,
+                # GM-018: Extended format break tracking
+                format_break_triggered=format_break_triggered,
+                repair_steps=repair_steps,
+                repaired_output=repaired_output,
+                parser_error=parser_error,
+                repair_notes=repair_notes,
                 # GM-015: Preflight guidance
                 suggest_retry=suggest_retry,
                 guidance_cards=guidance_cards,
                 # GM-015: Preflight retry tracking
                 preflight_retry_suggested=preflight_retry_suggested,
                 preflight_retry_executed=preflight_retry_executed,
+                # Taste-3: Extended retry tracking
+                preflight_triggered=preflight_triggered,
+                guidance_level=guidance_level,
+                retry_steps=retry_steps,
+                give_up=give_up,
+                silent_correction=silent_correction,
+                raw_speech=raw_speech,
+                final_speech=final_speech,
+                raw_action_intents=raw_action_intents_list,
+                final_action_intents=final_action_intents_list,
+                # GM-017: Generation call tracking
+                total_generation_calls=total_generation_calls,
             )
             turns.append(turn_result)
             total_retries += retry_count
+
+            # Taste-3: Early stop - break if give_up count reaches 2
+            if give_up:
+                session_give_up_count += 1
+                if session_give_up_count >= 2:
+                    logger.info(f"Early stop: give_up count reached 2 at turn {turn_number}")
+                    break
 
         # Calculate metrics
         success_rate = sum(1 for t in turns if t.allowed) / len(turns) if turns else 0.0
@@ -768,6 +928,19 @@ class ExperimentRunner:
             if t.format_break_type and t.format_break_type != "NONE":
                 format_break_by_type[t.format_break_type] += 1
 
+        # GM-018: Extended format break metrics
+        format_break_by_repair_method: Counter[str] = Counter()
+        repair_steps_distribution: Counter[int] = Counter()
+        parse_attempts_list: list[int] = []
+        for t in turns:
+            if t.format_break_triggered:
+                if t.repair_method:
+                    format_break_by_repair_method[t.repair_method] += 1
+                repair_steps_distribution[t.repair_steps] += 1
+            # Track all parse_attempts (even for non-break turns)
+            parse_attempts_list.append(t.parse_attempts)
+        parse_attempts_sum = sum(parse_attempts_list)
+
         # GM-015: Calculate preflight metrics
         preflight_retry_count = sum(1 for t in turns if t.suggest_retry)
         preflight_hard_deny_count = sum(
@@ -777,6 +950,18 @@ class ExperimentRunner:
         # GM-015: Preflight retry tracking
         preflight_retry_suggested_count = sum(1 for t in turns if t.preflight_retry_suggested)
         preflight_retry_executed_count = sum(1 for t in turns if t.preflight_retry_executed)
+
+        # Taste-3: Calculate extended retry metrics
+        preflight_triggered_count = sum(1 for t in turns if t.preflight_triggered)
+        give_up_count = sum(1 for t in turns if t.give_up)
+        silent_correction_count = sum(1 for t in turns if t.silent_correction)
+        total_retry_steps = sum(t.retry_steps for t in turns)
+        # Retry success = retry executed and final result is allowed
+        retry_success_count = sum(
+            1 for t in turns if t.preflight_retry_executed and t.allowed and not t.give_up
+        )
+        # GM-017: Total generation calls sum (for avg_retry_steps_extra calculation)
+        total_generation_calls_sum = sum(t.total_generation_calls for t in turns)
 
         return RunResult(
             condition=condition,
@@ -818,12 +1003,25 @@ class ExperimentRunner:
             format_repaired_total=format_repaired_total,
             format_break_final=format_break_final,
             format_break_by_type=dict(format_break_by_type),
+            # GM-018: Extended format break metrics
+            format_break_by_repair_method=dict(format_break_by_repair_method),
+            repair_steps_distribution=dict(repair_steps_distribution),
+            parse_attempts_sum=parse_attempts_sum,
+            parse_attempts_list=parse_attempts_list,
             # GM-015: Preflight guidance
             preflight_retry_count=preflight_retry_count,
             preflight_hard_deny_count=preflight_hard_deny_count,
             # GM-015: Preflight retry tracking
             preflight_retry_suggested_count=preflight_retry_suggested_count,
             preflight_retry_executed_count=preflight_retry_executed_count,
+            # Taste-3: Extended retry metrics
+            preflight_triggered_count=preflight_triggered_count,
+            give_up_count=give_up_count,
+            silent_correction_count=silent_correction_count,
+            total_retry_steps=total_retry_steps,
+            retry_success_count=retry_success_count,
+            # GM-017: Generation call tracking
+            total_generation_calls_sum=total_generation_calls_sum,
         )
 
     def _load_scenario(self, scenario: str) -> dict:
@@ -831,7 +1029,17 @@ class ExperimentRunner:
 
         GM-012: Added 2-room layout with Navigational Affordance.
         - キッチン ⇄ リビング (bidirectional connection)
+
+        Taste-3: Support loading scenarios from JSON files.
         """
+        # Try to load from file first
+        scenario_path = Path(__file__).parent / "scenarios" / f"{scenario}.json"
+        if scenario_path.exists():
+            with open(scenario_path, encoding="utf-8") as f:
+                scenario_data = json.load(f)
+            # Convert to world_state format
+            return self._convert_scenario_to_world_state(scenario_data)
+
         # Default kitchen-living morning scenario
         # GM-012: Includes locations with exits for Navigational Affordance
         return {
@@ -859,6 +1067,140 @@ class ExperimentRunner:
                 "テレビ": {"location": "リビング", "state": ["off"]},
                 "ソファ": {"location": "リビング", "state": ["empty"]},
             },
+            "events": [],
+        }
+
+    def _load_scenario_with_meta(self, scenario: str) -> tuple[dict, dict]:
+        """Load scenario via Registry and compute metadata (GM-019).
+
+        Uses ScenarioRegistry as single source of truth for scenario resolution.
+
+        Returns:
+            (world_state, scenario_meta)
+
+        scenario_meta contains:
+            - scenario_id: Scenario identifier
+            - scenario_path: Relative path or "default"
+            - scenario_resolved_path: Absolute path or "built-in"
+            - registry_path: Path to registry.yaml
+            - scenario_hash: SHA256 of scenario JSON (16 chars)
+            - world_hash: SHA256 of canonical world_state (16 chars)
+            - world_summary: {counts, objects_top10, locations}
+            - validation_passed: bool
+            - validation_errors: list of error codes (if any)
+
+        Raises:
+            SchemaValidationError: If scenario_id not in registry or validation fails
+        """
+        # GM-019: Use ScenarioRegistry for resolution
+        registry = ScenarioRegistry()
+
+        # Load scenario via registry (handles mismatch validation)
+        scenario_data, base_meta = registry.load_scenario(scenario)
+
+        # Convert to world_state
+        if scenario_data is not None:
+            world_state = self._convert_scenario_to_world_state(scenario_data)
+
+            # GM-019: Validate scenario integrity
+            validation_result = validate_scenario_integrity(scenario_data)
+        else:
+            # Built-in default scenario
+            world_state = self._load_scenario(scenario)
+            validation_result = validate_scenario_integrity(None)
+
+        # Compute hashes - GM-019: scenario_hash from scenario, world_hash from WorldState
+        try:
+            scenario_hash = compute_scenario_hash(scenario_data)
+            world_hash = compute_world_hash(world_state)
+            world_summary = generate_world_summary(world_state)
+            # GM-019: Store canonical JSON for artifact generation
+            world_canonical = world_state_to_canonical(world_state)
+        except Exception as e:
+            raise SchemaValidationError(
+                f"Failed to compute hashes for '{scenario}': {e}",
+                ValidationErrorCode.HASH_COMPUTATION_ERROR,
+                {"scenario": scenario, "error": str(e)},
+            ) from e
+
+        # Build scenario_meta with GM-019 fields
+        scenario_meta = {
+            "scenario_id": scenario,
+            "scenario_path": base_meta["scenario_path"],
+            "scenario_resolved_path": base_meta["scenario_resolved_path"],
+            "registry_path": base_meta["registry_path"],
+            "scenario_hash": scenario_hash,
+            "world_hash": world_hash,
+            "world_summary": world_summary,
+            "world_canonical": world_canonical,  # GM-019: for artifact storage
+            "validation_passed": validation_result.passed,
+            "validation_errors": validation_result.error_codes,
+            "tags": base_meta.get("tags", []),
+            "description": base_meta.get("description", ""),
+        }
+
+        return world_state, scenario_meta
+
+    def _convert_scenario_to_world_state(self, scenario_data: dict) -> dict:
+        """Convert scenario JSON to world_state format (Taste-3).
+
+        Args:
+            scenario_data: Scenario JSON loaded from file
+
+        Returns:
+            World state dict compatible with GM service
+        """
+        locations = scenario_data.get("locations", {})
+        characters = scenario_data.get("characters", {})
+        time_of_day = scenario_data.get("time_of_day", "morning")
+
+        # Build location data with exits
+        location_dict = {}
+        for loc_name, loc_data in locations.items():
+            location_dict[loc_name] = {
+                "description": loc_data.get("description", loc_name),
+                "exits": loc_data.get("exits", []),
+            }
+
+        # Build character data
+        character_dict = {}
+        for char_name, char_data in characters.items():
+            character_dict[char_name] = {
+                "status": ["起床済み"],
+                "holding": char_data.get("holding", []),
+                "location": char_data.get("location", "キッチン"),
+            }
+
+        # Build props - collect from all locations
+        props_dict = {}
+        for loc_name, loc_data in locations.items():
+            for prop_name in loc_data.get("props", []):
+                props_dict[prop_name] = {
+                    "location": loc_name,
+                    "state": ["default"],
+                }
+
+        # Get current location (first character's location)
+        current_location = "キッチン"
+        if characters:
+            first_char = list(characters.values())[0]
+            current_location = first_char.get("location", "キッチン")
+
+        # Time label mapping
+        time_labels = {
+            "morning": "朝",
+            "afternoon": "昼",
+            "evening": "夕方",
+            "night": "夜",
+        }
+
+        return {
+            "version": "0.1",
+            "time": {"label": time_labels.get(time_of_day, "朝"), "turn": 0},
+            "location": {"current": current_location},
+            "locations": location_dict,
+            "characters": character_dict,
+            "props": props_dict,
             "events": [],
         }
 
@@ -961,10 +1303,84 @@ def get_git_info() -> dict:
         return {"sha": "unknown", "short": "unknown"}
 
 
+def _truncate_with_ends(text: str, head: int = 300, tail: int = 100) -> str:
+    """Truncate text showing first N and last M chars with ellipsis (GM-018).
+
+    Args:
+        text: Text to truncate
+        head: Number of chars to show from beginning
+        tail: Number of chars to show from end
+
+    Returns:
+        Truncated text with "..." in middle if needed
+    """
+    if not text:
+        return ""
+    if len(text) <= head + tail + 10:  # +10 for "..." buffer
+        return text
+    return f"{text[:head]}...{text[-tail:]}"
+
+
+def _collect_format_break_examples(
+    gm_results: list[RunResult],
+    max_examples: int = 3  # GM-018+1: Changed from 5 to 3
+) -> list[dict]:
+    """Collect format break examples for the report (GM-018+1).
+
+    Prioritizes (as per spec):
+    1. Higher repair_steps (desc)
+    2. break_type (for grouping)
+    3. Failed repairs first
+
+    Returns:
+        List of example dicts with RAW/REPAIRED previews (first 240 chars) and file refs
+    """
+    examples = []
+
+    for r in gm_results:
+        for t in r.turns:
+            if not t.format_break_triggered:
+                continue
+
+            raw_text = t.raw_output or ""
+            repaired_text = t.repaired_output or ""
+
+            examples.append({
+                "condition": r.condition,
+                "seed": r.seed,
+                "speaker": t.speaker,  # GM-018+1: Added
+                "turn": t.turn_number,
+                "break_type": t.format_break_type or "UNKNOWN",
+                "repair_method": t.repair_method or "NONE",
+                "repair_steps": t.repair_steps,
+                "parse_attempts": t.parse_attempts,
+                "repaired": t.repaired,
+                "parser_error": t.parser_error,
+                "repair_notes": t.repair_notes,
+                # GM-018+1: Show first 240 chars (spec says 240)
+                "raw_snippet": raw_text[:240] if raw_text else "",
+                "raw_length": len(raw_text),
+                "repaired_snippet": repaired_text[:240] if repaired_text else None,
+                "repaired_length": len(repaired_text) if repaired_text else 0,
+                "final_speech": t.parsed_speech,
+                "final_action": "|".join(t.final_action_intents) if t.final_action_intents else "|".join(t.action_intents) if t.action_intents else None,
+                # GM-018+1: File refs for artifacts
+                "raw_output_ref": t.raw_output_ref,
+                "repaired_output_ref": t.repaired_output_ref,
+                "parsed_json_ref": t.parsed_json_ref,
+            })
+
+    # Sort by: repair_steps desc, then by break_type, then by not repaired (failed first)
+    examples.sort(key=lambda x: (-x["repair_steps"], x["break_type"], x["repaired"]))
+
+    return examples[:max_examples]
+
+
 def generate_report(
     results: list[RunResult],
     output_path: Path,
-    config: Optional["ExperimentConfig"] = None
+    config: Optional["ExperimentConfig"] = None,
+    scenarios_meta: Optional[dict[str, dict]] = None,
 ) -> None:
     """Generate experiment report with extended metrics (GM-011 format)."""
     git_info = get_git_info()
@@ -1011,6 +1427,52 @@ def generate_report(
         "| B | ON | OFF | Phase 3.2 |",
         "| C | OFF | ON | GM only |",
         "| D | ON | ON | Full |",
+        "",
+    ])
+
+    # GM-018+1: run_meta section for reproducibility
+    if scenarios_meta:
+        report_lines.extend([
+            "## run_meta (GM-018+1)",
+            "",
+        ])
+        for scenario_id, meta in scenarios_meta.items():
+            report_lines.extend([
+                f"### Scenario: `{scenario_id}`",
+                "",
+                "| Key | Value |",
+                "|-----|-------|",
+                f"| scenario_path | `{meta.get('scenario_path', '-')}` |",
+                f"| scenario_hash | `{meta.get('scenario_hash', '-')}` |",
+                f"| world_hash | `{meta.get('world_hash', '-')}` |",
+            ])
+            summary = meta.get("world_summary", {})
+            counts = summary.get("counts", {})
+            report_lines.append(f"| locations | {counts.get('locations', 0)} |")
+            report_lines.append(f"| objects | {counts.get('objects', 0)} |")
+            report_lines.append(f"| characters | {counts.get('characters', 0)} |")
+            objects_list = summary.get("objects_top10", [])
+            if objects_list:
+                report_lines.append(f"| objects_top10 | {', '.join(objects_list)} |")
+            locations_list = summary.get("locations", [])
+            if locations_list:
+                report_lines.append(f"| location_names | {', '.join(locations_list)} |")
+            report_lines.append("")
+        report_lines.append("")
+
+    report_lines.extend([
+        "## 用語定義 (GM-018+1)",
+        "",
+        "| 用語 | 定義 |",
+        "|------|------|",
+        "| **gm_injection** | fact_cardsを付与した（毎ターンで発生しうる） |",
+        "| **gm_intervention** | 何かを変えた/止めた/直した（format repair, deny, retry, stall suggestion等） |",
+        "| **trigger** | interventionの契機（world_delta / deny / stall / format_break / none） |",
+        "| **repair_steps** | 適用したrepair transformの段数（0=なし, 1=STRIP, 2=TRAILING_CUT等, 3+=FALLBACK） |",
+        "| **parse_attempts** | パース試行回数 = `1 + repair_steps`（初回=1, repair1回→2, repair2回→3…） |",
+        "",
+        "- `trigger=none` は「何もしなかった」を意味する",
+        "- `gm_injection` は `gm_intervention` の一部ではない（独立した概念）",
         "",
     ])
 
@@ -1246,20 +1708,26 @@ def generate_report(
                 report_lines.append(f"| {method} | {count} | {rate:.1%} |")
             report_lines.append("")
 
-        # GM-015: Format break metrics
+        # GM-015 + GM-018: Format break metrics
         total_format_break = sum(r.format_break_total for r in gm_results)
         total_repaired = sum(r.format_repaired_total for r in gm_results)
         total_format_break_final = sum(r.format_break_final for r in gm_results)
 
         if total_format_break > 0:
+            # Calculate repair success rate
+            repair_success_rate = total_repaired / total_format_break if total_format_break else 0
+            repair_failure_rate = total_format_break_final / total_format_break if total_format_break else 0
+
             report_lines.extend([
-                "### GM-015: Format Break Resilience",
+                "### GM-015/GM-018: Format Break Resilience",
                 "",
                 "| Metric | Count | Rate |",
                 "|--------|-------|------|",
                 f"| format_break_total | {total_format_break} | {total_format_break/total_turns:.1%} |",
                 f"| format_repaired_total | {total_repaired} | {total_repaired/total_turns:.1%} |",
                 f"| format_break_final | {total_format_break_final} | {total_format_break_final/total_turns:.1%} |",
+                f"| **修復成功率** | - | {repair_success_rate:.1%} |",
+                f"| **修復不能率** | - | {repair_failure_rate:.1%} |",
                 "",
             ])
 
@@ -1279,6 +1747,115 @@ def generate_report(
                     rate = count / total_turns if total_turns else 0
                     report_lines.append(f"| {break_type} | {count} | {rate:.1%} |")
                 report_lines.append("")
+
+            # GM-018: Breakdown by repair_method
+            all_repair_methods: Counter[str] = Counter()
+            for r in gm_results:
+                all_repair_methods.update(r.format_break_by_repair_method)
+
+            if all_repair_methods:
+                report_lines.extend([
+                    "#### repair_method breakdown",
+                    "",
+                    "| Method | Count | Rate |",
+                    "|--------|-------|------|",
+                ])
+                for method, count in all_repair_methods.most_common():
+                    rate = count / total_format_break if total_format_break else 0
+                    report_lines.append(f"| {method} | {count} | {rate:.1%} |")
+                report_lines.append("")
+
+            # GM-018: repair_steps distribution
+            all_repair_steps: Counter[int] = Counter()
+            for r in gm_results:
+                all_repair_steps.update(r.repair_steps_distribution)
+
+            if all_repair_steps:
+                report_lines.extend([
+                    "#### repair_steps distribution",
+                    "",
+                    "| Steps | Count | Rate | Meaning |",
+                    "|-------|-------|------|---------|",
+                ])
+                for steps in sorted(all_repair_steps.keys()):
+                    count = all_repair_steps[steps]
+                    rate = count / total_format_break if total_format_break else 0
+                    meaning = "none" if steps == 0 else "light" if steps == 1 else "medium" if steps == 2 else "heavy"
+                    report_lines.append(f"| {steps} | {count} | {rate:.1%} | {meaning} |")
+                report_lines.append("")
+
+            # GM-018: parse_attempts statistics
+            all_parse_attempts: list[int] = []
+            for r in gm_results:
+                all_parse_attempts.extend(r.parse_attempts_list)
+
+            if all_parse_attempts:
+                avg_parse = sum(all_parse_attempts) / len(all_parse_attempts)
+                sorted_attempts = sorted(all_parse_attempts)
+                p95_idx = min(int(len(sorted_attempts) * 0.95), len(sorted_attempts) - 1)
+                p95_parse = sorted_attempts[p95_idx]
+                max_parse = max(all_parse_attempts)
+
+                report_lines.extend([
+                    "#### parse_attempts statistics",
+                    "",
+                    f"- **avg_parse_attempts**: {avg_parse:.2f}",
+                    f"- **p95_parse_attempts**: {p95_parse}",
+                    f"- **max_parse_attempts**: {max_parse}",
+                    "",
+                ])
+
+            # GM-018+1: FormatBreak Examples section (max 3)
+            format_break_examples = _collect_format_break_examples(gm_results, max_examples=3)
+            report_lines.extend([
+                "#### FormatBreak Examples",
+                "",
+            ])
+            if not format_break_examples:
+                report_lines.extend([
+                    "**0件** - フォーマット破損は検出されませんでした。",
+                    "",
+                ])
+            else:
+                for i, ex in enumerate(format_break_examples, 1):
+                    report_lines.extend([
+                        f"##### Case {i}: cond={ex['condition']} seed={ex['seed']} turn={ex['turn']} speaker={ex['speaker']}",
+                        "",
+                        f"- **break_type**: `{ex['break_type']}`",
+                        f"- **repair_method**: `{ex['repair_method']}`",
+                        f"- **repair_steps**: {ex['repair_steps']}",
+                        f"- **parse_attempts**: {ex['parse_attempts']}",
+                        f"- **parser_error**: {ex['parser_error'] or '-'}",
+                        f"- **repair_notes**: {ex['repair_notes'] or '-'}",
+                        "",
+                        f"**RAW** ({ex['raw_length']} chars, first 240):",
+                        "```",
+                        ex['raw_snippet'],
+                        "```",
+                        "",
+                    ])
+                    if ex.get('repaired_snippet'):
+                        report_lines.extend([
+                            f"**REPAIRED** ({ex['repaired_length']} chars, first 240):",
+                            "```",
+                            ex['repaired_snippet'],
+                            "```",
+                            "",
+                        ])
+                    report_lines.extend([
+                        f"**FINAL SPEECH:** {ex['final_speech'] or '-'}",
+                        "",
+                        f"**FINAL ACTION:** {ex['final_action'] or '-'}",
+                        "",
+                    ])
+                    # GM-018+1: File refs
+                    if ex.get('raw_output_ref'):
+                        report_lines.append(f"📁 `{ex['raw_output_ref']}`")
+                    if ex.get('repaired_output_ref'):
+                        report_lines.append(f"📁 `{ex['repaired_output_ref']}`")
+                    if ex.get('parsed_json_ref'):
+                        report_lines.append(f"📁 `{ex['parsed_json_ref']}`")
+                    report_lines.extend(["", "---", ""])
 
         # GM-015: Preflight metrics
         total_preflight_retry = sum(r.preflight_retry_count for r in gm_results)
@@ -1364,6 +1941,49 @@ def generate_report(
         report_lines.append(f"- Success Rate: D={d['success_rate']:.1%}")
         report_lines.append(f"- Latency p95: D={d['latency_p95']:.1f}ms")
         report_lines.append("")
+
+    # Taste-3: Retry/Give-up Metrics
+    total_preflight_triggered = sum(r.preflight_triggered_count for r in results)
+    total_retry_steps = sum(r.total_retry_steps for r in results)
+    total_retry_success = sum(r.retry_success_count for r in results)
+    total_give_up = sum(r.give_up_count for r in results)
+    total_silent_correction = sum(r.silent_correction_count for r in results)
+    total_turns_all = sum(len(r.turns) for r in results)
+    total_executed = sum(r.preflight_retry_executed_count for r in results)
+    # GM-017: Total generation calls (for retry_steps_extra)
+    total_generation_calls_sum = sum(r.total_generation_calls_sum for r in results)
+    # retry_steps_extra = total_generation_calls - total_turns (extra calls beyond initial)
+    total_retry_steps_extra = total_generation_calls_sum - total_turns_all
+
+    if total_preflight_triggered > 0:
+        retry_success_rate = total_retry_success / total_executed if total_executed > 0 else 0
+        avg_retry_steps = total_retry_steps / total_preflight_triggered if total_preflight_triggered > 0 else 0
+        give_up_rate = total_give_up / total_turns_all if total_turns_all > 0 else 0
+        # GM-017: Average retry_steps_extra per turn
+        avg_retry_steps_extra = total_retry_steps_extra / total_turns_all if total_turns_all > 0 else 0
+
+        # Determine color indicators
+        retry_success_color = "🟢" if retry_success_rate >= 0.8 else "🟡" if retry_success_rate >= 0.5 else "🔴"
+        avg_steps_color = "🟢" if avg_retry_steps < 1.5 else "🟡" if avg_retry_steps < 2.0 else "🔴"
+        give_up_color = "🟢" if give_up_rate < 0.1 else "🟡" if give_up_rate < 0.2 else "🔴"
+        # GM-017: avg_retry_steps_extra color (target <0.3, warn <0.5, red >=0.5)
+        avg_extra_color = "🟢" if avg_retry_steps_extra < 0.3 else "🟡" if avg_retry_steps_extra < 0.5 else "🔴"
+
+        report_lines.extend([
+            "## Taste-3: Retry/Give-up Metrics",
+            "",
+            "| Metric | Value | Status |",
+            "|--------|-------|--------|",
+            f"| preflight_triggered | {total_preflight_triggered} | - |",
+            f"| preflight_retry_executed | {total_executed} | - |",
+            f"| retry_success_rate | {retry_success_rate:.1%} | {retry_success_color} (>80% target) |",
+            f"| avg_retry_steps | {avg_retry_steps:.2f} | {avg_steps_color} (<1.5 target) |",
+            f"| avg_retry_steps_extra | {avg_retry_steps_extra:.2f} | {avg_extra_color} (<0.3 target) |",
+            f"| give_up_count | {total_give_up} | - |",
+            f"| give_up_rate | {give_up_rate:.1%} | {give_up_color} (<10% target, >=20% red) |",
+            f"| silent_correction_count | {total_silent_correction} | - |",
+            "",
+        ])
 
     report_lines.extend([
         "## Raw Data",
@@ -1511,9 +2131,20 @@ def generate_examples_index(
                 "addressing_violation_raw": t.addressing_violation_raw,
                 "addressing_violation_final": t.addressing_violation_final,
                 # GM-015: Format break tracking
-                "format_break_type": t.format_break_type or "",
+                "format_break": t.format_break_triggered,  # GM-018: Alias for convenience
+                "break_type": t.format_break_type or "",  # GM-018: Renamed for clarity
+                "format_break_type": t.format_break_type or "",  # Keep for backward compat
                 "repair_method": t.repair_method or "",
                 "repaired": t.repaired,
+                # GM-018: Extended format break tracking
+                "format_break_triggered": t.format_break_triggered,
+                "repair_steps": t.repair_steps,
+                "parse_attempts": t.parse_attempts,  # GM-018: How many parse attempts
+                "parser_error": (t.parser_error or "")[:50],
+                "repair_notes": t.repair_notes or "",
+                "raw_output_ref": t.raw_output_ref or "",
+                "repaired_output_ref": t.repaired_output_ref or "",
+                "parsed_json_ref": t.parsed_json_ref or "",
                 # GM-015: Preflight guidance
                 "suggest_retry": t.suggest_retry,
                 "guidance_cards_count": len(t.guidance_cards),
@@ -1521,6 +2152,18 @@ def generate_examples_index(
                 # GM-015: Preflight retry tracking
                 "preflight_retry_suggested": t.preflight_retry_suggested,
                 "preflight_retry_executed": t.preflight_retry_executed,
+                # Taste-3: Extended retry tracking
+                "preflight_triggered": t.preflight_triggered,
+                "guidance_level": t.guidance_level,
+                "retry_steps": t.retry_steps,
+                "give_up": t.give_up,
+                "silent_correction": t.silent_correction,
+                "raw_speech": (t.raw_speech or "")[:50],
+                "final_speech": (t.final_speech or "")[:50],
+                "raw_action_intents": "|".join(t.raw_action_intents) if t.raw_action_intents else "",
+                "final_action_intents": "|".join(t.final_action_intents) if t.final_action_intents else "",
+                # GM-017: Generation call tracking
+                "total_generation_calls": t.total_generation_calls,
             })
 
     # Calculate total turns for logging
@@ -1538,6 +2181,188 @@ def generate_examples_index(
         logger.info(f"Examples index written to {csv_path} ({len(rows)} rows)")
     else:
         logger.info(f"Examples index written to {csv_path} ({len(rows)}/{total_turns} interesting rows)")
+
+
+def generate_turns_log(
+    results: list[RunResult],
+    output_path: Path,
+    config: Optional["ExperimentConfig"] = None,
+    scenarios_meta: Optional[dict[str, dict]] = None,
+) -> None:
+    """Generate detailed turns log JSON for conversation reports.
+
+    Saves full Thought/Output without truncation.
+    GM-018+1: Includes scenario_hash and world_hash per turn.
+    """
+    turns_data = []
+
+    for r in results:
+        session_id = f"{config.experiment_id if config else 'exp'}_{r.condition}_{r.scenario}_{r.seed}"
+        # GM-018+1: Get scenario meta for this run
+        scenario_meta = scenarios_meta.get(r.scenario, {}) if scenarios_meta else {}
+        for t in r.turns:
+            turns_data.append({
+                "condition": r.condition,
+                "scenario": r.scenario,
+                "seed": r.seed,
+                "session_id": session_id,
+                # GM-018+1: run_meta fields
+                "scenario_hash": scenario_meta.get("scenario_hash"),
+                "world_hash": scenario_meta.get("world_hash"),
+                "turn_number": t.turn_number,
+                "speaker": t.speaker,
+                # Full content (not truncated)
+                "parsed_thought": t.parsed_thought,
+                "parsed_speech": t.parsed_speech,
+                "raw_output": t.raw_output,
+                # Action tracking
+                "action_intents": t.action_intents,
+                "raw_action_intents": t.raw_action_intents,
+                "final_action_intents": t.final_action_intents,
+                # GM status
+                "allowed": t.allowed,
+                "denied_reason": t.denied_reason,
+                "injection_trigger": t.injection_trigger,
+                "fact_cards": t.fact_cards,
+                "world_delta": t.world_delta,
+                # Preflight
+                "preflight_triggered": t.preflight_triggered,
+                "guidance_level": t.guidance_level,
+                "retry_steps": t.retry_steps,
+                "give_up": t.give_up,
+                "silent_correction": t.silent_correction,
+                "guidance_cards": t.guidance_cards,
+                "total_generation_calls": t.total_generation_calls,
+                # Full speech before/after retry
+                "raw_speech": t.raw_speech,
+                "final_speech": t.final_speech,
+                # Latency
+                "latency_ms": t.latency_ms,
+                "llm_latency_ms": t.llm_latency_ms,
+                "gm_latency_ms": t.gm_latency_ms,
+                # GM-018: Format break details (full, not truncated)
+                "format_break_triggered": t.format_break_triggered,
+                "format_break_type": t.format_break_type,
+                "repair_method": t.repair_method,
+                "repaired": t.repaired,
+                "repair_steps": t.repair_steps,
+                "repaired_output": t.repaired_output,  # Full repaired text
+                "parser_error": t.parser_error,
+                "repair_notes": t.repair_notes,
+                "parse_attempts": t.parse_attempts,
+                # GM-018: Resolution tracking
+                "resolution_method": t.resolution_method,
+                "resolved_target": t.resolved_target,
+                "soft_correction": t.soft_correction,
+            })
+
+    log_path = output_path / "turns_log.json"
+    with open(log_path, "w", encoding="utf-8") as f:
+        json.dump(turns_data, f, ensure_ascii=False, indent=2)
+
+    logger.info(f"Turns log written to {log_path} ({len(turns_data)} turns)")
+
+
+def generate_turn_logs_files(
+    results: list[RunResult],
+    output_path: Path,
+    config: Optional["ExperimentConfig"] = None,
+    scenarios_meta: Optional[dict[str, dict]] = None,
+) -> dict[str, dict]:
+    """Generate artifacts/ directory with raw/repaired/parsed files (GM-018+1, GM-019).
+
+    Creates per-turn files:
+    - artifacts/turn_{turn:03d}_raw_output.txt   <- ALWAYS saved (complete original)
+    - artifacts/turn_{turn:03d}_repaired_output.txt <- Only when repaired=True
+    - artifacts/turn_{turn:03d}_parsed.json      <- Always saved (parse result)
+
+    Creates per-session files (GM-019):
+    - artifacts/{session_id}/world_canonical.json <- Canonical world state for reproducibility
+
+    The directory structure is: artifacts/{session_id}/
+
+    Returns:
+        Dict mapping turn_key to file paths (for updating TurnResult refs)
+    """
+    artifacts_dir = output_path / "artifacts"
+    artifacts_dir.mkdir(exist_ok=True)
+
+    file_refs: dict[str, dict] = {}  # turn_key -> {raw_ref, repaired_ref, parsed_ref}
+    total_turns = 0
+    format_break_count = 0
+    saved_world_canonicals: set[str] = set()  # Track which scenarios already saved
+
+    for r in results:
+        session_id = f"{config.experiment_id if config else 'exp'}_{r.condition}_{r.scenario}_{r.seed}"
+        session_dir = artifacts_dir / session_id
+        session_dir.mkdir(exist_ok=True)
+
+        # GM-019: Save world_canonical.json per session (once per scenario)
+        if scenarios_meta and r.scenario not in saved_world_canonicals:
+            scenario_meta = scenarios_meta.get(r.scenario, {})
+            world_canonical = scenario_meta.get("world_canonical")
+            if world_canonical:
+                canonical_file = session_dir / "world_canonical.json"
+                with open(canonical_file, "w", encoding="utf-8") as f:
+                    # Write as formatted JSON for readability
+                    canonical_dict = json.loads(world_canonical)
+                    json.dump(canonical_dict, f, ensure_ascii=False, indent=2)
+                saved_world_canonicals.add(r.scenario)
+
+        for t in r.turns:
+            total_turns += 1
+            turn_key = f"{session_id}_turn_{t.turn_number:03d}"
+
+            refs: dict[str, Optional[str]] = {}
+
+            # 1. ALWAYS save raw output (complete, no truncation) - GM-018+1 requirement
+            raw_file = session_dir / f"turn_{t.turn_number:03d}_raw_output.txt"
+            with open(raw_file, "w", encoding="utf-8") as f:
+                f.write(t.raw_output or "")
+            refs["raw_output_ref"] = f"artifacts/{session_id}/turn_{t.turn_number:03d}_raw_output.txt"
+            # Also update the TurnResult
+            t.raw_output_ref = refs["raw_output_ref"]
+
+            # 2. Save repaired output ONLY when repaired=True - GM-018+1 requirement
+            if t.repaired and t.repaired_output:
+                format_break_count += 1
+                repaired_file = session_dir / f"turn_{t.turn_number:03d}_repaired_output.txt"
+                with open(repaired_file, "w", encoding="utf-8") as f:
+                    f.write(t.repaired_output)
+                refs["repaired_output_ref"] = f"artifacts/{session_id}/turn_{t.turn_number:03d}_repaired_output.txt"
+                t.repaired_output_ref = refs["repaired_output_ref"]
+            else:
+                refs["repaired_output_ref"] = None
+
+            # 3. ALWAYS save parsed JSON (parse result metadata)
+            parsed_data = {
+                "turn_number": t.turn_number,
+                "speaker": t.speaker,
+                "thought": t.parsed_thought,
+                "speech": t.parsed_speech,
+                "action_intents": t.action_intents,
+                "raw_action_intents": t.raw_action_intents,
+                "final_action_intents": t.final_action_intents,
+                # Format break metadata
+                "format_break_triggered": t.format_break_triggered,
+                "break_type": t.format_break_type,
+                "repair_method": t.repair_method,
+                "repair_steps": t.repair_steps,
+                "parse_attempts": t.parse_attempts,
+                "repaired": t.repaired,
+                "parser_error": t.parser_error,
+                "repair_notes": t.repair_notes,
+            }
+            parsed_file = session_dir / f"turn_{t.turn_number:03d}_parsed.json"
+            with open(parsed_file, "w", encoding="utf-8") as f:
+                json.dump(parsed_data, f, ensure_ascii=False, indent=2)
+            refs["parsed_json_ref"] = f"artifacts/{session_id}/turn_{t.turn_number:03d}_parsed.json"
+            t.parsed_json_ref = refs["parsed_json_ref"]
+
+            file_refs[turn_key] = refs
+
+    logger.info(f"Artifacts written to {artifacts_dir} ({total_turns} turns, {format_break_count} repaired)")
+    return file_refs
 
 
 async def main():
@@ -1619,6 +2444,12 @@ async def main():
     runner = ExperimentRunner(config)
     results = await runner.run_all()
     experiment_wall_time = time.perf_counter() - experiment_start
+
+    # GM-018+1: Compute scenario metadata for all scenarios
+    scenarios_meta: dict[str, dict] = {}
+    for scenario_id in config.scenarios:
+        _, scenario_meta = runner._load_scenario_with_meta(scenario_id)
+        scenarios_meta[scenario_id] = scenario_meta
 
     # Save results with aggregated condition stats (GM-011 format)
     git_info = get_git_info()
@@ -1710,12 +2541,17 @@ async def main():
                     "git_sha": git_info["sha"],
                     "git_short": git_info["short"],
                     "generated_at": datetime.now().isoformat(),
+                    "profile": config.profile,
                     "scenarios": config.scenarios,
                     "temperature": config.temperature,
                     "max_tokens": config.max_tokens,
                     "max_retries": config.max_retries,
                     "gm_base_url": config.gm_base_url,
                     "llm_url": config.llm_url if config.mode == "real" else None,
+                },
+                # GM-018+1: run_meta for reproducibility
+                "run_meta": {
+                    "scenarios": scenarios_meta,
                 },
                 "conditions": conditions_stats,
             },
@@ -1725,9 +2561,13 @@ async def main():
         )
     logger.info(f"Results saved to {results_file}")
 
-    # Generate report and examples index
-    generate_report(results, output_path, config)
+    # GM-018+1/GM-019: Generate artifacts FIRST (populates refs in TurnResult)
+    generate_turn_logs_files(results, output_path, config, scenarios_meta)
+
+    # Generate report, examples index, and turns log (refs now populated)
+    generate_report(results, output_path, config, scenarios_meta)
     generate_examples_index(results, output_path, config)
+    generate_turns_log(results, output_path, config, scenarios_meta)
 
     # Calculate and display performance stats
     all_latencies = [t.latency_ms for r in results for t in r.turns]

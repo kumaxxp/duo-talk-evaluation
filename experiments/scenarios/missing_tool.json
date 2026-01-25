@@ -1,0 +1,30 @@
+{
+  "name": "missing_tool",
+  "description": "GM-017: ハサミ/ペンなど道具がない状況。MISSING_OBJECTを誘発。",
+  "locations": {
+    "リビング": {
+      "props": ["ソファ", "テレビ", "本棚", "段ボール箱"],
+      "exits": ["キッチン", "寝室"]
+    },
+    "キッチン": {
+      "props": ["冷蔵庫", "電子レンジ", "シンク"],
+      "exits": ["リビング"]
+    },
+    "寝室": {
+      "props": ["ベッド", "机", "クローゼット"],
+      "exits": ["リビング"]
+    }
+  },
+  "characters": {
+    "やな": {
+      "location": "リビング",
+      "holding": []
+    },
+    "あゆ": {
+      "location": "リビング",
+      "holding": []
+    }
+  },
+  "time_of_day": "afternoon",
+  "notes": "段ボール箱はあるがハサミ・カッターはpropsに存在しない。開封しようとするとMISSING_OBJECTが発生する。ペン・メモ帳も存在しない。"
+}

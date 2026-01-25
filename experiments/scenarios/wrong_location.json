@@ -1,0 +1,30 @@
+{
+  "name": "wrong_location",
+  "description": "GM-017: 欲しいアイテムが別の部屋にある状況。WRONG_LOCATIONを誘発。",
+  "locations": {
+    "リビング": {
+      "props": ["ソファ", "テレビ", "リモコン"],
+      "exits": ["キッチン", "書斎"]
+    },
+    "キッチン": {
+      "props": ["冷蔵庫", "ジュース", "おやつ", "マグカップ"],
+      "exits": ["リビング"]
+    },
+    "書斎": {
+      "props": ["本棚", "ノートパソコン", "デスクライト", "メモ帳", "ペン"],
+      "exits": ["リビング"]
+    }
+  },
+  "characters": {
+    "やな": {
+      "location": "リビング",
+      "holding": []
+    },
+    "あゆ": {
+      "location": "リビング",
+      "holding": []
+    }
+  },
+  "time_of_day": "evening",
+  "notes": "リビングにいるがジュース・おやつはキッチン、ノートパソコン・メモ帳はstudy。これらを取ろうとするとWRONG_LOCATIONが発生する。"
+}

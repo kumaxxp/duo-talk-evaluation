@@ -1,0 +1,36 @@
+# Scenario Registry (GM-019)
+# Single source of truth for scenario_id -> file path resolution
+#
+# Rules:
+# - scenario_id is the unique key (CLI input)
+# - path is relative to experiments/scenarios/
+# - tags are for filtering/grouping
+# - recommended_profile is the suggested experiment profile
+
+scenarios:
+  # Default scenario (built-in, no file)
+  - scenario_id: default
+    path: null  # Built-in default scenario
+    tags: [baseline, kitchen_living]
+    recommended_profile: dev
+    description: "Default kitchen-living morning scenario"
+
+  # Taste-3: MISSING_OBJECT scenarios
+  - scenario_id: coffee_trap
+    path: coffee_trap.json
+    tags: [gate_taste3, retry, missing_object]
+    recommended_profile: dev
+    description: "Coffee maker exists but no beans - triggers MISSING_OBJECT"
+
+  - scenario_id: missing_tool
+    path: missing_tool.json
+    tags: [gate_taste3, retry, missing_object]
+    recommended_profile: dev
+    description: "Cardboard box but no scissors - triggers MISSING_OBJECT"
+
+  # GM-017: WRONG_LOCATION scenarios
+  - scenario_id: wrong_location
+    path: wrong_location.json
+    tags: [gate_gm017, wrong_location]
+    recommended_profile: dev
+    description: "Items in different rooms - triggers WRONG_LOCATION"
