@@ -1,0 +1,204 @@
+{
+  "experiment_id": "gm017_gate",
+  "mode": "real",
+  "model": "gemma3:12b",
+  "seeds": 5,
+  "max_turns": 10,
+  "metadata": {
+    "git_sha": "04da1524e36044e5bbbe6986f856529963893d62",
+    "git_short": "04da1524-dirty",
+    "generated_at": "2026-01-25T15:29:35.311515",
+    "scenarios": [
+      "coffee_trap,missing_tool,wrong_location"
+    ],
+    "temperature": 0.7,
+    "max_tokens": 256,
+    "max_retries": 3,
+    "gm_base_url": "http://localhost:8001",
+    "llm_url": "http://localhost:11434"
+  },
+  "conditions": {
+    "B": {
+      "stats": {
+        "turns": 50,
+        "success": 50,
+        "retries_total": 0,
+        "addressing_violations": 0,
+        "impossible_actions": {
+          "total": 0,
+          "breakdown": {}
+        },
+        "stall_events": 0,
+        "stall_recoveries": 0,
+        "gm_interventions": {
+          "count": 0,
+          "triggers": {}
+        },
+        "gm_denied_count": 0,
+        "latency_ms": {
+          "p50": 1585.15,
+          "p95": 2006.81
+        }
+      },
+      "runs": [
+        {
+          "scenario": "coffee_trap,missing_tool,wrong_location",
+          "seed": 0,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1792.7174329997797,
+          "latency_p95_ms": 2396.797550001793
+        },
+        {
+          "scenario": "coffee_trap,missing_tool,wrong_location",
+          "seed": 1,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1554.9920910016226,
+          "latency_p95_ms": 1888.5565060008958
+        },
+        {
+          "scenario": "coffee_trap,missing_tool,wrong_location",
+          "seed": 2,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1357.5199709994195,
+          "latency_p95_ms": 1890.3611589994398
+        },
+        {
+          "scenario": "coffee_trap,missing_tool,wrong_location",
+          "seed": 3,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1591.1968190011976,
+          "latency_p95_ms": 1887.8056600005948
+        },
+        {
+          "scenario": "coffee_trap,missing_tool,wrong_location",
+          "seed": 4,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1669.6835799994005,
+          "latency_p95_ms": 2016.848448998644
+        }
+      ]
+    },
+    "D": {
+      "stats": {
+        "turns": 50,
+        "success": 50,
+        "retries_total": 0,
+        "addressing_violations": 0,
+        "impossible_actions": {
+          "total": 0,
+          "breakdown": {}
+        },
+        "stall_events": 0,
+        "stall_recoveries": 0,
+        "gm_interventions": {
+          "count": 50,
+          "triggers": {
+            "format_break": 50
+          }
+        },
+        "gm_denied_count": 0,
+        "latency_ms": {
+          "p50": 1508.1,
+          "p95": 2484.88
+        }
+      },
+      "runs": [
+        {
+          "scenario": "coffee_trap,missing_tool,wrong_location",
+          "seed": 0,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1413.4096849993512,
+          "latency_p95_ms": 2187.743500999204
+        },
+        {
+          "scenario": "coffee_trap,missing_tool,wrong_location",
+          "seed": 1,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 2246.7299240015564,
+          "latency_p95_ms": 3222.3343000005116
+        },
+        {
+          "scenario": "coffee_trap,missing_tool,wrong_location",
+          "seed": 2,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1538.4512950004137,
+          "latency_p95_ms": 1733.5504190014035
+        },
+        {
+          "scenario": "coffee_trap,missing_tool,wrong_location",
+          "seed": 3,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1665.1133350023883,
+          "latency_p95_ms": 2484.878391998791
+        },
+        {
+          "scenario": "coffee_trap,missing_tool,wrong_location",
+          "seed": 4,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1371.540948999609,
+          "latency_p95_ms": 1969.9087859989959
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "experiment_id": "conv_full_report",
+  "mode": "real",
+  "model": "gemma3:12b",
+  "seeds": 1,
+  "max_turns": 6,
+  "metadata": {
+    "git_sha": "04da1524e36044e5bbbe6986f856529963893d62",
+    "git_short": "04da1524-dirty",
+    "generated_at": "2026-01-25T16:26:55.860620",
+    "scenarios": [
+      "default"
+    ],
+    "temperature": 0.7,
+    "max_tokens": 192,
+    "max_retries": 3,
+    "gm_base_url": "http://localhost:8001",
+    "llm_url": "http://localhost:11434"
+  },
+  "conditions": {
+    "D": {
+      "stats": {
+        "turns": 6,
+        "success": 6,
+        "retries_total": 0,
+        "addressing_violations": 0,
+        "impossible_actions": {
+          "total": 0,
+          "breakdown": {}
+        },
+        "stall_events": 0,
+        "stall_recoveries": 0,
+        "gm_interventions": {
+          "count": 6,
+          "triggers": {
+            "format_break": 6
+          }
+        },
+        "gm_denied_count": 0,
+        "latency_ms": {
+          "p50": 1540.08,
+          "p95": 2245.14
+        }
+      },
+      "runs": [
+        {
+          "scenario": "default",
+          "seed": 0,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 6,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1540.075502001855,
+          "latency_p95_ms": 2245.1424229984696
+        }
+      ]
+    }
+  }
+}

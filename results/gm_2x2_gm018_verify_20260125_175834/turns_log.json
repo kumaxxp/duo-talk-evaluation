@@ -1,0 +1,209 @@
+[
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "gm018_verify_D_default_0",
+    "turn_number": 0,
+    "speaker": "やな",
+    "parsed_thought": "あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、ちょっとおしゃべりしようかな。",
+    "parsed_speech": "*コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー淹れてるよ。",
+    "raw_output": "Thought: あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、ちょっとおしゃべりしようかな。\nOutput: *コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー淹れてるよ。",
+    "action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "raw_action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "final_action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "none",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "*コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー淹れてるよ。",
+    "final_speech": "*コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー淹れてるよ。",
+    "latency_ms": 1232.4360929997056,
+    "llm_latency_ms": 1230.9791820007376,
+    "gm_latency_ms": 1.4089639953454025,
+    "format_break_triggered": false,
+    "format_break_type": "NONE",
+    "repair_method": "NONE",
+    "repaired": false,
+    "repair_steps": 0,
+    "repaired_output": null,
+    "parser_error": null,
+    "repair_notes": null,
+    "parse_attempts": 1,
+    "resolution_method": null,
+    "resolved_target": null,
+    "soft_correction": null
+  },
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "gm018_verify_D_default_0",
+    "turn_number": 1,
+    "speaker": "あゆ",
+    "parsed_thought": "姉様がコーヒーを淹れている…良い香りだ。朝から元気だなぁ。姉様はいつも行動的だ。",
+    "parsed_speech": "姉様、おはようございます。素敵な香りですね。少しだけいただきますね。",
+    "raw_output": "Thought: 姉様がコーヒーを淹れている…良い香りだ。朝から元気だなぁ。姉様はいつも行動的だ。\n\nOutput: 姉様、おはようございます。素敵な香りですね。少しだけいただきますね。",
+    "action_intents": [
+      "SAY"
+    ],
+    "raw_action_intents": [
+      "SAY"
+    ],
+    "final_action_intents": [
+      "SAY"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "none",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "姉様、おはようございます。素敵な香りですね。少しだけいただきますね。",
+    "final_speech": "姉様、おはようございます。素敵な香りですね。少しだけいただきますね。",
+    "latency_ms": 991.1758340022061,
+    "llm_latency_ms": 989.8666049994063,
+    "gm_latency_ms": 1.2667729970416985,
+    "format_break_triggered": false,
+    "format_break_type": "NONE",
+    "repair_method": "NONE",
+    "repaired": false,
+    "repair_steps": 0,
+    "repaired_output": null,
+    "parser_error": null,
+    "repair_notes": null,
+    "parse_attempts": 1,
+    "resolution_method": null,
+    "resolved_target": null,
+    "soft_correction": null
+  },
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "gm018_verify_D_default_0",
+    "turn_number": 2,
+    "speaker": "やな",
+    "parsed_thought": "あゆも起きたみたい。ちょっと甘えん坊だなあ、でも可愛い。",
+    "parsed_speech": "あゆ、おはよう！はいはい、どうぞ。熱いから気をつけてね。今日は何する？",
+    "raw_output": "Thought: あゆも起きたみたい。ちょっと甘えん坊だなあ、でも可愛い。\nOutput: あゆ、おはよう！はいはい、どうぞ。熱いから気をつけてね。今日は何する？",
+    "action_intents": [
+      "ASK"
+    ],
+    "raw_action_intents": [
+      "ASK"
+    ],
+    "final_action_intents": [
+      "ASK"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "none",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "あゆ、おはよう！はいはい、どうぞ。熱いから気をつけてね。今日は何する？",
+    "final_speech": "あゆ、おはよう！はいはい、どうぞ。熱いから気をつけてね。今日は何する？",
+    "latency_ms": 906.459720004932,
+    "llm_latency_ms": 905.1083810045384,
+    "gm_latency_ms": 1.3140189985278994,
+    "format_break_triggered": false,
+    "format_break_type": "NONE",
+    "repair_method": "NONE",
+    "repaired": false,
+    "repair_steps": 0,
+    "repaired_output": null,
+    "parser_error": null,
+    "repair_notes": null,
+    "parse_attempts": 1,
+    "resolution_method": null,
+    "resolved_target": null,
+    "soft_correction": null
+  },
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "gm018_verify_D_default_0",
+    "turn_number": 3,
+    "speaker": "あゆ",
+    "parsed_thought": "姉様は朝から元気だなぁ。今日の予定を考えると、何か手伝うことはないかな？でも、まずはコーヒーを味わおう。",
+    "parsed_speech": "姉様、おはようございます。ありがとうございます、いただきますね。今日の予定は、まだ詳細が決まっていないのですが、いくつか書類の整理と、資料のレビューがあると思います。何か私にできることはありますか？",
+    "raw_output": "Thought: 姉様は朝から元気だなぁ。今日の予定を考えると、何か手伝うことはないかな？でも、まずはコーヒーを味わおう。\n\nOutput: 姉様、おはようございます。ありがとうございます、いただきますね。今日の予定は、まだ詳細が決まっていないのですが、いくつか書類の整理と、資料のレビューがあると思います。何か私にできることはありますか？",
+    "action_intents": [
+      "ASK"
+    ],
+    "raw_action_intents": [
+      "ASK"
+    ],
+    "final_action_intents": [
+      "ASK"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "none",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "姉様、おはようございます。ありがとうございます、いただきますね。今日の予定は、まだ詳細が決まっていないのですが、いくつか書類の整理と、資料のレビューがあると思います。何か私にできることはありますか？",
+    "final_speech": "姉様、おはようございます。ありがとうございます、いただきますね。今日の予定は、まだ詳細が決まっていないのですが、いくつか書類の整理と、資料のレビューがあると思います。何か私にできることはありますか？",
+    "latency_ms": 1539.8567559968797,
+    "llm_latency_ms": 1538.511907994689,
+    "gm_latency_ms": 1.3054099981673062,
+    "format_break_triggered": false,
+    "format_break_type": "NONE",
+    "repair_method": "NONE",
+    "repaired": false,
+    "repair_steps": 0,
+    "repaired_output": null,
+    "parser_error": null,
+    "repair_notes": null,
+    "parse_attempts": 1,
+    "resolution_method": null,
+    "resolved_target": null,
+    "soft_correction": null
+  }
+]

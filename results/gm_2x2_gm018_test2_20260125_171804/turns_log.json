@@ -1,0 +1,164 @@
+[
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "gm018_test2_D_default_0",
+    "turn_number": 0,
+    "speaker": "やな",
+    "parsed_thought": "あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、あゆにも起こそう。",
+    "parsed_speech": "*コーヒーメーカーに豆を入れ、スイッチを入れる* うーん、いい香り。あゆ、起きなー！",
+    "raw_output": "Thought: あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、あゆにも起こそう。\nOutput: *コーヒーメーカーに豆を入れ、スイッチを入れる* うーん、いい香り。あゆ、起きなー！",
+    "action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "raw_action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "final_action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "none",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "*コーヒーメーカーに豆を入れ、スイッチを入れる* うーん、いい香り。あゆ、起きなー！",
+    "final_speech": "*コーヒーメーカーに豆を入れ、スイッチを入れる* うーん、いい香り。あゆ、起きなー！",
+    "latency_ms": 1063.6671110041789,
+    "llm_latency_ms": 1062.2417619961197,
+    "gm_latency_ms": 1.3770290024694987
+  },
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "gm018_test2_D_default_0",
+    "turn_number": 1,
+    "speaker": "あゆ",
+    "parsed_thought": "姉様がコーヒーの準備をしている。朝から行動的だなぁ。私もそろそろ起きなければ。",
+    "parsed_speech": "姉様、おはようございます。素敵な香りですね。",
+    "raw_output": "Thought: 姉様がコーヒーの準備をしている。朝から行動的だなぁ。私もそろそろ起きなければ。\n\nOutput: 姉様、おはようございます。素敵な香りですね。",
+    "action_intents": [
+      "SAY"
+    ],
+    "raw_action_intents": [
+      "SAY"
+    ],
+    "final_action_intents": [
+      "SAY"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "none",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "姉様、おはようございます。素敵な香りですね。",
+    "final_speech": "姉様、おはようございます。素敵な香りですね。",
+    "latency_ms": 788.0602840014035,
+    "llm_latency_ms": 786.6466780033079,
+    "gm_latency_ms": 1.3605640051537193
+  },
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "gm018_test2_D_default_0",
+    "turn_number": 2,
+    "speaker": "やな",
+    "parsed_thought": "あゆも起きたみたい。朝から分析的な口調は相変わらずだね。でも、そんなあゆも可愛いな。",
+    "parsed_speech": "あゆ、おはよう！そうだよ、すごくいい香りじゃない？今日は何する？",
+    "raw_output": "Thought: あゆも起きたみたい。朝から分析的な口調は相変わらずだね。でも、そんなあゆも可愛いな。\nOutput: あゆ、おはよう！そうだよ、すごくいい香りじゃない？今日は何する？",
+    "action_intents": [
+      "ASK"
+    ],
+    "raw_action_intents": [
+      "ASK"
+    ],
+    "final_action_intents": [
+      "ASK"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "none",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "あゆ、おはよう！そうだよ、すごくいい香りじゃない？今日は何する？",
+    "final_speech": "あゆ、おはよう！そうだよ、すごくいい香りじゃない？今日は何する？",
+    "latency_ms": 1038.5961639985908,
+    "llm_latency_ms": 1037.243616003252,
+    "gm_latency_ms": 1.314483000896871
+  },
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "gm018_test2_D_default_0",
+    "turn_number": 3,
+    "speaker": "あゆ",
+    "parsed_thought": "姉様は朝からノリノリだなぁ。今日の予定を考える前に、まずはコーヒーを味わおうかしら。",
+    "parsed_speech": "姉様、おはようございます。そうですね、素敵な香りですわね。今日の予定ですが…少し考えさせてください。まずはコーヒーを味わうのが先ですね。*コーヒーメーカーからマグカップにコーヒーが注がれるのを待つ*",
+    "raw_output": "Thought: 姉様は朝からノリノリだなぁ。今日の予定を考える前に、まずはコーヒーを味わおうかしら。\n\nOutput: 姉様、おはようございます。そうですね、素敵な香りですわね。今日の予定ですが…少し考えさせてください。まずはコーヒーを味わうのが先ですね。*コーヒーメーカーからマグカップにコーヒーが注がれるのを待つ*",
+    "action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "raw_action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "final_action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "none",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "姉様、おはようございます。そうですね、素敵な香りですわね。今日の予定ですが…少し考えさせてください。まずはコーヒーを味わうのが先ですね。*コーヒーメーカーからマグカップにコーヒーが注がれるのを待つ*",
+    "final_speech": "姉様、おはようございます。そうですね、素敵な香りですわね。今日の予定ですが…少し考えさせてください。まずはコーヒーを味わうのが先ですね。*コーヒーメーカーからマグカップにコーヒーが注がれるのを待つ*",
+    "latency_ms": 1580.9513850035728,
+    "llm_latency_ms": 1579.503733999445,
+    "gm_latency_ms": 1.4081830013310537
+  }
+]

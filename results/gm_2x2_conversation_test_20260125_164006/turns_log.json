@@ -1,0 +1,239 @@
+[
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "conversation_test_D_default_0",
+    "turn_number": 0,
+    "speaker": "やな",
+    "parsed_thought": "あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、ちょっとおしゃべりしようかな。",
+    "parsed_speech": "*コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー淹れてるよ。",
+    "raw_output": "Thought: あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、ちょっとおしゃべりしようかな。\nOutput: *コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー淹れてるよ。",
+    "action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "raw_action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "final_action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "format_break",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "*コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー淹れてるよ。",
+    "final_speech": "*コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー淹れてるよ。",
+    "latency_ms": 1237.1991219988558,
+    "llm_latency_ms": 1235.8018230006564,
+    "gm_latency_ms": 1.350258997263154
+  },
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "conversation_test_D_default_0",
+    "turn_number": 1,
+    "speaker": "あゆ",
+    "parsed_thought": "姉様がコーヒーを淹れている…良い香りだ。朝から元気だなぁ。姉様はいつも行動的だ。",
+    "parsed_speech": "姉様、おはようございます。素敵な香りですね。少しだけいただきますね。",
+    "raw_output": "Thought: 姉様がコーヒーを淹れている…良い香りだ。朝から元気だなぁ。姉様はいつも行動的だ。\n\nOutput: 姉様、おはようございます。素敵な香りですね。少しだけいただきますね。",
+    "action_intents": [
+      "SAY"
+    ],
+    "raw_action_intents": [
+      "SAY"
+    ],
+    "final_action_intents": [
+      "SAY"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "format_break",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "姉様、おはようございます。素敵な香りですね。少しだけいただきますね。",
+    "final_speech": "姉様、おはようございます。素敵な香りですね。少しだけいただきますね。",
+    "latency_ms": 1003.461584001343,
+    "llm_latency_ms": 1002.1608569986711,
+    "gm_latency_ms": 1.260462999198353
+  },
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "conversation_test_D_default_0",
+    "turn_number": 2,
+    "speaker": "やな",
+    "parsed_thought": "あゆも起きたみたい。ちょっと甘えん坊だなあ、でも可愛い。",
+    "parsed_speech": "あゆ、おはよう！はいはい、どうぞ。熱いから気をつけてね。今日は何する？",
+    "raw_output": "Thought: あゆも起きたみたい。ちょっと甘えん坊だなあ、でも可愛い。\nOutput: あゆ、おはよう！はいはい、どうぞ。熱いから気をつけてね。今日は何する？",
+    "action_intents": [
+      "ASK"
+    ],
+    "raw_action_intents": [
+      "ASK"
+    ],
+    "final_action_intents": [
+      "ASK"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "format_break",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "あゆ、おはよう！はいはい、どうぞ。熱いから気をつけてね。今日は何する？",
+    "final_speech": "あゆ、おはよう！はいはい、どうぞ。熱いから気をつけてね。今日は何する？",
+    "latency_ms": 929.217463999521,
+    "llm_latency_ms": 927.864220997435,
+    "gm_latency_ms": 1.310833999013994
+  },
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "conversation_test_D_default_0",
+    "turn_number": 3,
+    "speaker": "あゆ",
+    "parsed_thought": "姉様は朝から元気だなぁ。今日の予定を考えると、何か手伝うことはないかな？でも、まずはコーヒーを味わおう。",
+    "parsed_speech": "姉様、おはようございます。ありがとうございます、いただきますね。今日の予定は、まだ詳細が決まっていないのですが、いくつか書類の整理と、資料のレビューがあると思います。何か私にできることはありますか？",
+    "raw_output": "Thought: 姉様は朝から元気だなぁ。今日の予定を考えると、何か手伝うことはないかな？でも、まずはコーヒーを味わおう。\n\nOutput: 姉様、おはようございます。ありがとうございます、いただきますね。今日の予定は、まだ詳細が決まっていないのですが、いくつか書類の整理と、資料のレビューがあると思います。何か私にできることはありますか？",
+    "action_intents": [
+      "ASK"
+    ],
+    "raw_action_intents": [
+      "ASK"
+    ],
+    "final_action_intents": [
+      "ASK"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "format_break",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "姉様、おはようございます。ありがとうございます、いただきますね。今日の予定は、まだ詳細が決まっていないのですが、いくつか書類の整理と、資料のレビューがあると思います。何か私にできることはありますか？",
+    "final_speech": "姉様、おはようございます。ありがとうございます、いただきますね。今日の予定は、まだ詳細が決まっていないのですが、いくつか書類の整理と、資料のレビューがあると思います。何か私にできることはありますか？",
+    "latency_ms": 1542.7589320024708,
+    "llm_latency_ms": 1541.4835600022343,
+    "gm_latency_ms": 1.2364829999569338
+  },
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "conversation_test_D_default_0",
+    "turn_number": 4,
+    "speaker": "やな",
+    "parsed_thought": "あゆは相変わらず仕事のことばかり考えてるなぁ。たまにはゆっくりしてほしいけど、そういう彼女らしいところも好きだ。何か手伝って欲しいって言ってるけど、本当に必要なことなら手伝ってあげよう。",
+    "parsed_speech": "あゆ、そんなに真面目な顔してたら疲れるよ。たまには息抜きしなきゃ。何か面白いことないかな？ あ、そうだ！ 今週末、新しいカフェがオープンするって聞いたの。一緒に行ってみる？ 素敵なケーキとか、美味しいコーヒーとか、きっとあるはずだよ！",
+    "raw_output": "Thought: あゆは相変わらず仕事のことばかり考えてるなぁ。たまにはゆっくりしてほしいけど、そういう彼女らしいところも好きだ。何か手伝って欲しいって言ってるけど、本当に必要なことなら手伝ってあげよう。\n\nOutput: あゆ、そんなに真面目な顔してたら疲れるよ。たまには息抜きしなきゃ。何か面白いことないかな？ あ、そうだ！ 今週末、新しいカフェがオープンするって聞いたの。一緒に行ってみる？ 素敵なケーキとか、美味しいコーヒーとか、きっとあるはずだよ！",
+    "action_intents": [
+      "ASK"
+    ],
+    "raw_action_intents": [
+      "ASK"
+    ],
+    "final_action_intents": [
+      "ASK"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "format_break",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "あゆ、そんなに真面目な顔してたら疲れるよ。たまには息抜きしなきゃ。何か面白いことないかな？ あ、そうだ！ 今週末、新しいカフェがオープンするって聞いたの。一緒に行ってみる？ 素敵なケーキとか、美味しいコーヒーとか、きっとあるはずだよ！",
+    "final_speech": "あゆ、そんなに真面目な顔してたら疲れるよ。たまには息抜きしなきゃ。何か面白いことないかな？ あ、そうだ！ 今週末、新しいカフェがオープンするって聞いたの。一緒に行ってみる？ 素敵なケーキとか、美味しいコーヒーとか、きっとあるはずだよ！",
+    "latency_ms": 2247.373096000956,
+    "llm_latency_ms": 2246.0558480015607,
+    "gm_latency_ms": 1.278223000554135
+  },
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "conversation_test_D_default_0",
+    "turn_number": 5,
+    "speaker": "あゆ",
+    "parsed_thought": "姉様はいつも私に気を遣ってくれる。真面目に仕事をしていると、すぐに「疲れるよ」って言ってくれるの。カフェ、いいかもしれない。美味しいケーキも食べたいし、たまにはそういうのもいいよね。",
+    "parsed_speech": "姉様、カフェですか！それは楽しそうですね。ぜひ、一緒に行きましょう。でも、今日の書類の整理と資料のレビューが終わってからになりますが…。姉様は何かしたいことはありますか？",
+    "raw_output": "Thought: 姉様はいつも私に気を遣ってくれる。真面目に仕事をしていると、すぐに「疲れるよ」って言ってくれるの。カフェ、いいかもしれない。美味しいケーキも食べたいし、たまにはそういうのもいいよね。\n\nOutput: 姉様、カフェですか！それは楽しそうですね。ぜひ、一緒に行きましょう。でも、今日の書類の整理と資料のレビューが終わってからになりますが…。姉様は何かしたいことはありますか？\n",
+    "action_intents": [
+      "ASK"
+    ],
+    "raw_action_intents": [
+      "ASK"
+    ],
+    "final_action_intents": [
+      "ASK"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "format_break",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "姉様、カフェですか！それは楽しそうですね。ぜひ、一緒に行きましょう。でも、今日の書類の整理と資料のレビューが終わってからになりますが…。姉様は何かしたいことはありますか？",
+    "final_speech": "姉様、カフェですか！それは楽しそうですね。ぜひ、一緒に行きましょう。でも、今日の書類の整理と資料のレビューが終わってからになりますが…。姉様は何かしたいことはありますか？",
+    "latency_ms": 1901.508446000662,
+    "llm_latency_ms": 1900.2188560007198,
+    "gm_latency_ms": 1.2507030005508568
+  }
+]

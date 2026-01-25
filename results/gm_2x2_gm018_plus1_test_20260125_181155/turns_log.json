@@ -1,0 +1,111 @@
+[
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "gm018_plus1_test_D_default_0",
+    "scenario_hash": "c05916c746e9ce8a",
+    "world_hash": "c05916c746e9ce8a",
+    "turn_number": 0,
+    "speaker": "やな",
+    "parsed_thought": "あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、ちょっとおしゃべりしようかな。",
+    "parsed_speech": "*コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー淹れてるよ。",
+    "raw_output": "Thought: あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、ちょっとおしゃべりしようかな。\nOutput: *コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー淹れてるよ。",
+    "action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "raw_action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "final_action_intents": [
+      "USE",
+      "SAY"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "none",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "*コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー淹れてるよ。",
+    "final_speech": "*コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー淹れてるよ。",
+    "latency_ms": 1236.7878719960572,
+    "llm_latency_ms": 1235.3488549997564,
+    "gm_latency_ms": 1.3918940021540038,
+    "format_break_triggered": false,
+    "format_break_type": "NONE",
+    "repair_method": "NONE",
+    "repaired": false,
+    "repair_steps": 0,
+    "repaired_output": null,
+    "parser_error": null,
+    "repair_notes": null,
+    "parse_attempts": 1,
+    "resolution_method": null,
+    "resolved_target": null,
+    "soft_correction": null
+  },
+  {
+    "condition": "D",
+    "scenario": "default",
+    "seed": 0,
+    "session_id": "gm018_plus1_test_D_default_0",
+    "scenario_hash": "c05916c746e9ce8a",
+    "world_hash": "c05916c746e9ce8a",
+    "turn_number": 1,
+    "speaker": "あゆ",
+    "parsed_thought": "姉様がコーヒーを淹れている…良い香りだ。朝から元気だなぁ。姉様はいつも行動的だ。",
+    "parsed_speech": "姉様、おはようございます。素敵な香りですね。少しだけいただきますね。",
+    "raw_output": "Thought: 姉様がコーヒーを淹れている…良い香りだ。朝から元気だなぁ。姉様はいつも行動的だ。\n\nOutput: 姉様、おはようございます。素敵な香りですね。少しだけいただきますね。",
+    "action_intents": [
+      "SAY"
+    ],
+    "raw_action_intents": [
+      "SAY"
+    ],
+    "final_action_intents": [
+      "SAY"
+    ],
+    "allowed": true,
+    "denied_reason": null,
+    "injection_trigger": "none",
+    "fact_cards": [
+      "[GIVE_UP] Max retries exceeded"
+    ],
+    "world_delta": [],
+    "preflight_triggered": false,
+    "guidance_level": 0,
+    "retry_steps": 0,
+    "give_up": false,
+    "silent_correction": false,
+    "guidance_cards": [],
+    "total_generation_calls": 1,
+    "raw_speech": "姉様、おはようございます。素敵な香りですね。少しだけいただきますね。",
+    "final_speech": "姉様、おはようございます。素敵な香りですね。少しだけいただきますね。",
+    "latency_ms": 986.2750870015589,
+    "llm_latency_ms": 984.9034680009936,
+    "gm_latency_ms": 1.3291430004755966,
+    "format_break_triggered": false,
+    "format_break_type": "NONE",
+    "repair_method": "NONE",
+    "repaired": false,
+    "repair_steps": 0,
+    "repaired_output": null,
+    "parser_error": null,
+    "repair_notes": null,
+    "parse_attempts": 1,
+    "resolution_method": null,
+    "resolved_target": null,
+    "soft_correction": null
+  }
+]

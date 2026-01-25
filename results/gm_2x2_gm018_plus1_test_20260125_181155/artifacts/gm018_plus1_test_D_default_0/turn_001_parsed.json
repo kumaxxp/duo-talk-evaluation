@@ -1,0 +1,23 @@
+{
+  "turn_number": 1,
+  "speaker": "あゆ",
+  "thought": "姉様がコーヒーを淹れている…良い香りだ。朝から元気だなぁ。姉様はいつも行動的だ。",
+  "speech": "姉様、おはようございます。素敵な香りですね。少しだけいただきますね。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}
