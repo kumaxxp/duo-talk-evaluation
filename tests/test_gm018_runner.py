@@ -326,3 +326,131 @@ class TestScenarioMismatchValidation:
         )
         assert "mismatch" in str(error)
         assert error.code == ValidationErrorCode.SCENARIO_ID_MISMATCH
+
+
+class TestGate3RetryFailReasonClassification:
+    """Tests for Gate-3 retry failure reason classification."""
+
+    def test_retry_fail_reason_give_up(self):
+        """FAIL_GIVE_UP when give_up=True."""
+        turn = TurnResult(
+            turn_number=0,
+            speaker="やな",
+            raw_output="test",
+            parsed_thought="test",
+            parsed_speech="test",
+            allowed=False,
+            denied_reason="MISSING_OBJECT",
+            world_delta=[],
+            stall_score=0.0,
+            fact_cards=[],
+            retry_count=2,
+            latency_ms=100.0,
+            gm_latency_ms=1.0,
+            preflight_retry_executed=True,
+            give_up=True,
+            retry_fail_reason="FAIL_GIVE_UP",
+        )
+        assert turn.retry_fail_reason == "FAIL_GIVE_UP"
+
+    def test_retry_fail_reason_still_missing_object(self):
+        """FAIL_STILL_MISSING_OBJECT when denied_reason is MISSING_OBJECT."""
+        turn = TurnResult(
+            turn_number=0,
+            speaker="やな",
+            raw_output="test",
+            parsed_thought="test",
+            parsed_speech="test",
+            allowed=False,
+            denied_reason="MISSING_OBJECT",
+            world_delta=[],
+            stall_score=0.0,
+            fact_cards=[],
+            retry_count=1,
+            latency_ms=100.0,
+            gm_latency_ms=1.0,
+            preflight_retry_executed=True,
+            give_up=False,
+            retry_fail_reason="FAIL_STILL_MISSING_OBJECT",
+            raw_action_intents=["GET"],
+            final_action_intents=["GET"],  # No change
+        )
+        assert turn.retry_fail_reason == "FAIL_STILL_MISSING_OBJECT"
+
+    def test_retry_success_no_fail_reason(self):
+        """No retry_fail_reason when retry succeeded."""
+        turn = TurnResult(
+            turn_number=0,
+            speaker="やな",
+            raw_output="test",
+            parsed_thought="test",
+            parsed_speech="test",
+            allowed=True,  # Success
+            denied_reason=None,
+            world_delta=[],
+            stall_score=0.0,
+            fact_cards=[],
+            retry_count=1,
+            latency_ms=100.0,
+            gm_latency_ms=1.0,
+            preflight_retry_executed=True,
+            give_up=False,
+            retry_fail_reason=None,  # Should be None on success
+        )
+        assert turn.retry_fail_reason is None
+
+
+class TestGate3RetrySuccessRateDenominator:
+    """Tests for retry_success_rate denominator consistency."""
+
+    def test_success_rate_denominator_is_executed(self):
+        """retry_success_rate denominator should be retry_executed_total, not suggested."""
+        turns = [
+            TurnResult(
+                turn_number=i,
+                speaker="やな",
+                raw_output=f"test {i}",
+                parsed_thought="test",
+                parsed_speech="test",
+                allowed=(i == 0),  # Only first succeeds
+                denied_reason=None if i == 0 else "MISSING_OBJECT",
+                world_delta=[],
+                stall_score=0.0,
+                fact_cards=[],
+                retry_count=1,
+                latency_ms=100.0,
+                gm_latency_ms=1.0,
+                preflight_retry_suggested=True,  # All suggested
+                preflight_retry_executed=(i < 3),  # 3 executed (indices 0, 1, 2)
+                give_up=False,
+                retry_fail_reason=None if i == 0 else "FAIL_STILL_MISSING_OBJECT",
+            )
+            for i in range(5)
+        ]
+
+        run_result = RunResult(
+            condition="D",
+            scenario="test",
+            seed=0,
+            inject_enabled=True,
+            gm_enabled=True,
+            turns=turns,
+            total_retries=3,
+            success_rate=0.2,
+            gm_injected_count=0,
+            gm_denied_count=4,
+            mean_stall_score=0.0,
+            latency_p50_ms=100.0,
+            latency_p95_ms=100.0,
+            timestamp="2026-01-25",
+            preflight_retry_suggested_count=5,
+            preflight_retry_executed_count=3,
+            retry_success_count=1,  # Only turn 0 succeeded
+            retry_fail_count=2,  # Turns 1, 2 failed
+        )
+
+        # Verify: success_rate = success / executed = 1 / 3 ≈ 33%
+        assert run_result.preflight_retry_executed_count == 3
+        assert run_result.retry_success_count == 1
+        success_rate = run_result.retry_success_count / run_result.preflight_retry_executed_count
+        assert abs(success_rate - 0.333) < 0.01

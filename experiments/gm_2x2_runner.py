@@ -229,6 +229,7 @@ class TurnResult:
     retry_steps: int = 0  # Number of retry steps executed (0/1/2)
     give_up: bool = False  # Whether GIVE_UP was returned
     silent_correction: bool = False  # Action changed without apology
+    silent_correction_failed_reason: Optional[str] = None  # Reason why silent correction failed (e.g., "apology_hit")
     raw_speech: Optional[str] = None  # Speech before retry
     final_speech: Optional[str] = None  # Speech after retry (or same as raw if no retry)
     raw_action_intents: list[str] = field(default_factory=list)  # Action intents before retry
@@ -237,6 +238,8 @@ class TurnResult:
     total_generation_calls: int = 1  # Total LLM calls this turn (initial=1, +1 per retry)
     # GM-018: Parse attempts tracking
     parse_attempts: int = 1  # Number of parse attempts (1=first try, 2+=retries)
+    # Gate-3: Retry failure classification
+    retry_fail_reason: Optional[str] = None  # Reason for retry failure (if retry executed but not allowed)
 
 
 @dataclass
@@ -301,6 +304,9 @@ class RunResult:
     silent_correction_count: int = 0  # Turns where action changed without apology
     total_retry_steps: int = 0  # Sum of retry_steps across all turns
     retry_success_count: int = 0  # Retries that resulted in allowed=True
+    # Gate-3: Retry failure classification
+    retry_fail_count: int = 0  # Retries that did not result in allowed=True
+    retry_fail_breakdown: dict[str, int] = field(default_factory=dict)  # Breakdown by fail reason
     # GM-017: Generation call tracking
     total_generation_calls_sum: int = 0  # Sum of total_generation_calls across all turns
 
@@ -788,13 +794,45 @@ class ExperimentRunner:
 
             # Taste-3: Detect silent correction (action changed without apology)
             silent_correction = False
-            if retry_steps > 0 and not give_up:
+            silent_correction_failed_reason: Optional[str] = None
+            action_changed = False
+            has_apology = False
+            apology_words = ["すみません", "ごめん", "間違え", "失礼", "申し訳", "ごめんなさい", "すいません"]
+            if retry_steps > 0:
                 # Check if action changed
                 action_changed = set(raw_action_intents_list) != set(final_action_intents_list)
                 # Check for apology words in final speech
-                apology_words = ["すみません", "ごめん", "間違え", "失礼", "申し訳"]
                 has_apology = any(word in (final_speech or "") for word in apology_words)
-                silent_correction = action_changed and not has_apology
+                if not give_up:
+                    silent_correction = action_changed and not has_apology
+                    # Track why silent correction failed
+                    if action_changed and has_apology:
+                        silent_correction_failed_reason = "apology_hit"
+                    elif not action_changed:
+                        silent_correction_failed_reason = "no_action_change"
+
+            # Gate-3: Classify retry failure reason
+            retry_fail_reason: Optional[str] = None
+            if preflight_retry_executed and not (allowed and not give_up):
+                # Retry was executed but did not result in success
+                if give_up:
+                    retry_fail_reason = "FAIL_GIVE_UP"
+                elif not action_changed:
+                    retry_fail_reason = "FAIL_NO_ACTION_CHANGE"
+                elif format_break_triggered and not allowed:
+                    retry_fail_reason = "FAIL_FORMAT_BREAK"
+                elif denied_reason == "MISSING_OBJECT":
+                    retry_fail_reason = "FAIL_STILL_MISSING_OBJECT"
+                elif denied_reason == "NOT_OWNED":
+                    retry_fail_reason = "FAIL_STILL_NOT_OWNED"
+                elif denied_reason == "WRONG_LOCATION":
+                    retry_fail_reason = "FAIL_STILL_WRONG_LOCATION"
+                elif denied_reason in ("OUT_OF_SCOPE", "INVALID_STATE"):
+                    retry_fail_reason = "FAIL_STILL_NAV_ERROR"
+                elif denied_reason:
+                    retry_fail_reason = "FAIL_NEW_ERROR_INTRODUCED"
+                else:
+                    retry_fail_reason = "FAIL_OTHER"
 
             turn_result = TurnResult(
                 turn_number=turn_number,
@@ -849,12 +887,15 @@ class ExperimentRunner:
                 retry_steps=retry_steps,
                 give_up=give_up,
                 silent_correction=silent_correction,
+                silent_correction_failed_reason=silent_correction_failed_reason,
                 raw_speech=raw_speech,
                 final_speech=final_speech,
                 raw_action_intents=raw_action_intents_list,
                 final_action_intents=final_action_intents_list,
                 # GM-017: Generation call tracking
                 total_generation_calls=total_generation_calls,
+                # Gate-3: Retry failure classification
+                retry_fail_reason=retry_fail_reason,
             )
             turns.append(turn_result)
             total_retries += retry_count
@@ -960,6 +1001,12 @@ class ExperimentRunner:
         retry_success_count = sum(
             1 for t in turns if t.preflight_retry_executed and t.allowed and not t.give_up
         )
+        # Gate-3: Retry failure count and breakdown
+        retry_fail_count = sum(
+            1 for t in turns if t.preflight_retry_executed and not (t.allowed and not t.give_up)
+        )
+        retry_fail_reasons = [t.retry_fail_reason for t in turns if t.retry_fail_reason]
+        retry_fail_breakdown = dict(Counter(retry_fail_reasons))
         # GM-017: Total generation calls sum (for avg_retry_steps_extra calculation)
         total_generation_calls_sum = sum(t.total_generation_calls for t in turns)
 
@@ -1020,6 +1067,9 @@ class ExperimentRunner:
             silent_correction_count=silent_correction_count,
             total_retry_steps=total_retry_steps,
             retry_success_count=retry_success_count,
+            # Gate-3: Retry failure classification
+            retry_fail_count=retry_fail_count,
+            retry_fail_breakdown=retry_fail_breakdown,
             # GM-017: Generation call tracking
             total_generation_calls_sum=total_generation_calls_sum,
         )
@@ -1992,9 +2042,11 @@ def generate_report(
         retry_steps_extra_total = total_gen_calls - total_turns_for_gate
         avg_retry_steps_extra_gate = retry_steps_extra_total / total_turns_for_gate if total_turns_for_gate > 0 else 0
 
-        # Calculate retry success rate for Gate-3
+        # Calculate retry counts for Gate-3 (suggested/executed/success/fail)
+        retry_suggested_total = sum(r.preflight_retry_suggested_count for r in results)
         retry_executed_total = sum(r.preflight_retry_executed_count for r in results)
         retry_success_total = sum(r.retry_success_count for r in results)
+        retry_fail_total = sum(r.retry_fail_count for r in results)
         retry_success_rate_gate = retry_success_total / retry_executed_total if retry_executed_total > 0 else 1.0
 
         give_up_total = sum(r.give_up_count for r in results)
@@ -2007,6 +2059,17 @@ def generate_report(
         preflight_reasons: Counter[str] = Counter()
         for r in results:
             preflight_reasons.update(r.denied_reason_histogram)
+
+        # Gate-3: Collect retry failure breakdown
+        retry_fail_breakdown_total: Counter[str] = Counter()
+        for r in results:
+            retry_fail_breakdown_total.update(r.retry_fail_breakdown)
+
+        # Gate-3: Collect total_generation_calls distribution (0=error/1=no retry/2=1 retry/3=2 retries)
+        gen_calls_distribution: Counter[int] = Counter()
+        for r in results:
+            for t in r.turns:
+                gen_calls_distribution[t.total_generation_calls] += 1
 
         # Gate-3 pass/fail status
         retry_pass = retry_success_rate_gate > 0.8
@@ -2033,7 +2096,44 @@ def generate_report(
             f"| give_up_rate | {give_up_rate_gate:.1%} | <10% | {give_up_icon} |",
             f"| silent_correction_rate | {silent_correction_rate:.1%} | (info) | - |",
             "",
+            "### Retry Metrics Detail",
+            "",
+            "| Metric | Count | Note |",
+            "|--------|-------|------|",
+            f"| retry_suggested_total | {retry_suggested_total} | First GM call suggested retry |",
+            f"| retry_executed_total | {retry_executed_total} | Retries actually executed |",
+            f"| retry_success_total | {retry_success_total} | Resulted in allowed=True |",
+            f"| retry_fail_total | {retry_fail_total} | Did not result in allowed=True |",
+            "",
+            "### Generation Calls Distribution",
+            "",
+            "| gen_calls | Count | Rate |",
+            "|-----------|-------|------|",
         ])
+        for calls in sorted(gen_calls_distribution.keys()):
+            count = gen_calls_distribution[calls]
+            rate = count / total_turns_for_gate if total_turns_for_gate > 0 else 0
+            report_lines.append(f"| {calls} | {count} | {rate:.1%} |")
+        report_lines.append("")
+
+        # Retry failure breakdown (Top 5)
+        if retry_fail_breakdown_total:
+            report_lines.extend([
+                "### Retry Failure Breakdown (Top 5)",
+                "",
+                "| Reason | Count |",
+                "|--------|-------|",
+            ])
+            for reason, count in retry_fail_breakdown_total.most_common(5):
+                report_lines.append(f"| {reason} | {count} |")
+            report_lines.append("")
+        else:
+            report_lines.extend([
+                "### Retry Failure Breakdown",
+                "",
+                "No retry failures recorded.",
+                "",
+            ])
 
         # Format break summary
         total_fb = sum(r.format_break_total for r in results)
@@ -2079,6 +2179,58 @@ def generate_report(
                     f"| {sid} | `{meta.get('scenario_hash', '-')[:8]}` | `{meta.get('world_hash', '-')[:8]}` |"
                 )
             report_lines.append("")
+
+    # Gate-3: Extract retry failure examples (up to 3 per scenario)
+    retry_failure_examples: list[dict] = []
+    for r in results:
+        for t in r.turns:
+            if t.retry_fail_reason and len(retry_failure_examples) < 9:  # Max 9 examples (3 per scenario type)
+                retry_failure_examples.append({
+                    "scenario": r.scenario,
+                    "turn": t.turn_number,
+                    "speaker": t.speaker,
+                    "fail_reason": t.retry_fail_reason,
+                    "denied_reason": t.denied_reason,
+                    "raw_speech": (t.raw_speech or "")[:100],
+                    "final_speech": (t.final_speech or "")[:100],
+                    "guidance_cards": t.guidance_cards[:1] if t.guidance_cards else [],
+                    "raw_output": (t.raw_output or "")[:200],
+                    "action_changed": set(t.raw_action_intents) != set(t.final_action_intents),
+                })
+
+    if retry_failure_examples:
+        report_lines.extend([
+            "## Retry Failure Examples",
+            "",
+            "Detailed examples of retry failures for analysis.",
+            "",
+        ])
+        for i, ex in enumerate(retry_failure_examples[:6], 1):  # Show max 6
+            report_lines.extend([
+                f"### Example {i}: {ex['scenario']} Turn {ex['turn']}",
+                "",
+                f"- **Fail Reason**: `{ex['fail_reason']}`",
+                f"- **Denied Reason**: `{ex['denied_reason']}`",
+                f"- **Speaker**: {ex['speaker']}",
+                f"- **Action Changed**: {ex['action_changed']}",
+                "",
+                "**Guidance Card** (truncated):",
+                "```",
+                ex['guidance_cards'][0][:300] if ex['guidance_cards'] else "(none)",
+                "```",
+                "",
+                "**Raw Output** (truncated):",
+                "```",
+                ex['raw_output'],
+                "```",
+                "",
+                "**Raw Speech**: " + ex['raw_speech'],
+                "",
+                "**Final Speech**: " + ex['final_speech'],
+                "",
+                "---",
+                "",
+            ])
 
     report_lines.extend([
         "## Raw Data",
