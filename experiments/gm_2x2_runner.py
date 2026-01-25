@@ -36,6 +36,7 @@ import json
 import logging
 import subprocess
 import time
+import unicodedata
 from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -192,6 +193,198 @@ def extract_marker_targets(text: str) -> list[str]:
     return targets
 
 
+def extract_available_from_guidance(guidance_cards: list[str]) -> dict[str, list[str]]:
+    """Extract available objects/holding/exits from guidance cards (P1a).
+
+    Parses guidance cards to extract the candidate lists that were presented
+    to the LLM. Used to check if retry targets are "invented" (not in lists).
+
+    Args:
+        guidance_cards: List of guidance card strings
+
+    Returns:
+        Dictionary with keys: objects_here, holding, exits
+    """
+    result = {
+        "objects_here": [],
+        "holding": [],
+        "exits": [],
+    }
+
+    if not guidance_cards:
+        return result
+
+    # Patterns to extract lists from guidance cards
+    objects_pattern = re.compile(r"OBJECTS_HERE:\s*([^\n]+)")
+    holding_pattern = re.compile(r"HOLDING:\s*([^\n]+)")
+    exits_pattern = re.compile(r"(?:AVAILABLE_)?EXITS:\s*([^\n]+)")
+
+    for card in guidance_cards:
+        # Extract OBJECTS_HERE
+        match = objects_pattern.search(card)
+        if match:
+            items_str = match.group(1).strip()
+            if items_str and items_str != "(none)":
+                # Split by comma and clean up
+                items = [item.strip() for item in items_str.split(",")]
+                # Remove "(+N more)" suffix if present
+                items = [re.sub(r"\s*\(\+\d+ more\)", "", item) for item in items]
+                result["objects_here"] = [i for i in items if i]
+
+        # Extract HOLDING
+        match = holding_pattern.search(card)
+        if match:
+            items_str = match.group(1).strip()
+            if items_str and items_str != "(none)":
+                items = [item.strip() for item in items_str.split(",")]
+                items = [re.sub(r"\s*\(\+\d+ more\)", "", item) for item in items]
+                result["holding"] = [i for i in items if i]
+
+        # Extract EXITS
+        match = exits_pattern.search(card)
+        if match:
+            items_str = match.group(1).strip()
+            if items_str and items_str != "(none)":
+                items = [item.strip() for item in items_str.split(",")]
+                items = [re.sub(r"\s*\(\+\d+ more\)", "", item) for item in items]
+                result["exits"] = [i for i in items if i]
+
+    return result
+
+
+def normalize_text(text: str) -> str:
+    """Normalize text for comparison (P1a improved).
+
+    Applies normalization to handle:
+    - Full-width/half-width conversion (NFKC)
+    - Lowercase conversion
+    - Whitespace stripping
+    - Common punctuation removal
+
+    Args:
+        text: Text to normalize
+
+    Returns:
+        Normalized text for comparison
+    """
+    if not text:
+        return ""
+    # NFKC normalization (full-width → half-width, etc.)
+    normalized = unicodedata.normalize("NFKC", text)
+    # Lowercase
+    normalized = normalized.lower()
+    # Strip whitespace
+    normalized = normalized.strip()
+    # Remove common punctuation that might interfere with matching
+    for char in ["、", "。", "・", "　", " ", "「", "」", "『", "』"]:
+        normalized = normalized.replace(char, "")
+    return normalized
+
+
+@dataclass
+class InventedResult:
+    """Result of invented object check (P1a improved)."""
+
+    invented: list[str]  # List of invented object names
+    reasons: dict[str, str]  # target -> reason mapping
+    available_empty: bool  # True if all available lists were empty
+
+
+def check_invented_objects(
+    marker_targets: list[str],
+    available: dict[str, list[str]],
+) -> list[str]:
+    """Check which marker targets are NOT in the available lists (P1a).
+
+    An "invented" object is one that the LLM mentioned in *...* markers
+    but was not in the OBJECTS_HERE, HOLDING, or EXITS lists.
+
+    Args:
+        marker_targets: Targets extracted from *...* markers
+        available: Dictionary from extract_available_from_guidance
+
+    Returns:
+        List of invented object names
+    """
+    result = check_invented_objects_detailed(marker_targets, available)
+    return result.invented
+
+
+def check_invented_objects_detailed(
+    marker_targets: list[str],
+    available: dict[str, list[str]],
+) -> InventedResult:
+    """Check which marker targets are NOT in the available lists (P1a improved).
+
+    Enhanced version with normalization and detailed reasons.
+
+    Args:
+        marker_targets: Targets extracted from *...* markers
+        available: Dictionary from extract_available_from_guidance
+
+    Returns:
+        InventedResult with invented objects and reasons
+    """
+    # Combine all available items first (to check if empty)
+    objects_here = available.get("objects_here", [])
+    holding = available.get("holding", [])
+    exits = available.get("exits", [])
+    all_available = objects_here + holding + exits
+
+    # Check if available lists are empty
+    available_empty = len(all_available) == 0
+
+    if not marker_targets:
+        return InventedResult(invented=[], reasons={}, available_empty=available_empty)
+
+    # Pre-normalize all available items
+    normalized_available = {normalize_text(item): item for item in all_available}
+
+    # Find targets not in available lists
+    invented = []
+    reasons: dict[str, str] = {}
+
+    for target in marker_targets:
+        # Skip if target is too short (likely just a verb or particle)
+        if len(target) <= 1:
+            reasons[target] = "target_too_short"
+            continue
+
+        normalized_target = normalize_text(target)
+
+        # Skip if normalized target is empty or too short
+        if len(normalized_target) <= 1:
+            reasons[target] = "normalized_too_short"
+            continue
+
+        # Check exact match first (after normalization)
+        if normalized_target in normalized_available:
+            reasons[target] = "exact_match"
+            continue
+
+        # Check partial match (substring in either direction)
+        found = False
+        for norm_avail, orig_avail in normalized_available.items():
+            if normalized_target in norm_avail or norm_avail in normalized_target:
+                found = True
+                reasons[target] = f"partial_match:{orig_avail}"
+                break
+
+        if not found:
+            if target not in invented:
+                invented.append(target)
+                if available_empty:
+                    reasons[target] = "available_lists_empty"
+                else:
+                    reasons[target] = "no_match_in_available"
+
+    return InventedResult(
+        invented=invented,
+        reasons=reasons,
+        available_empty=available_empty,
+    )
+
+
 @dataclass
 class ExperimentConfig:
     """Configuration for 2×2 experiment."""
@@ -301,6 +494,15 @@ class TurnResult:
     marker_targets_after: list[str] = field(default_factory=list)  # Targets from final_speech *...*
     blocked_target_before: Optional[str] = None  # Target that was blocked initially
     blocked_target_after: Optional[str] = None  # Target that was blocked after retry (if any)
+    # P1a: Enhanced retry analysis
+    available_objects_here: list[str] = field(default_factory=list)  # From guidance cards
+    available_holding: list[str] = field(default_factory=list)  # From guidance cards
+    available_exits: list[str] = field(default_factory=list)  # From guidance cards
+    invented_objects: list[str] = field(default_factory=list)  # Targets NOT in available lists
+    invented_reasons: dict[str, str] = field(default_factory=dict)  # target -> reason mapping
+    available_lists_empty: bool = False  # True if all available lists were empty
+    retry_same_target: bool = False  # True if blocked_target_after == blocked_target_before
+    retry_new_missing: bool = False  # True if give_up with different blocked target
 
 
 @dataclass
@@ -373,6 +575,11 @@ class RunResult:
     # GM-020: Detailed retry success metrics
     retry_success_strict_count: int = 0  # allowed=True && !suggest_retry && !give_up after retry
     retry_success_action_count: int = 0  # *...* marker targets changed (even if give_up)
+    # P1a: Enhanced retry analysis
+    retry_same_target_count: int = 0  # Retries where blocked_target_after == blocked_target_before
+    retry_new_missing_count: int = 0  # Retries with give_up and different blocked target
+    invented_object_count: int = 0  # Turns where invented objects were used
+    available_lists_empty_count: int = 0  # Turns where available lists were empty (guidance failed)
 
 
 class GMClient:
@@ -962,6 +1169,35 @@ class ExperimentRunner:
                             blocked_target_after = target
                             break
 
+            # P1a: Enhanced retry analysis
+            available_objects_here: list[str] = []
+            available_holding: list[str] = []
+            available_exits: list[str] = []
+            invented_objects: list[str] = []
+            invented_reasons: dict[str, str] = {}
+            available_lists_empty = False
+            retry_same_target = False
+            retry_new_missing = False
+
+            if preflight_retry_executed and initial_guidance_cards:
+                # Extract available lists from guidance cards
+                available = extract_available_from_guidance(initial_guidance_cards)
+                available_objects_here = available.get("objects_here", [])
+                available_holding = available.get("holding", [])
+                available_exits = available.get("exits", [])
+
+                # Check for invented objects in final output (detailed version)
+                invented_result = check_invented_objects_detailed(marker_targets_after, available)
+                invented_objects = invented_result.invented
+                invented_reasons = invented_result.reasons
+                available_lists_empty = invented_result.available_empty
+
+                # Check retry patterns
+                if blocked_target_before and blocked_target_after:
+                    retry_same_target = blocked_target_before == blocked_target_after
+                if give_up and blocked_target_after and blocked_target_before != blocked_target_after:
+                    retry_new_missing = True
+
             turn_result = TurnResult(
                 turn_number=turn_number,
                 speaker=speaker,
@@ -1033,6 +1269,15 @@ class ExperimentRunner:
                 marker_targets_after=marker_targets_after,
                 blocked_target_before=blocked_target_before,
                 blocked_target_after=blocked_target_after,
+                # P1a: Enhanced retry analysis
+                available_objects_here=available_objects_here,
+                available_holding=available_holding,
+                available_exits=available_exits,
+                invented_objects=invented_objects,
+                invented_reasons=invented_reasons,
+                available_lists_empty=available_lists_empty,
+                retry_same_target=retry_same_target,
+                retry_new_missing=retry_new_missing,
             )
             turns.append(turn_result)
             total_retries += retry_count
@@ -1149,6 +1394,11 @@ class ExperimentRunner:
         # GM-020: Detailed retry success metrics
         retry_success_strict_count = sum(1 for t in turns if t.retry_success_strict)
         retry_success_action_count = sum(1 for t in turns if t.retry_success_action)
+        # P1a: Enhanced retry analysis
+        retry_same_target_count = sum(1 for t in turns if t.retry_same_target)
+        retry_new_missing_count = sum(1 for t in turns if t.retry_new_missing)
+        invented_object_count = sum(1 for t in turns if t.invented_objects)
+        available_lists_empty_count = sum(1 for t in turns if t.available_lists_empty)
 
         return RunResult(
             condition=condition,
@@ -1215,6 +1465,11 @@ class ExperimentRunner:
             # GM-020: Detailed retry success metrics
             retry_success_strict_count=retry_success_strict_count,
             retry_success_action_count=retry_success_action_count,
+            # P1a: Enhanced retry analysis
+            retry_same_target_count=retry_same_target_count,
+            retry_new_missing_count=retry_new_missing_count,
+            invented_object_count=invented_object_count,
+            available_lists_empty_count=available_lists_empty_count,
         )
 
     def _load_scenario(self, scenario: str) -> dict:
@@ -2325,6 +2580,76 @@ def generate_report(
             f"| retry_success_strict | {retry_success_strict_total} | {retry_success_strict_rate:.1%} | {strict_icon} (allowed=True & no give_up) |",
             f"| retry_success_action | {retry_success_action_total} | {retry_success_action_rate:.1%} | {action_icon} (*...* targets changed) |",
             "",
+        ])
+
+        # P1a: Enhanced retry analysis - invented object tracking
+        retry_same_target_total = sum(r.retry_same_target_count for r in results)
+        retry_new_missing_total = sum(r.retry_new_missing_count for r in results)
+        invented_object_total = sum(r.invented_object_count for r in results)
+        available_lists_empty_total = sum(r.available_lists_empty_count for r in results)
+        retry_same_target_rate = retry_same_target_total / retry_executed_total if retry_executed_total > 0 else 0
+        retry_new_missing_rate = retry_new_missing_total / retry_executed_total if retry_executed_total > 0 else 0
+        invented_object_rate = invented_object_total / total_turns_for_gate if total_turns_for_gate > 0 else 0
+        available_lists_empty_rate = available_lists_empty_total / retry_executed_total if retry_executed_total > 0 else 0
+
+        # Icon: low = good (not repeating same target or inventing objects)
+        same_target_icon = "✅" if retry_same_target_rate <= 0.2 else "🟡" if retry_same_target_rate <= 0.5 else "❌"
+        new_missing_icon = "✅" if retry_new_missing_rate <= 0.2 else "🟡" if retry_new_missing_rate <= 0.5 else "❌"
+        invented_icon = "✅" if invented_object_rate <= 0.05 else "🟡" if invented_object_rate <= 0.1 else "❌"
+        empty_icon = "✅" if available_lists_empty_rate <= 0.1 else "🟡" if available_lists_empty_rate <= 0.3 else "❌"
+
+        report_lines.extend([
+            "### P1a: Invented Object Analysis",
+            "",
+            "| Metric | Count | Rate | Status |",
+            "|--------|-------|------|--------|",
+            f"| retry_same_target | {retry_same_target_total} | {retry_same_target_rate:.1%} | {same_target_icon} (blocked target repeated) |",
+            f"| retry_new_missing | {retry_new_missing_total} | {retry_new_missing_rate:.1%} | {new_missing_icon} (give_up with different target) |",
+            f"| invented_objects | {invented_object_total} | {invented_object_rate:.1%} | {invented_icon} (targets not in AVAILABLE_*) |",
+            f"| available_lists_empty | {available_lists_empty_total} | {available_lists_empty_rate:.1%} | {empty_icon} (guidance had no candidates) |",
+            "",
+        ])
+
+        # P1a: Scenario breakdown
+        scenario_p1a_stats: dict[str, dict] = {}
+        for r in results:
+            if r.scenario not in scenario_p1a_stats:
+                scenario_p1a_stats[r.scenario] = {
+                    "turns": 0,
+                    "retry_executed": 0,
+                    "invented_objects": 0,
+                    "retry_new_missing": 0,
+                    "give_up": 0,
+                }
+            stats = scenario_p1a_stats[r.scenario]
+            stats["turns"] += len(r.turns)
+            stats["retry_executed"] += r.preflight_retry_executed_count
+            stats["invented_objects"] += r.invented_object_count
+            stats["retry_new_missing"] += r.retry_new_missing_count
+            stats["give_up"] += r.give_up_count
+
+        if len(scenario_p1a_stats) > 1:
+            report_lines.extend([
+                "### P1a: Scenario Breakdown",
+                "",
+                "| Scenario | Turns | Retry | Invented | NewMissing | GiveUp |",
+                "|----------|-------|-------|----------|------------|--------|",
+            ])
+            for scenario_name, stats in sorted(scenario_p1a_stats.items()):
+                turns = stats["turns"]
+                retry_exec = stats["retry_executed"]
+                invented = stats["invented_objects"]
+                new_missing = stats["retry_new_missing"]
+                give_up = stats["give_up"]
+                invented_r = f"{invented/turns:.1%}" if turns > 0 else "-"
+                new_missing_r = f"{new_missing/retry_exec:.1%}" if retry_exec > 0 else "-"
+                give_up_r = f"{give_up/turns:.1%}" if turns > 0 else "-"
+                report_lines.append(
+                    f"| {scenario_name} | {turns} | {retry_exec} | {invented} ({invented_r}) | {new_missing} ({new_missing_r}) | {give_up} ({give_up_r}) |"
+                )
+            report_lines.append("")
+
+        report_lines.extend([
             "### Generation Calls Distribution",
             "",
             "| gen_calls | Count | Rate |",
@@ -2422,6 +2747,15 @@ def generate_report(
                     "retry_success_action": t.retry_success_action,
                     "blocked_target_before": t.blocked_target_before,
                     "blocked_target_after": t.blocked_target_after,
+                    # P1a: Available lists and invented objects
+                    "available_objects_here": t.available_objects_here,
+                    "available_holding": t.available_holding,
+                    "available_exits": t.available_exits,
+                    "invented_objects": t.invented_objects,
+                    "invented_reasons": t.invented_reasons,
+                    "available_lists_empty": t.available_lists_empty,
+                    "retry_same_target": t.retry_same_target,
+                    "retry_new_missing": t.retry_new_missing,
                 })
 
     if retry_failure_examples:
@@ -2436,6 +2770,14 @@ def generate_report(
             targets_after = ", ".join(ex.get('marker_targets_after', [])) or "(none)"
             action_success_icon = "✅" if ex.get('retry_success_action') else "❌"
 
+            # P1a: Format invented objects and available lists
+            invented_list = ", ".join(ex.get('invented_objects', [])) or "(none)"
+            available_objects = ", ".join(ex.get('available_objects_here', [])) or "(none)"
+            available_holding = ", ".join(ex.get('available_holding', [])) or "(none)"
+            available_exits = ", ".join(ex.get('available_exits', [])) or "(none)"
+            same_target_icon = "🔁" if ex.get('retry_same_target') else ""
+            new_missing_icon = "🆕" if ex.get('retry_new_missing') else ""
+
             report_lines.extend([
                 f"### Example {i}: {ex['scenario']} Turn {ex['turn']}",
                 "",
@@ -2444,7 +2786,15 @@ def generate_report(
                 f"- **Speaker**: {ex['speaker']}",
                 f"- **Action Changed (intent)**: {ex['action_changed']}",
                 f"- **Action Changed (*...*)**: {action_success_icon} (`{targets_before}` → `{targets_after}`)",
-                f"- **Blocked Target**: `{ex.get('blocked_target_before', 'N/A')}` → `{ex.get('blocked_target_after', 'N/A')}`",
+                f"- **Blocked Target**: `{ex.get('blocked_target_before', 'N/A')}` → `{ex.get('blocked_target_after', 'N/A')}` {same_target_icon}{new_missing_icon}",
+                "",
+                "**P1a: Available Lists & Invented Objects**:",
+                f"- OBJECTS_HERE: {available_objects}",
+                f"- HOLDING: {available_holding}",
+                f"- EXITS: {available_exits}",
+                f"- **Invented**: {invented_list}",
+                f"- **Reasons**: {ex.get('invented_reasons', {})}",
+                f"- **Available Empty**: {'⚠️ Yes' if ex.get('available_lists_empty') else 'No'}",
                 "",
                 "**Guidance Card** (truncated):",
                 "```",
@@ -2878,6 +3228,22 @@ def generate_turns_log(
                 "resolution_method": t.resolution_method,
                 "resolved_target": t.resolved_target,
                 "soft_correction": t.soft_correction,
+                # GM-020: Detailed retry success metrics
+                "marker_targets_before": t.marker_targets_before,
+                "marker_targets_after": t.marker_targets_after,
+                "retry_success_strict": t.retry_success_strict,
+                "retry_success_action": t.retry_success_action,
+                "blocked_target_before": t.blocked_target_before,
+                "blocked_target_after": t.blocked_target_after,
+                # P1a: Invented object analysis
+                "available_objects_here": t.available_objects_here,
+                "available_holding": t.available_holding,
+                "available_exits": t.available_exits,
+                "invented_objects": t.invented_objects,
+                "invented_reasons": t.invented_reasons,
+                "available_lists_empty": t.available_lists_empty,
+                "retry_same_target": t.retry_same_target,
+                "retry_new_missing": t.retry_new_missing,
             })
 
     log_path = output_path / "turns_log.json"
