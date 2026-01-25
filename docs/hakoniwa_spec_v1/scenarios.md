@@ -80,3 +80,44 @@ v1.0 は **決定論的 YAML + スキーマ検証** を推奨ベースライン�
 - **整合性検証**: exits/locations/characters の参照整合性チェック
 - **ハッシュ計算**: scenario_hash / world_hash による再現性保証
 
+### 4.2 Registry必須運用（Single Source of Truth）
+
+**重要**: すべてのシナリオは `experiments/scenarios/registry.yaml` に登録必須です。
+
+```yaml
+# experiments/scenarios/registry.yaml
+scenarios:
+  - scenario_id: coffee_trap
+    path: coffee_trap.json
+    tags: [gate_taste3, retry, missing_object]
+    recommended_profile: dev
+    description: "Coffee maker exists but no beans"
+```
+
+- 未登録シナリオを指定 → `REGISTRY_MISSING` エラー
+- `path: null` は built-in default 専用
+- タグによるフィルタリング・グルーピングが可能
+
+### 4.3 scenario_id 命名規約
+
+```
+scn_<domain>_<problem>
+```
+
+| 要素 | 説明 | 例 |
+|------|------|-----|
+| `scn_` | 固定プレフィックス | - |
+| `<domain>` | 問題ドメイン | `nav`, `obj`, `retry`, `format` |
+| `<problem>` | 具体的な問題 | `locked`, `missing`, `wrong_loc` |
+
+#### 命名例
+
+| scenario_id | ドメイン | 問題 |
+|-------------|----------|------|
+| `coffee_trap` | obj | missing_object（豆なし） |
+| `wrong_location` | obj | wrong_location（別室） |
+| `locked_door` | nav | exits制約（行けない） |
+| `missing_tool` | obj | missing_object（道具なし） |
+
+※ v1.0では既存の命名（`coffee_trap` 等）を維持。新規シナリオは `scn_` プレフィックス推奨。
+

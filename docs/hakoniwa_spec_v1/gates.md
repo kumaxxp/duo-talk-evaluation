@@ -34,7 +34,58 @@ Gate Test は、HAKONIWA-G3 を段階的に「味見」しながら、手戻り�
 
 ---
 
-## 3. Gate‑Resilience（フォーマット修復）
+## 3. Gate-3（Preflight+Retry 総合検証）
+
+### 目的
+GM-015の「Preflight+RetryでHard Denyを回避」できる状態を、**gateプロファイル（seeds=5）×複数シナリオ**で再現し、品質を検証する。
+
+### 実行条件
+```bash
+python -m experiments.gm_2x2_runner \
+  --experiment_id gate3_test \
+  --profile gate \
+  --conditions D \
+  --scenarios coffee_trap wrong_location locked_door \
+  --seeds 5 \
+  --max_turns 10 \
+  --mode real
+```
+
+### 合格基準
+
+| Metric | Target | Status |
+|--------|--------|--------|
+| retry_success_rate | > 80% | ✅/❌ |
+| avg_retry_steps_extra | < 0.5 | ✅/❌ |
+| give_up_rate | < 10% | ✅/❌ |
+| GM Crash | = 0 | ✅/❌ |
+
+### 主要メトリクス
+
+| Metric | Definition |
+|--------|------------|
+| retry_success_rate | リトライ後に allowed=True となった割合 |
+| avg_retry_steps_extra | 1ターンあたりの追加LLM呼び出し回数 |
+| give_up_rate | リトライ上限に達した割合 |
+| silent_correction_rate | 謝罪なしで行動が変わった割合 |
+
+### Silent Correction 判定
+
+```
+silent_correction = (action_changed) AND (NOT apology_detected)
+```
+
+謝罪語リスト: すみません, ごめん, 間違え, 失礼, 申し訳
+
+### 出力レポート
+
+1. **REPORT.md**: Gate-3 Summary セクション
+2. **CONVERSATION_REPORT.md**: ターン単位の詳細分析
+3. **artifacts/**: raw_output, repaired_output, parsed.json
+
+---
+
+## 4. Gate‑Resilience（フォーマット修復）
 ### 目的
 軽微な JSON 崩れ（末尾ゴミ、引用符ミス、カンマ等）を GM が修復し、**クラッシュせずに会話を継続**できることを確認します。
 

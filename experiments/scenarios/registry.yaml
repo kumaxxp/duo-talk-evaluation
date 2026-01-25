@@ -31,6 +31,13 @@ scenarios:
   # GM-017: WRONG_LOCATION scenarios
   - scenario_id: wrong_location
     path: wrong_location.json
-    tags: [gate_gm017, wrong_location]
+    tags: [gate_taste3, gate_gm017, wrong_location]
     recommended_profile: dev
     description: "Items in different rooms - triggers WRONG_LOCATION"
+
+  # Gate-3: Navigation constraint scenarios
+  - scenario_id: locked_door
+    path: locked_door.json
+    tags: [gate_taste3, navigation, exits]
+    recommended_profile: gate
+    description: "Cannot move to study room - triggers navigation deny"

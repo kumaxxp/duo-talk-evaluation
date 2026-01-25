@@ -1985,18 +1985,258 @@ def generate_report(
             "",
         ])
 
+    # Gate-3 Summary (consolidated view for gate testing)
+    if total_preflight_triggered > 0 or gm_results:
+        total_gen_calls = sum(r.total_generation_calls_sum for r in results)
+        total_turns_for_gate = sum(len(r.turns) for r in results)
+        retry_steps_extra_total = total_gen_calls - total_turns_for_gate
+        avg_retry_steps_extra_gate = retry_steps_extra_total / total_turns_for_gate if total_turns_for_gate > 0 else 0
+
+        # Calculate retry success rate for Gate-3
+        retry_executed_total = sum(r.preflight_retry_executed_count for r in results)
+        retry_success_total = sum(r.retry_success_count for r in results)
+        retry_success_rate_gate = retry_success_total / retry_executed_total if retry_executed_total > 0 else 1.0
+
+        give_up_total = sum(r.give_up_count for r in results)
+        give_up_rate_gate = give_up_total / total_turns_for_gate if total_turns_for_gate > 0 else 0
+
+        silent_correction_total = sum(r.silent_correction_count for r in results)
+        silent_correction_rate = silent_correction_total / total_turns_for_gate if total_turns_for_gate > 0 else 0
+
+        # Collect preflight reasons breakdown
+        preflight_reasons: Counter[str] = Counter()
+        for r in results:
+            preflight_reasons.update(r.denied_reason_histogram)
+
+        # Gate-3 pass/fail status
+        retry_pass = retry_success_rate_gate > 0.8
+        extra_pass = avg_retry_steps_extra_gate < 0.5
+        give_up_pass = give_up_rate_gate < 0.1
+        overall_pass = retry_pass and extra_pass and give_up_pass
+
+        gate_status = "✅ PASS" if overall_pass else "❌ FAIL"
+        retry_icon = "✅" if retry_pass else "❌"
+        extra_icon = "✅" if extra_pass else "❌"
+        give_up_icon = "✅" if give_up_pass else "❌"
+
+        report_lines.extend([
+            "## Gate-3 Summary (Preflight+Retry)",
+            "",
+            f"**Overall Status: {gate_status}**",
+            "",
+            "### Gate-3 Criteria",
+            "",
+            "| Metric | Value | Target | Status |",
+            "|--------|-------|--------|--------|",
+            f"| retry_success_rate | {retry_success_rate_gate:.1%} | >80% | {retry_icon} |",
+            f"| avg_retry_steps_extra | {avg_retry_steps_extra_gate:.2f} | <0.5 | {extra_icon} |",
+            f"| give_up_rate | {give_up_rate_gate:.1%} | <10% | {give_up_icon} |",
+            f"| silent_correction_rate | {silent_correction_rate:.1%} | (info) | - |",
+            "",
+        ])
+
+        # Format break summary
+        total_fb = sum(r.format_break_total for r in results)
+        total_repaired = sum(r.format_repaired_total for r in results)
+        report_lines.extend([
+            "### Format Break Summary",
+            "",
+            f"- **format_break_total**: {total_fb}",
+            f"- **repaired_total**: {total_repaired}",
+        ])
+
+        # Break type breakdown
+        all_break_types: Counter[str] = Counter()
+        for r in results:
+            all_break_types.update(r.format_break_by_type)
+        if all_break_types:
+            top_types = [f"{t}({c})" for t, c in all_break_types.most_common(3)]
+            report_lines.append(f"- **top_break_types**: {', '.join(top_types)}")
+        report_lines.append("")
+
+        # Preflight reasons breakdown
+        if preflight_reasons:
+            report_lines.extend([
+                "### top_preflight_reasons",
+                "",
+                "| Reason | Count |",
+                "|--------|-------|",
+            ])
+            for reason, count in preflight_reasons.most_common(5):
+                report_lines.append(f"| {reason} | {count} |")
+            report_lines.append("")
+
+        # Per-scenario breakdown
+        if scenarios_meta:
+            report_lines.extend([
+                "### Scenario Hashes (GM-019)",
+                "",
+                "| scenario_id | scenario_hash | world_hash |",
+                "|-------------|---------------|------------|",
+            ])
+            for sid, meta in scenarios_meta.items():
+                report_lines.append(
+                    f"| {sid} | `{meta.get('scenario_hash', '-')[:8]}` | `{meta.get('world_hash', '-')[:8]}` |"
+                )
+            report_lines.append("")
+
     report_lines.extend([
         "## Raw Data",
         "",
         "See `results.json` for detailed per-run data.",
         "",
         "See `examples_index.csv` for qualitative analysis index.",
+        "",
+        "See `CONVERSATION_REPORT.md` for turn-by-turn conversation analysis.",
     ])
 
     # Write report
     report_path = output_path / "REPORT.md"
     report_path.write_text("\n".join(report_lines), encoding="utf-8")
     logger.info(f"Report written to {report_path}")
+
+
+def generate_conversation_report(
+    results: list[RunResult],
+    output_path: Path,
+    config: Optional["ExperimentConfig"] = None,
+    scenarios_meta: Optional[dict[str, dict]] = None,
+) -> None:
+    """Generate CONVERSATION_REPORT.md with turn-by-turn conversation analysis.
+
+    Shows:
+    - raw_speech / final_speech
+    - guidance_cards (if any)
+    - total_generation_calls
+    - silent_correction detection
+    - format_break info
+    """
+    # Apology words for detection (JP)
+    apology_words = ["すみません", "ごめん", "間違え", "失礼", "申し訳", "ごめんなさい", "すいません"]
+
+    report_lines = [
+        "# Conversation Report (Gate-3 Analysis)",
+        "",
+        f"Generated: {datetime.now().isoformat()}",
+        "",
+    ]
+
+    for r in results:
+        session_id = f"{config.experiment_id if config else 'exp'}_{r.condition}_{r.scenario}_{r.seed}"
+        report_lines.extend([
+            f"## Session: {session_id}",
+            "",
+            f"- **Condition**: {r.condition}",
+            f"- **Scenario**: {r.scenario}",
+            f"- **Seed**: {r.seed}",
+            "",
+        ])
+
+        # Scenario meta if available
+        if scenarios_meta and r.scenario in scenarios_meta:
+            meta = scenarios_meta[r.scenario]
+            report_lines.append(f"- **scenario_hash**: `{meta.get('scenario_hash', '-')}`")
+            report_lines.append(f"- **world_hash**: `{meta.get('world_hash', '-')}`")
+            report_lines.append("")
+
+        report_lines.extend([
+            "| Turn | Speaker | raw_speech | final_speech | guidance | gen_calls | silent_corr | apology | format_break |",
+            "|------|---------|------------|--------------|----------|-----------|-------------|---------|--------------|",
+        ])
+
+        for t in r.turns:
+            # Truncate speeches for table
+            raw_sp = (t.raw_speech or t.parsed_speech or "")[:40].replace("|", "\\|").replace("\n", " ")
+            final_sp = (t.final_speech or t.parsed_speech or "")[:40].replace("|", "\\|").replace("\n", " ")
+
+            # Guidance summary
+            guidance = ", ".join(t.guidance_cards[:2]) if t.guidance_cards else "-"
+            guidance = guidance[:30].replace("|", "\\|")
+
+            # Apology detection
+            has_apology = any(w in (t.final_speech or "") for w in apology_words)
+            apology_str = "⚠️" if has_apology else "-"
+
+            # Silent correction
+            silent_str = "✅" if t.silent_correction else "-"
+
+            # Format break
+            fb_str = t.format_break_type if t.format_break_triggered else "-"
+
+            report_lines.append(
+                f"| {t.turn_number} | {t.speaker} | {raw_sp} | {final_sp} | {guidance} | {t.total_generation_calls} | {silent_str} | {apology_str} | {fb_str} |"
+            )
+
+        report_lines.append("")
+
+        # Detailed examples for interesting turns
+        interesting_turns = [t for t in r.turns if t.silent_correction or t.format_break_triggered or t.total_generation_calls > 1]
+        if interesting_turns:
+            report_lines.extend([
+                "### Detailed Turn Analysis",
+                "",
+            ])
+            for t in interesting_turns[:3]:  # Max 3 examples per session
+                report_lines.extend([
+                    f"#### Turn {t.turn_number}: {t.speaker}",
+                    "",
+                ])
+
+                # Raw vs Final speech comparison
+                if t.raw_speech and t.final_speech and t.raw_speech != t.final_speech:
+                    report_lines.extend([
+                        "**Speech Change (raw → final):**",
+                        f"- RAW: {t.raw_speech[:100]}",
+                        f"- FINAL: {t.final_speech[:100]}",
+                        "",
+                    ])
+
+                # Action intents change
+                if t.raw_action_intents != t.final_action_intents:
+                    report_lines.extend([
+                        "**Action Change:**",
+                        f"- RAW intents: {t.raw_action_intents}",
+                        f"- FINAL intents: {t.final_action_intents}",
+                        "",
+                    ])
+
+                # Guidance cards
+                if t.guidance_cards:
+                    report_lines.extend([
+                        "**Guidance Cards:**",
+                    ])
+                    for card in t.guidance_cards:
+                        report_lines.append(f"- {card}")
+                    report_lines.append("")
+
+                # Format break details
+                if t.format_break_triggered:
+                    report_lines.extend([
+                        "**Format Break:**",
+                        f"- Type: {t.format_break_type}",
+                        f"- Repair Method: {t.repair_method}",
+                        f"- Repair Steps: {t.repair_steps}",
+                        "",
+                    ])
+
+                # Silent correction analysis
+                has_apology = any(w in (t.final_speech or "") for w in apology_words)
+                report_lines.extend([
+                    "**Silent Correction Analysis:**",
+                    f"- silent_correction: {t.silent_correction}",
+                    f"- total_generation_calls: {t.total_generation_calls}",
+                    f"- apology_detected: {has_apology}",
+                    "",
+                    "---",
+                    "",
+                ])
+
+        report_lines.append("")
+
+    # Write report
+    report_path = output_path / "CONVERSATION_REPORT.md"
+    report_path.write_text("\n".join(report_lines), encoding="utf-8")
+    logger.info(f"Conversation report written to {report_path}")
 
 
 def _summarize_world_delta(delta: list[dict]) -> str:
@@ -2564,10 +2804,11 @@ async def main():
     # GM-018+1/GM-019: Generate artifacts FIRST (populates refs in TurnResult)
     generate_turn_logs_files(results, output_path, config, scenarios_meta)
 
-    # Generate report, examples index, and turns log (refs now populated)
+    # Generate report, examples index, turns log, and conversation report (refs now populated)
     generate_report(results, output_path, config, scenarios_meta)
     generate_examples_index(results, output_path, config)
     generate_turns_log(results, output_path, config, scenarios_meta)
+    generate_conversation_report(results, output_path, config, scenarios_meta)
 
     # Calculate and display performance stats
     all_latencies = [t.latency_ms for r in results for t in r.turns]
