@@ -1,0 +1,26 @@
+{
+  "turn_number": 5,
+  "speaker": "あゆ",
+  "thought": "姉様はまた何か面白いこと探しているんだろうな。旅行のアルバム、確かに少し前に見たような気がする。どこにしまったか、一緒に探してみよう。",
+  "speech": "姉様、旅行のアルバムですね。確か、少し前に母上がリビングの棚の奥にしまったとおっしゃっていました。今、一緒に探してみましょうか？ *棚の方を眺める*",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

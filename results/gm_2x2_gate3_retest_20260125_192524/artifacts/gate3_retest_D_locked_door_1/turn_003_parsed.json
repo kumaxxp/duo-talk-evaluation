@@ -1,0 +1,26 @@
+{
+  "turn_number": 3,
+  "speaker": "あゆ",
+  "thought": "姉様がテレビを見るのも良いけど、雑誌の片付けを頼まれているので、手際よく終わらせてあげよう。",
+  "speech": "姉様、かしこまりましたわ。 *テーブルの上にある雑誌を手に取り、まとめて棚へ向かう* どの雑誌まで片付けましょうか？",
+  "action_intents": [
+    "MOVE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "MOVE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "MOVE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

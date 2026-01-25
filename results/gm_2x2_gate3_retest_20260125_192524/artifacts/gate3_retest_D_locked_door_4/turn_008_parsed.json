@@ -1,0 +1,26 @@
+{
+  "turn_number": 8,
+  "speaker": "やな",
+  "thought": "あゆ、本当に頼りになるわ。母さんがどこにしまったか、覚えてるなんてすごい！一緒に探してくれて感謝だなぁ。",
+  "speech": "あゆ、ありがとうー！助かるわー！*棚の周りを歩き回り、あゆの視線を追う* さあ、どこにあるかなー？",
+  "action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

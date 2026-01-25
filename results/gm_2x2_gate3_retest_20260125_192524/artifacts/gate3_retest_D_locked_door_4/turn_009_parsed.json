@@ -1,0 +1,26 @@
+{
+  "turn_number": 9,
+  "speaker": "あゆ",
+  "thought": "姉様は本当に明るくて行動力があるから、私がサポートしてあげないと。母上がアルバムを置いた場所を覚えてるなんて、本当にラッキーだったわ。一緒に探して、早く見つけてあげよう。",
+  "speech": "はい、姉様。*棚の上の方をもう一度注意深く見る* 母上が「旅行の思い出」",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": true,
+  "break_type": "TRAILING_GARBAGE",
+  "repair_method": "TRAILING_CUT",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": true,
+  "parser_error": null,
+  "repair_notes": null
+}

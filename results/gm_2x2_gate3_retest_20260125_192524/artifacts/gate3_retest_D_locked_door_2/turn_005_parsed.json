@@ -1,0 +1,23 @@
+{
+  "turn_number": 5,
+  "speaker": "あゆ",
+  "thought": "姉様はテレビを見てゴロゴロしたい気分なのですね。承知いたしました。何か私が手伝うことはありませんか？無理強いはしたくないのですが…。",
+  "speech": "姉様、承知いたしました。それでは、姉様がテレビをご覧になる間、私は何かできることはありますでしょうか？",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

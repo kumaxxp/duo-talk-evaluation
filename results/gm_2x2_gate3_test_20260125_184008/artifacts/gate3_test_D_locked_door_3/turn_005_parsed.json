@@ -1,0 +1,26 @@
+{
+  "turn_number": 5,
+  "speaker": "あゆ",
+  "thought": "姉様はいつも突拍子もないことをするけど、その明るさが私を安心させてくれる。今回はクッキー作りか。レシピを確認せずに作るなんて、少し不安だけれど、姉様と一緒に作るならきっと大丈夫だろう。",
+  "speech": "姉様、承知いたしました。レシピは省くのですね。分かったわ。姉様と一緒に作るなら、きっと美味しくできると信じて進めさせていただきます！ *少し緊張した面持ちで、姉様の笑顔を見返す*",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

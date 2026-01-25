@@ -1,0 +1,26 @@
+{
+  "turn_number": 4,
+  "speaker": "やな",
+  "thought": "あゆはいつも慎重だな。でも、それが安心できるんだ。ブルーベリー味を選ぶなんて、やっぱり落ち着いてていいね。",
+  "speech": "ブルーベリー味ね、了解！*トースターにパンをセットする* あゆはやっぱりブルーベリー好きなんだね。あ、焼き終わるまでちょっと待っててね。何か他に食べたいもの出てくるかもよ？",
+  "action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

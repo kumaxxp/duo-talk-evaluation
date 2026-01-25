@@ -1,0 +1,26 @@
+{
+  "turn_number": 7,
+  "speaker": "あゆ",
+  "thought": "姉様は本当に楽観的で、私とは正反対の考え方をするなぁ。でも、そんな姉様と一緒に何かを作るのは、きっと楽しいはず。少しだけ緊張はするけれど、姉様の笑顔を見ていると、きっと大丈夫だと思える。",
+  "speech": "姉様、はい、笑っています！ *少しぎこちなく笑う* どんなクッキーを作る予定ですか？ どんな材料が必要か、事前に把握しておくと、スムーズに始められそうです。",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

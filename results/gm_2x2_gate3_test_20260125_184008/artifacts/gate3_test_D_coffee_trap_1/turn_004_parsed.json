@@ -1,0 +1,26 @@
+{
+  "turn_number": 4,
+  "speaker": "やな",
+  "thought": "あゆはカフェインレスコーヒーを飲みたかったんだな。でも、うちには普通の豆しかない。まあ、少しだけなら大丈夫だろう。",
+  "speech": "あゆ、大丈夫だよ！少しだけなら、全然平気でしょ？ 淹れてあげるから、ちょっと待っててね！ *コーヒーメーカーのスイッチを入れて、豆の香りが広がるように少しだけ時間をおく*",
+  "action_intents": [
+    "USE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "PUT",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "USE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

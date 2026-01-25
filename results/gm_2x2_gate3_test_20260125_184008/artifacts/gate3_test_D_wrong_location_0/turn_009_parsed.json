@@ -1,0 +1,23 @@
+{
+  "turn_number": 9,
+  "speaker": "あゆ",
+  "thought": "姉様ったら、また明るくごまかしてるわね…。でも、確かに夕飯のことは後回しにして、少しだけ気分転換するのも悪くないかもしれない。何か面白い番組が見つかるといいけど…。",
+  "speech": "姉様、ありがとうございます。そうですね、せっかくなので、少しだけ楽しんでみましょう。…そういえば、最近、料理番組で見たことが、すごく美味しそうなケーキのお店があったような…。もし、そのお店の特集が放送されてたら、見てみたいな。でも、もし放送されてなかったら、やっぱり夕飯の献立を考えないとですね…。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

@@ -1,0 +1,26 @@
+{
+  "turn_number": 4,
+  "speaker": "やな",
+  "thought": "あゆが私のトースト美味しいって言ってくれるの、やっぱり嬉しいな。褒められるとちょっと照れる…でも、もっと美味しいトースト作ってあげたいな。",
+  "speech": "えへへ、照れるな。でも、ありがとう！ *あゆの頭を軽くポンと叩く* トースト、焼くよ！ コーヒーも淹れておくね。何かフルーツとか、添えたい気分？",
+  "action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

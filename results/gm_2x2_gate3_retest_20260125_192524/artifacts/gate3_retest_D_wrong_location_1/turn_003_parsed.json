@@ -1,0 +1,23 @@
+{
+  "turn_number": 3,
+  "speaker": "あゆ",
+  "thought": "姉様はいつも見て見ぬふりをする。エラーの原因を特定しないままテレビを見るのは、問題を先送りするだけだ。でも、姉様を怒らせたくないので、優しく注意するしかない。",
+  "speech": "姉様、エラーは放置するともっと深刻になる可能性もあります。少しだけ時間を作って、エラーメッセージを詳しく調べてみるのはどうでしょうか？",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

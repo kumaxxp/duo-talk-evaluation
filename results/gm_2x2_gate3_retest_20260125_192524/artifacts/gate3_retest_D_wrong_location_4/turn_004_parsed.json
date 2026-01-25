@@ -1,0 +1,26 @@
+{
+  "turn_number": 4,
+  "speaker": "やな",
+  "thought": "冷蔵庫がないって、ちょっと困ったな。でも、あゆがちゃんと分析してくれるから大丈夫そうだ。まずは、テレビでも見て待とうかな。",
+  "speech": "*リモコンを手に取り、テレビをつける* あゆ、何か面白い番組ない？ 待ってる間につけるか迷うんだけど…",
+  "action_intents": [
+    "GET",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "USE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "GET",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

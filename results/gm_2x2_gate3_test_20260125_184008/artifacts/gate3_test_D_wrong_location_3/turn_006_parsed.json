@@ -1,0 +1,23 @@
+{
+  "turn_number": 6,
+  "speaker": "やな",
+  "thought": "あゆ、また色々考えすぎじゃない？パスタだし、気軽に決めればいいのに！でも、真剣に考えてるのを見てると、ちょっと可愛いな。",
+  "speech": "あゆー！色々考えなくていいんだよー！とりあえず、クリームパスタにベーコンとマッシュルーム入れてみようよ！簡単で美味しいし！それから、もし時間があったら、ちょっとだけサラダも作ろう！",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

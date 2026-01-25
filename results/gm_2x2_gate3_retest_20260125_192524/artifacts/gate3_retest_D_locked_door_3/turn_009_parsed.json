@@ -1,0 +1,23 @@
+{
+  "turn_number": 9,
+  "speaker": "あゆ",
+  "thought": "姉様はいつも元気で、私を心配してくれている。でも、いつもとげとげしい私に、そんな風に優しく接してくれるのが、少しだけ戸惑ってしまう。でも、クッキー作り、楽しんでみよう。",
+  "speech": "姉様、迷いますね…。チョコレートチップクッキーは定番で美味しいですし、抹茶も好きです。でも、特別…となると、ちょっと考えにくいです。何か、姉様のオススメはありますか？ 材料の在庫状況も考慮すると、スムーズに始められそうです。",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

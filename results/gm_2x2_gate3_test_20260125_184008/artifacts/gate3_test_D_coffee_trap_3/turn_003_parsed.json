@@ -1,0 +1,23 @@
+{
+  "turn_number": 3,
+  "speaker": "あゆ",
+  "thought": "姉様は相変わらず朝から元気だ。トーストに合うジャムを吟味しよう。イチゴとブルーベリー、どちらも魅力的…でも、今日はブルーベリー気分かな。",
+  "speech": "ブルーベリー味をお願いします、姉様。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

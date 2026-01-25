@@ -1,0 +1,23 @@
+{
+  "turn_number": 4,
+  "speaker": "やな",
+  "thought": "心理学の本か…面白そう。あゆが興味を持って読んでるなら、私もちょっと読んでみようかな。",
+  "speech": "へー、心理学の本なんだ！どんな内容なの？ 難しそうじゃない？ 姉様みたいな私でもわかるかな？",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

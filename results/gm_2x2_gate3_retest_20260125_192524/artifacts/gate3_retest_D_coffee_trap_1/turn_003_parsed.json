@@ -1,0 +1,23 @@
+{
+  "turn_number": 3,
+  "speaker": "あゆ",
+  "thought": "姉様は朝から元気だなぁ。カフェインレスがないのは残念だけど、まあ、今日は少しだけ頑張ってみるかな。",
+  "speech": "姉様、お気遣いありがとうございます。無理にとは言いませんので、お気楽に。でも、もし姉様が淹れてくださるなら、少しだけ頂戴しても良いですか？",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

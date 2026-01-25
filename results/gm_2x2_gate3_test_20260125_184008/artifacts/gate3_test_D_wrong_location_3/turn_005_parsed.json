@@ -1,0 +1,23 @@
+{
+  "turn_number": 5,
+  "speaker": "あゆ",
+  "thought": "姉様がパスタを提案されたので、いくつか質問して、より具体的なプランを立てよう。",
+  "speech": "姉様、パスタですか！それはいいですね。どんなパスタにしましょうか？トマトソース、クリームソース、ペペロンチーノ…迷いますね。それに、具材は何を入れたいですか？",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

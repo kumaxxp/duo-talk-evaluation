@@ -1,0 +1,26 @@
+{
+  "turn_number": 2,
+  "speaker": "やな",
+  "thought": "あゆは相変わらず私のことを心配性だね。でも、朝からコーヒーの香りでキッチンに引き寄せられたし、これも一か八か、ってやつ？",
+  "speech": "ああ、ちょっとね。でも、香りで気分転換！ あゆも、ゆっくりお風呂入って、元気出してね！ *あゆの方を笑顔で見る* 何か食べたいものある？",
+  "action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

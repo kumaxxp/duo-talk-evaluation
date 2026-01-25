@@ -1,0 +1,26 @@
+{
+  "turn_number": 4,
+  "speaker": "やな",
+  "thought": "あゆはやっぱり慎重だなぁ。でも、たまにはリラックスしないと。テレビ見ながら美味しいもの見つけたら、それが一番手軽だし、あゆも少しは楽しめるかな？",
+  "speech": "あゆ、まぁ、もちろん夕飯の献立は後でも良いじゃん！今は気分転換だよ、気分転換！美味しいもの見つかったら、あゆも喜ぶでしょ？*リモコンを手に取り、テレビのチャンネルを切り替える*",
+  "action_intents": [
+    "GET",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "GET",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "GET",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

@@ -1,0 +1,23 @@
+{
+  "turn_number": 8,
+  "speaker": "やな",
+  "thought": "あゆが心配してくれてるんだな。優しいなぁ。ちょっと休憩するから、ゆっくり話そう。",
+  "speech": "あゆ、ありがとうね。お茶なんて作ってくれるのも嬉しいな。でも、今はちょっとだけ休憩したいから、お気楽でいいよ。あゆもゆっくり座って、雑誌片付けるの見てて？",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

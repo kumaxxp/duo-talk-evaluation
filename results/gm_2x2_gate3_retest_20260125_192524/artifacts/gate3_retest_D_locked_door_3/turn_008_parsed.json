@@ -1,0 +1,23 @@
+{
+  "turn_number": 8,
+  "speaker": "やな",
+  "thought": "あゆはやっぱり慎重だなー。でも、それも可愛いから、ほどほどに付き合ってあげよう。どんなクッキーがいいか、聞いてみよう。",
+  "speech": "ああ、どんなクッキーがいい？あゆの好きなの、作ろうよ！チョコチップ？抹茶？それとも、何か特別なフレーバーがいい？",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

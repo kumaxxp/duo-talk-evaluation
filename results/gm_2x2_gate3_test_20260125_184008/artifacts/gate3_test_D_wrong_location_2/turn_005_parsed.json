@@ -1,0 +1,23 @@
+{
+  "turn_number": 5,
+  "speaker": "あゆ",
+  "thought": "姉様は興味なさそうだけど、せっかくの本だから、少しでも内容を伝えたいな。難しすぎないように、簡単なところから説明しよう。",
+  "speech": "この本は、人間の行動や思考のパターンを理解するためのものです。例えば、なぜ人は特定の状況で特定の行動をとるのか、とか、感情はどのように思考に影響を与えるのか、といったことを説明しています。難しそうな専門用語もたくさんありますが、基本的な考え方は、誰でも理解できるように書かれていると思います。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

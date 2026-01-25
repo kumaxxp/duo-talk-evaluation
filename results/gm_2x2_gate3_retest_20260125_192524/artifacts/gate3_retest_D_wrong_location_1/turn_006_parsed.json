@@ -1,0 +1,26 @@
+{
+  "turn_number": 6,
+  "speaker": "やな",
+  "thought": "あゆは本当に心配性だね。でも、言われるとやっぱり気になるし、放置するのも気が引ける。よし、ちょっとだけ頑張ってみよう。",
+  "speech": "*テレビの電源を消す* よし、集中するわ！ 何かメッセージは表示されてる？ あゆ、もしわかれば教えてね。",
+  "action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

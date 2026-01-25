@@ -1,0 +1,23 @@
+{
+  "turn_number": 4,
+  "speaker": "やな",
+  "thought": "あゆも起き出したみたい。トーストの好みを聞くのは良い感じ？バターとジャムか…迷うよね。",
+  "speech": "ああ、おはよう！バターとジャムね、どっちも美味しいもんねー。今日は気分で決めちゃう？それとも、どっちか強いて言う？",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

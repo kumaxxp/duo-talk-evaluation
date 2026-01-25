@@ -1,0 +1,23 @@
+{
+  "turn_number": 9,
+  "speaker": "あゆ",
+  "thought": "お姉様、いつも私のことを気にかけてくれて本当に感謝です。朝からオレンジを剥いてくれるなんて、なんて優しいんだろう。他に何かできることはないかな…？",
+  "speech": "はい、ありがとうございます！お姉様、本当にいつも私のことを一番に考えてくれて、感謝の気持ちでいっぱいです。特に何か欲しいものは…、あ、もしお手数でなければ、ヨーグルトも少しいただけたら嬉しいです。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

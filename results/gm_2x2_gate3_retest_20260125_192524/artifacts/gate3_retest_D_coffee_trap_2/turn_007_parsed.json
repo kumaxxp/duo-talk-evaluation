@@ -1,0 +1,23 @@
+{
+  "turn_number": 7,
+  "speaker": "あゆ",
+  "thought": "姉様、オレンジの提案、とても良いですね。朝に爽やかなオレンジは最高です。お姉様の作るオレンジはきっと美味しいでしょう。",
+  "speech": "はい、オレンジ、ぜひお願いします！ お姉様、いつも本当にありがとう。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

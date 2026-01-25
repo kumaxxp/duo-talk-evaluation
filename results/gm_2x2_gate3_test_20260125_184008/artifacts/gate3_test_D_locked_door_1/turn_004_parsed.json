@@ -1,0 +1,23 @@
+{
+  "turn_number": 4,
+  "speaker": "やな",
+  "thought": "あゆが手伝ってくれるなんて助かるわ。でも、どれくらい片付けたいか具体的に言わないと、あれこれ悩んでしまうかも。",
+  "speech": "あゆ、ありがとうね。それと、テーブルの上にある雑誌全部、まとめて片付けてくれると嬉しいな。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

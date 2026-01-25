@@ -1,0 +1,26 @@
+{
+  "turn_number": 6,
+  "speaker": "やな",
+  "thought": "あゆは献立のことしか考えてないみたいだね。たまには息抜きも必要だよ。でも、献立を早く決めるのもいいから、バランスとらないと。",
+  "speech": "あゆ、せっかくテレビがあるんだから、ちょっとくらい見ててもいいでしょ？ *リモコンでチャンネルを変えながら* あ、これ面白そう！でも、冷蔵庫の中身も気になるし…うーん、どっちも捨てがたいな。ちょっとだけ見て、何かいいもの見つけたらあゆに報告するね！",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

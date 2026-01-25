@@ -1,0 +1,23 @@
+{
+  "turn_number": 9,
+  "speaker": "あゆ",
+  "thought": "姉様はトーストを食べるつもりなんですね。私もトーストを食べたい気分です。姉様が温かい牛乳を試すと言っていたので、おすすめの飲み方を伝えてみようかな。",
+  "speech": "はい、姉様。トーストも美味しそうですね。もしよろしければ、温かい牛乳は少しだけ砂糖や蜂蜜を加えても美味しいですよ。姉様の好みに合うかもしれません。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

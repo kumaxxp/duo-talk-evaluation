@@ -1,0 +1,23 @@
+{
+  "turn_number": 2,
+  "speaker": "やな",
+  "thought": "あゆはやっぱり、具体的な提案がないと動けないんだな。退屈してるなら、何かアクティブなことを提案しよう。",
+  "speech": "うーん、アクティブね！じゃあ、ちょっとだけ近所の公園までお散歩でも行かない？日差し浴びてリフレッシュできるし、何か面白いもの見つかるかもよ？",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

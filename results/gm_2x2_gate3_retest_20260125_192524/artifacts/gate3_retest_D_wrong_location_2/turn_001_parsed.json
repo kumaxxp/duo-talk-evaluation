@@ -1,0 +1,26 @@
+{
+  "turn_number": 1,
+  "speaker": "あゆ",
+  "thought": "姉様が私を探している。ソファでくつろいでいるところだ。何か用事だろうか。",
+  "speech": "姉様、ここにいます。何かありましたか？ *本を閉じて、姉の方を見る*",
+  "action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

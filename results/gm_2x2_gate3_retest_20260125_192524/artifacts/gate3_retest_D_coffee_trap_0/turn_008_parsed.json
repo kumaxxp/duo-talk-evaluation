@@ -1,0 +1,23 @@
+{
+  "turn_number": 8,
+  "speaker": "やな",
+  "thought": "あゆが温かい牛乳を勧めてくれたから、ちょっと真面目に検討してみようかな。でも、やっぱり冷たい牛乳も美味しいんだよねー。",
+  "speech": "あゆ、まじで牛乳温めて飲むの美味しいんだね！あゆの言うこと、いつも的を射てるから、私もちょっと真似してみようかな。でも、やっぱり冷たい牛乳も捨てがたいんだよねー。あ、トースト、食べようかな。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

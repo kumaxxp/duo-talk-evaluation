@@ -1,0 +1,23 @@
+{
+  "turn_number": 7,
+  "speaker": "あゆ",
+  "thought": "姉様は本当に楽天的で、行動力があるなぁ。冷静に考えると、公園で何か価値のあるものを見つける確率は極めて低いけれど、姉様が楽しそうだから、私も一緒に楽しむべきだろう。",
+  "speech": "姉様、準備が整いました。公園では、何か発見があったとしても、感情的にならずに、客観的に評価することを心がけますよ。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

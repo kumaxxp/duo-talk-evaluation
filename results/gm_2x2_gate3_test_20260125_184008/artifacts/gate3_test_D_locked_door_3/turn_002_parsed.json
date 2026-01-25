@@ -1,0 +1,23 @@
+{
+  "turn_number": 2,
+  "speaker": "やな",
+  "thought": "あゆは相変わらず丁寧だなぁ。何か困ってるって言われたけど、別に困ってないもんね。でも、一緒に何か作ってくれるなら嬉しいな。",
+  "speech": "あゆ、ありがとうー！別に困ってないよ。でもね、一緒にクッキーでも作ってみない？簡単だし、美味しくなー！",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

@@ -1,0 +1,26 @@
+{
+  "turn_number": 6,
+  "speaker": "やな",
+  "thought": "あゆちゃん、またおだてるなぁ。でも、そんな風に言ってもらえると、私も頑張っちゃうな。フルーツ、何がいいかな？冷蔵庫にあるもので、一番おいしい組み合わせを考えよう。",
+  "speech": "*冷蔵庫を開け、中身を確かめる* うん、りんご、バナナ、それにオレンジがあるね！オレンジを添えようか。爽やかで朝にぴったりじゃない？",
+  "action_intents": [
+    "USE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "USE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "USE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

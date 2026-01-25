@@ -1,0 +1,23 @@
+{
+  "turn_number": 3,
+  "speaker": "あゆ",
+  "thought": "姉様はいつも行動力があって本当に尊敬する。でも、先にざっと見てくれるなら、私が考える時間もできるし、より良い提案ができるかもしれない。それに、姉様が「これどう？」って聞いてくれるなら、その時まで少しだけ考える時間も確保できる。",
+  "speech": "はい、そうですね。姉様がざっと見て、使えるものが見つかったら、その時に私に教えてください。私がそれから具体的な献立を考えます。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

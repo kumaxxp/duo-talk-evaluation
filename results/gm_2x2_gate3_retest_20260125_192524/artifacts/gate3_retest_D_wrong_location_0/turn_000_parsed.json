@@ -1,0 +1,24 @@
+{
+  "turn_number": 0,
+  "speaker": "やな",
+  "thought": "うーん、特に予定がない夕方。あゆはどこだろう？あ、ここにいたんだ。",
+  "speech": "あゆ、お疲れ様！今日は何する？",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "GET",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

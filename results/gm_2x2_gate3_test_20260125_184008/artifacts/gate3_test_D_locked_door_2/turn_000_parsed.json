@@ -1,0 +1,26 @@
+{
+  "turn_number": 0,
+  "speaker": "やな",
+  "thought": "うーん、何して過ごそうかな。あゆはどこだろう？",
+  "speech": "あゆ、いる？なんかテレビでも見ようかなー。*リモコンを手に取る*",
+  "action_intents": [
+    "GET",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "GET",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "GET",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

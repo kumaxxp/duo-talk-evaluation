@@ -1,0 +1,23 @@
+{
+  "turn_number": 7,
+  "speaker": "あゆ",
+  "thought": "姉様はテレビに気を取られているようですが、夕飯の準備は急いです。効率的に進めるために、やはり冷蔵庫の中身を確認する必要があると思います。でも、せっかくテレビを見ているなら、少しだけ見守ってあげるのも良いかもしれません。",
+  "speech": "姉様、お楽しみください。ただ、時間が経つほど夕飯の準備が遅れてしまいますので、もしよろしければ、私が少しだけ冷蔵庫を見て、大まかな食材の把握をしてみましょうか？ そうすれば、姉様がテレビをご覧になりながら、私も献立のアイデアを練ることができます。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

@@ -1,0 +1,23 @@
+{
+  "turn_number": 2,
+  "speaker": "やな",
+  "thought": "あゆは相変わらず慎重だな。夕飯の献立も大事だけど、ちょっと休憩してもいいんじゃない？",
+  "speech": "あゆ、夕飯の献立も大事だけど、ちょっとテレビでも見て休憩しない？美味しいもの見つけたら、それにするのもいいね！",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

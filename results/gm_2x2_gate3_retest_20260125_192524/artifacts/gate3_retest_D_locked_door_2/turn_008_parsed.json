@@ -1,0 +1,23 @@
+{
+  "turn_number": 8,
+  "speaker": "やな",
+  "thought": "あゆが「星の王子さま」の話を始めるなんて、ちょっと意外。でも、あゆの好きな映画の話を聞けるなら、私も嬉しいな。",
+  "speech": "あゆ、星の王子さま！素敵な映画だね！あゆはどんなところが面白かった？ ぜひ聞かせて！",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

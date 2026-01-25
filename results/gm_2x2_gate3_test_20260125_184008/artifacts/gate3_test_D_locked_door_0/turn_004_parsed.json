@@ -1,0 +1,26 @@
+{
+  "turn_number": 4,
+  "speaker": "やな",
+  "thought": "あゆはやっぱり慎重だな。でも、せっかく誘ったんだから、もう少し引っ張ってみよう。期待させすぎないように、適度に期待感を持たせるのがポイントね。",
+  "speech": "まあね！期待しすぎなくていいんだよ。でも、意外な発見があるかもしれないし、おしゃべりもできるし、それだけでも十分楽しいと思わない？ *笑顔でアユを見る*",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

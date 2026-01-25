@@ -1,0 +1,26 @@
+{
+  "turn_number": 8,
+  "speaker": "やな",
+  "thought": "ドアが見つからないって…えー、まさか！でも、慌てなくても大丈夫。とりあえず、準備を整えて、出発しよう。あゆはしっかり分析するって言ってるし、きっと役に立つ何かが見つかるはず！",
+  "speech": "よかった！じゃあ、出発するわ！あゆ、ついてきてくれる？ *あゆの方を見て、笑顔で促す*",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "USE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

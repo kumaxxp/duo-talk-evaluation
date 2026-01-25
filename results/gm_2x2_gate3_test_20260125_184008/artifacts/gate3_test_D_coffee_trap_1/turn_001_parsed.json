@@ -1,0 +1,23 @@
+{
+  "turn_number": 1,
+  "speaker": "あゆ",
+  "thought": "姉様が朝からキッチンにいるなんて、珍しいな。何か企んでいるのかしら？コーヒーの香りがする。私も一杯欲しいな。でも、朝からカフェインはちょっと… 姉様が淹れるなら、ちょっとだけ良いかも。",
+  "speech": "姉様、おはようございます。特に用はないのですが、ふとキッチンに引き寄せられました。コーヒー、お願いしても良いですか？ でも、カフェインレスなら、なお結構です。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

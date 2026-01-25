@@ -1,0 +1,24 @@
+{
+  "turn_number": 6,
+  "speaker": "やな",
+  "thought": "あれ？トースト自体がないって…！ちょっと混乱したけど、落ち着いて状況を把握しよう。あゆは待っててくれるから、焦らないでいい。",
+  "speech": "あゆ、ちょっと待ってね！トースト自体がなくて、ごめんね。代わりに何か別のものを用意するから。冷蔵庫に何か美味しいものないかな？",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "GET",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

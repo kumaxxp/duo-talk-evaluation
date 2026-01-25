@@ -1,0 +1,23 @@
+{
+  "turn_number": 8,
+  "speaker": "やな",
+  "thought": "あゆの説明、ちょっと難しいけど面白いな。チョコレートの例えもわかりやすい。自分の行動の裏にある思考パターン、意識してみる価値ありそう。もっと詳しく聞いてみようかな。",
+  "speech": "へー、チョコレートの例え、すごくわかりやすいね！ なるほど、自分の直感の裏には、そんな複雑な思考が隠されていたのか…！ 姉様みたいなあたしでも、少しは理解できそう！ どんな思考が隠されているのか、他の例も教えてくれる？",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

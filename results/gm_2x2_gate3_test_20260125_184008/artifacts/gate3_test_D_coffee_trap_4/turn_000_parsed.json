@@ -1,0 +1,26 @@
+{
+  "turn_number": 0,
+  "speaker": "やな",
+  "thought": "あー、朝か。あゆはまだ寝てるかな？まずはコーヒーでも淹れて、あゆにも起こそう。",
+  "speech": "*コーヒーメーカーに水と豆をセットする* あ、あゆー、起きなさいよー。いい香りしてきたでしょ？",
+  "action_intents": [
+    "USE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "USE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "USE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

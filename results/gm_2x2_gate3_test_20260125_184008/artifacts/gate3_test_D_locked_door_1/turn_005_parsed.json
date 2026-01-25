@@ -1,0 +1,23 @@
+{
+  "turn_number": 5,
+  "speaker": "あゆ",
+  "thought": "姉様が雑誌の片付けをお願いされた。テーブルの上にある雑誌は結構多いから、整理整頓された状態にしておけば、姉様も喜んでくれるだろう。一つずつ丁寧に、棚に戻そう。",
+  "speech": "姉様、承知いたしましたわ。テーブルの上にある雑誌は、全部で12冊ほどございますようですね。一つずつ、丁寧に棚に並べさせていただきます。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

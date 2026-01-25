@@ -1,0 +1,23 @@
+{
+  "turn_number": 1,
+  "speaker": "あゆ",
+  "thought": "姉様はいつも元気だなぁ。今日の夕飯は何にしようかな。でも、まず何をするか決めないと。",
+  "speech": "姉様、お疲れ様です。夕飯の献立を考えようかな、と思いましたが、何か他にしたいことはありますか？",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

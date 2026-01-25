@@ -1,0 +1,23 @@
+{
+  "turn_number": 5,
+  "speaker": "あゆ",
+  "thought": "姉様はいつも気まぐれだ。でも、それが姉様らしくて好き。今日は何が食べたい気分かな…？",
+  "speech": "姉様、おはようございます。…うーん、今日はジャムでお願いしてもよろしいでしょうか？ 姉様の気分に合わせて、私もジャムにしようかな、と。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

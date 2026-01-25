@@ -1,0 +1,23 @@
+{
+  "turn_number": 3,
+  "speaker": "あゆ",
+  "thought": "公園ですか…姉様が提案してくれたのは、確かに良い選択肢かもしれません。ただ、何を見つけるか、という点が少し不安です。でも、姉様の言う通り、気分転換にはなるかもしれません。",
+  "speech": "姉様、お誘いありがとうございます。公園、良いですね。ただ、何か特定の目的があるわけではないので、あまり期待せずに散策する、という感じでしょうか？",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

@@ -1,0 +1,23 @@
+{
+  "turn_number": 3,
+  "speaker": "あゆ",
+  "thought": "姉様はなんとなくテレビをつけたいらしい。何か特定の目的があるわけではないみたいだけど、なんとなく暇なのかもしれない。私も何か提案してみようかな。",
+  "speech": "姉様、なんとなくテレビを見るのも良いですね。でも、他に何かできること、例えば、少し片付けを手伝ったり、お茶でも淹れましょうか？",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

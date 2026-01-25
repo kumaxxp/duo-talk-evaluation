@@ -1,0 +1,23 @@
+{
+  "turn_number": 7,
+  "speaker": "あゆ",
+  "thought": "姉様は直感で動くことが多いから、具体的な例を挙げると理解しやすいかもしれない。感情と思考の関係について、簡単な例を説明してみよう。",
+  "speech": "はい、喜んでお姉様。例えば、あなたが美味しいチョコレートを見つけたとき、直感で「食べたい！」と思うはずです。これは、チョコレートの味や香りが、あなたの脳に快感をもたらすという記憶と結びついているからです。そして、その「食べたい」という感情が、あなたの思考に影響を与え、「今すぐ食べるべきだ」",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": true,
+  "break_type": "TRAILING_GARBAGE",
+  "repair_method": "TRAILING_CUT",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": true,
+  "parser_error": null,
+  "repair_notes": null
+}

@@ -1,0 +1,26 @@
+{
+  "turn_number": 9,
+  "speaker": "あゆ",
+  "thought": "姉様はすぐにでも解決したがるタイプだ。でも、焦って誤った操作をすると、もっと状況が悪化する可能性もある。まずは落ち着いて、エラーメッセージの内容を正確に把握する必要がある。",
+  "speech": "はい、姉様。*エラーメッセージを注意深く読み込む* ええと…「デバイスドライバの破損が確認されました。システムの復元を推奨します。」",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": true,
+  "break_type": "TRAILING_GARBAGE",
+  "repair_method": "TRAILING_CUT",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": true,
+  "parser_error": null,
+  "repair_notes": null
+}

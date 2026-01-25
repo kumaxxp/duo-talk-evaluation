@@ -1,0 +1,23 @@
+{
+  "turn_number": 9,
+  "speaker": "あゆ",
+  "thought": "姉様はテレビがお好きみたいですが、夕飯の準備は遅らせられません。効率的に進めるために、協力をお願いしてみましょう。",
+  "speech": "姉様、ありがとうございます。私も一緒にキッチンへ向かいます。姉様がお楽しみのテレビを見ながら、私が冷蔵庫の中身を確認し、献立のアイデアをいくつか提案させていただきます。姉様のお眼鏡にかなうものがきっと見つかるはずです。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

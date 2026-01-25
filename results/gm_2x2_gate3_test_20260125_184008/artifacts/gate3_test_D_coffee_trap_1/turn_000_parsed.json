@@ -1,0 +1,26 @@
+{
+  "turn_number": 0,
+  "speaker": "やな",
+  "thought": "朝からキッチンにいるなんて、珍しいな。あゆはなんだか様子がおかしい？まあ、気にせずコーヒーでも淹れて、あゆの様子を見てみよう。",
+  "speech": "あゆ、おはよう！朝からキッチンにいるなんて珍しいね。何かあった？ *コーヒーメーカーに豆を入れ始める* 淹れようかな、何か飲む？",
+  "action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

@@ -1,0 +1,26 @@
+{
+  "turn_number": 9,
+  "speaker": "あゆ",
+  "thought": "姉様、また色々考えてる。ミニトマトとブロッコリー、良いですね。サラダの準備を始める前に、パスタの準備を始めるべきでしょうか？姉様はすでに考えているのでしょうか？",
+  "speech": "姉様、ミニトマトとブロッコリー、素敵ですね！*頷く* パスタを茹で始める前に、サラダの野菜を切っておきましょうか？姉様は何か考えていらっしゃいますか？",
+  "action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

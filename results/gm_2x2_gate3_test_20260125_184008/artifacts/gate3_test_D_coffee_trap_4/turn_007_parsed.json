@@ -1,0 +1,26 @@
+{
+  "turn_number": 7,
+  "speaker": "あゆ",
+  "thought": "姉様はいつも楽しそう。私も少しは明るく振る舞ってみよう。ジャムトースト、良い選択だったかな？",
+  "speech": "姉様、ありがとうございます。ジャムトースト、とても美味しそうですね。 *少し照れながら笑顔を見せる*",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

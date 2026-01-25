@@ -1,0 +1,26 @@
+{
+  "turn_number": 7,
+  "speaker": "あゆ",
+  "thought": "姉様は本当にどうでもいいことによく気がつくのね。棚の場所を覚えていたのは、母上が詳しく教えてくれたからだけれど…。まあ、一緒に探してあげよう。",
+  "speech": "はい、姉様。*棚の方へ歩き、棚の上から下まで、丁寧に視線を走らせる* 母上が詳しく教えてくださったので、場所を覚えていらっしゃいました。少しの間だけ、一緒に探してみましょうか？",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

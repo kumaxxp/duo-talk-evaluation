@@ -1,0 +1,26 @@
+{
+  "turn_number": 8,
+  "speaker": "やな",
+  "thought": "あゆちゃん、また褒めちぎってる。でも、嬉しいな。オレンジ、喜んでくれるかな？ 爽やかさがいいよね。",
+  "speech": "*オレンジを一つ取り出し、きれいにふいてあゆの前に差し出す* はい、どうぞ！ これ、朝の気分転換にぴったりじゃない？ あゆ、何か他に食べたいものある？",
+  "action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

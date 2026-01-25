@@ -1,0 +1,23 @@
+{
+  "turn_number": 5,
+  "speaker": "あゆ",
+  "thought": "姉様は本当に楽観的だなぁ。でも、確かに夕飯のことでずっと頭を使っていると疲れてしまうかもしれない。気分転換も必要かもしれない…それに、本当に美味しいものが見つかるかもしれないし。",
+  "speech": "姉様、わかったわ。少しだけテレビを見て気分転換しましょう。でも、もし何も良いものが見つからなかったら、やっぱり夕飯の献立を考えないとですね…。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

@@ -1,0 +1,23 @@
+{
+  "turn_number": 7,
+  "speaker": "あゆ",
+  "thought": "姉様はいつも自分のペースで動かれるから、少し心配になる。でも、協力的な姿勢を見せて、一緒に問題を解決しようと促そう。",
+  "speech": "はい、姉様。エラーメッセージの内容を確認させてください。どのようなエラーが発生しているかによって、対応策も変わってきますので。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

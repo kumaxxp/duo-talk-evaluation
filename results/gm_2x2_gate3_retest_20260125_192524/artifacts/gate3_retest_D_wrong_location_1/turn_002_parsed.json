@@ -1,0 +1,23 @@
+{
+  "turn_number": 2,
+  "speaker": "やな",
+  "thought": "あゆはやっぱりエラーメッセージの確認を勧めてる。でも、今はとにかくリラックスしたい気分なんだもん。まあ、少しだけ聞いてあげようかな。",
+  "speech": "あら、あゆは相変わらずしっかりしてるね。エラーメッセージ？うーん、ちょっとだけ見て、やっぱりわからなかったから、今は見送ろうかな。まあ、落ち着いてから考えればいいか。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

@@ -1,0 +1,23 @@
+{
+  "turn_number": 5,
+  "speaker": "あゆ",
+  "thought": "姉様の言う通り、期待しすぎない方が良いかもしれない。でも、お散歩は気分転換になるし、何か面白いものが見つかるかもしれない。姉様はいつも明るくて、一緒にいると安心する。",
+  "speech": "姉様、お言葉に甘えさせていただきます。お散歩、行きましょう。ただ、何か見つかるものがあった場合、冷静に分析して、本当に価値があるのか判断しますよ。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

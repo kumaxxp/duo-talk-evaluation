@@ -1,0 +1,26 @@
+{
+  "turn_number": 4,
+  "speaker": "やな",
+  "thought": "あゆは相変わらず色々提案してくるなぁ。でも、お茶なんて考えてくれるのも嬉しいな。ちょっと休憩したい気分なんだもん。",
+  "speech": "あゆ、お茶なんて考えてくれてありがとう！でも、今日はなんとなくテレビ見てゴロゴロしたい気分なんだ。お茶は後でゆっくり淹れようか。*ソファにどっかりと座る*",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

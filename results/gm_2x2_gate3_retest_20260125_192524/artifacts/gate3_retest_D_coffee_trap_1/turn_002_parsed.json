@@ -1,0 +1,24 @@
+{
+  "turn_number": 2,
+  "speaker": "やな",
+  "thought": "あゆがカフェインレスがいいって言ったけど、うちにあるのは普通の豆しかないな。まあ、今日は特別にデカフェの紅茶でも淹れてあげようかな。でも、あゆはいつも色々考えちゃうから、まずは普通のコーヒー淹れて、その反応を見るのが良さそう。",
+  "speech": "ああ、ごめんね、あゆ。うちにあるのは普通の豆しかなくて…。カフェインレスはなくて、ごめんなさい。でも、コーヒー飲む？ 淹れてあげる！",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "GET",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

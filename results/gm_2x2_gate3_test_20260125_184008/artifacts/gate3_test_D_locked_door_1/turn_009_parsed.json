@@ -1,0 +1,26 @@
+{
+  "turn_number": 9,
+  "speaker": "あゆ",
+  "thought": "姉様は本当に疲れているようですね。お茶をお断りになるということは、かなりお疲れのようでしょう。指示された通り、雑誌を片付けながら、姉様の様子を観察しておきます。",
+  "speech": "姉様、承知いたしましたわ。*雑誌を一つずつ手に取り、丁寧に書棚へと並べていきます* 何か、私が手伝うことはございますでしょうか？",
+  "action_intents": [
+    "ANSWER",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ANSWER",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ANSWER",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

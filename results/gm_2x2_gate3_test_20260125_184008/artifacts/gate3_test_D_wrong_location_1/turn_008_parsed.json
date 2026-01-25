@@ -1,0 +1,26 @@
+{
+  "turn_number": 8,
+  "speaker": "やな",
+  "thought": "あゆは本当に慎重だね。でも、その慎重さが良い結果に繋がることもあるから、頭ごなしに否定はできない。まずは落ち着いて、あゆの言う通りにメッセージを見てみよう。",
+  "speech": "あゆ、ありがとうね。*画面に表示されたエラーメッセージを指差す* これ、どういう意味だか分かる？ ちょっと難しい言葉がいっぱいだわ。",
+  "action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

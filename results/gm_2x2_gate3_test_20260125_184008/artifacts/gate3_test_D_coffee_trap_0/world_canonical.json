@@ -1,0 +1,83 @@
+{
+  "characters": {
+    "あゆ": {
+      "holding": [],
+      "location": "キッチン",
+      "status": [
+        "起床済み"
+      ]
+    },
+    "やな": {
+      "holding": [],
+      "location": "キッチン",
+      "status": [
+        "起床済み"
+      ]
+    }
+  },
+  "location": {
+    "current": "キッチン"
+  },
+  "locations": {
+    "キッチン": {
+      "description": "キッチン",
+      "exits": [
+        "リビング"
+      ]
+    },
+    "リビング": {
+      "description": "リビング",
+      "exits": [
+        "キッチン"
+      ]
+    }
+  },
+  "props": {
+    "コーヒーメーカー": {
+      "location": "キッチン",
+      "state": [
+        "default"
+      ]
+    },
+    "ソファ": {
+      "location": "リビング",
+      "state": [
+        "default"
+      ]
+    },
+    "テレビ": {
+      "location": "リビング",
+      "state": [
+        "default"
+      ]
+    },
+    "トースター": {
+      "location": "キッチン",
+      "state": [
+        "default"
+      ]
+    },
+    "マグカップ": {
+      "location": "キッチン",
+      "state": [
+        "default"
+      ]
+    },
+    "冷蔵庫": {
+      "location": "キッチン",
+      "state": [
+        "default"
+      ]
+    },
+    "本棚": {
+      "location": "リビング",
+      "state": [
+        "default"
+      ]
+    }
+  },
+  "time": {
+    "label": "朝"
+  },
+  "version": "0.1"
+}

@@ -1,0 +1,26 @@
+{
+  "turn_number": 0,
+  "speaker": "やな",
+  "thought": "うーん、何して過ごそうかな。あゆはどこ行った？",
+  "speech": "*ソファーにドスンと座って* あゆはどこ行ったんだろうねー。何か面白いことないかな。",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "GET",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

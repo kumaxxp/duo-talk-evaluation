@@ -1,0 +1,23 @@
+{
+  "turn_number": 3,
+  "speaker": "あゆ",
+  "thought": "姉様は何かを作りたいみたい。クッキーか。簡単そうだけど、何か失敗しないか心配だな。でも、姉様が楽しそうだから、協力しよう。",
+  "speech": "姉様、クッキーですか！いいですね。材料はありますか？レシピを一度確認してから始めるのが良いかもしれません。姉様が作るなら、きっと美味しいでしょうけど、念のためです。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

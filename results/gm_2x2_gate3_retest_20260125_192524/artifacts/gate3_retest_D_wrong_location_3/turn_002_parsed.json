@@ -1,0 +1,23 @@
+{
+  "turn_number": 2,
+  "speaker": "やな",
+  "thought": "あゆは相変わらず丁寧だなあ。面白い番組見てるのか…ちょっとは一緒に楽しもうとしてくれてる？まあ、別にいいか。",
+  "speech": "あゆー！別に面白い番組見てるわけじゃないんだよー。ただ、テレビがあるから見てるだけ。ねえ、今日のご飯なにがいい？",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

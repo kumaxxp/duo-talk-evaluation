@@ -1,0 +1,23 @@
+{
+  "turn_number": 9,
+  "speaker": "あゆ",
+  "thought": "姉様はチョコレートの例えで興味を持ってくれたみたい。次はもっと日常的な例を挙げてみよう。でも、専門用語は避けて、できるだけわかりやすく説明しないと。",
+  "speech": "はい、お姉様。例えば、あなたがスーパーで目的の品を見つけられなかったとき、イライラするかもしれません。これは、目的を達成できなかったという状況が、あなたの脳に不快感をもたらすからです。「早く目的を達成したい」という感情が、あなたの思考に影響を与え、「店員さんに聞くべきだ」「別の店を探すべきだ」",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": true,
+  "break_type": "TRAILING_GARBAGE",
+  "repair_method": "TRAILING_CUT",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": true,
+  "parser_error": null,
+  "repair_notes": null
+}

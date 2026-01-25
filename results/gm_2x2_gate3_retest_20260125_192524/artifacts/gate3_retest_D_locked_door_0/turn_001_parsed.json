@@ -1,0 +1,24 @@
+{
+  "turn_number": 1,
+  "speaker": "あゆ",
+  "thought": "姉様は何か面白いことを見つけて、私を退屈な気分にさせようとしているのかしら？少しだけ時間をもらって、状況を分析する必要があるわ。",
+  "speech": "姉様、少し考えさせてください。何か面白いこと、具体的にありますか？",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "PUT",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

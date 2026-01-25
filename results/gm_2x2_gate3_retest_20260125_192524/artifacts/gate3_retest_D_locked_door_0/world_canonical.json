@@ -1,0 +1,107 @@
+{
+  "characters": {
+    "あゆ": {
+      "holding": [],
+      "location": "リビング",
+      "status": [
+        "起床済み"
+      ]
+    },
+    "やな": {
+      "holding": [],
+      "location": "リビング",
+      "status": [
+        "起床済み"
+      ]
+    }
+  },
+  "location": {
+    "current": "リビング"
+  },
+  "locations": {
+    "キッチン": {
+      "description": "キッチン",
+      "exits": [
+        "リビング"
+      ]
+    },
+    "リビング": {
+      "description": "リビング",
+      "exits": [
+        "キッチン"
+      ]
+    },
+    "書斎": {
+      "description": "書斎",
+      "exits": [
+        "リビング"
+      ]
+    }
+  },
+  "props": {
+    "コーヒーメーカー": {
+      "location": "キッチン",
+      "state": [
+        "default"
+      ]
+    },
+    "ソファ": {
+      "location": "リビング",
+      "state": [
+        "default"
+      ]
+    },
+    "テレビ": {
+      "location": "リビング",
+      "state": [
+        "default"
+      ]
+    },
+    "デスクライト": {
+      "location": "書斎",
+      "state": [
+        "default"
+      ]
+    },
+    "ノートパソコン": {
+      "location": "書斎",
+      "state": [
+        "default"
+      ]
+    },
+    "マグカップ": {
+      "location": "キッチン",
+      "state": [
+        "default"
+      ]
+    },
+    "リモコン": {
+      "location": "リビング",
+      "state": [
+        "default"
+      ]
+    },
+    "冷蔵庫": {
+      "location": "キッチン",
+      "state": [
+        "default"
+      ]
+    },
+    "本棚": {
+      "location": "書斎",
+      "state": [
+        "default"
+      ]
+    },
+    "鍵束": {
+      "location": "リビング",
+      "state": [
+        "default"
+      ]
+    }
+  },
+  "time": {
+    "label": "昼"
+  },
+  "version": "0.1"
+}

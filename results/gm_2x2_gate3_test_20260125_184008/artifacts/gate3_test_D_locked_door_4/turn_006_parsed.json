@@ -1,0 +1,26 @@
+{
+  "turn_number": 6,
+  "speaker": "やな",
+  "thought": "あゆが棚の場所を覚えてたなんて、助かるわー。一緒に探してくれるのも嬉しいな。",
+  "speech": "あゆ、ありがとうー！棚の場所、覚えてたんだね！*棚の方に歩いていく* あゆも一緒に探してくれると助かるわ。",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

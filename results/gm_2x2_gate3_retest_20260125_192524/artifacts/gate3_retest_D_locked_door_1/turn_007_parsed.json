@@ -1,0 +1,26 @@
+{
+  "turn_number": 7,
+  "speaker": "あゆ",
+  "thought": "姉様がソファで休憩されるのですね。私も少しの間、休憩させていただきましょう。雑誌の整理も一段落しましたし、姉様と少しお話するのも良いかもしれません。",
+  "speech": "姉様、お疲れ様でございますわ。私も少しの間、ご一緒させていただきますね。 *ソファに腰掛ける* 何かお飲み物でもいかがでございますか？",
+  "action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

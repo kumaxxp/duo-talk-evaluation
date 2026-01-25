@@ -1,0 +1,26 @@
+{
+  "turn_number": 4,
+  "speaker": "やな",
+  "thought": "あゆは本当に心配性だなぁ。でも、確かに放置したらもっと大変になるかもしれないし…。まあ、少しだけ見てみようかな。",
+  "speech": "あゆ、ありがとうね。言われてみたら、やっぱり気になるし。*リモコンを探す* ちょっとだけ見てみるわ。でも、もしわからなかったら、やっぱり後回しにするからね！",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

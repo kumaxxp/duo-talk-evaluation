@@ -1,0 +1,23 @@
+{
+  "turn_number": 4,
+  "speaker": "やな",
+  "thought": "あゆは相変わらず真面目だなぁ。でも、手伝ってくれるなら助かるかも。何があるかな？",
+  "speech": "あゆは優しいねー。ありがとう。そういえば、私、あの旅行の写真が入ったアルバムが見たいな。どこにしまったんだろう？ あゆは見たことある？",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

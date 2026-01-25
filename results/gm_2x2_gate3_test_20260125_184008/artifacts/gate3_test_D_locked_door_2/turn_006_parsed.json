@@ -1,0 +1,23 @@
+{
+  "turn_number": 6,
+  "speaker": "やな",
+  "thought": "あゆは心配性なんだな。でも、優しいから仕方ない。テレビ見てるだけだから、何か適当なことを言って気を紛らわせよう。",
+  "speech": "あゆ、別に何かする必要はないよ。ただ、あゆが退屈しないように、何か面白いことないかな？例えば、あゆが最近見た映画の話とか、聞きたいな。",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

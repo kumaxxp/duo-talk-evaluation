@@ -1,0 +1,26 @@
+{
+  "turn_number": 8,
+  "speaker": "やな",
+  "thought": "あゆったら、また分析分析で難しいことを言ってる…。でも、夕飯の準備をスムーズにしたい気持ちもわかるから、ちょっとだけ冷蔵庫の中見てあげようかな。",
+  "speech": "わかったわ、あゆ。ちょっとだけ見てみるわね！ *リモコンを置いて立ち上がり、キッチンへ向かう* あ、何かいいものあるかな？ あゆも一緒に見てくれる？",
+  "action_intents": [
+    "MOVE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "MOVE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "MOVE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

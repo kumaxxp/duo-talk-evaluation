@@ -1,0 +1,23 @@
+{
+  "turn_number": 2,
+  "speaker": "やな",
+  "thought": "あゆが飲み物を用意してくれるなら助かるな。でも、自分で用意するのも悪くないかも。まあ、あゆに任せて、私はトースト焼き終わるまで待とう。",
+  "speech": "あゆ、ありがとう！ジュースとか牛乳とか、あゆが好きなものでいいよー！私はコーヒー飲むかな。あ、トースト焼き終わるまでちょっと待っててね！",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

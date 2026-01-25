@@ -1,0 +1,23 @@
+{
+  "turn_number": 9,
+  "speaker": "あゆ",
+  "thought": "姉様は私のことを気にかけてくれるんだな。嬉しいな。特に何かしたいことはないけど、何か言っておかないと姉様が気を遣ってしまうかも。",
+  "speech": "姉様、ありがとうございます。私は特に何もしていません。姉様がコーヒーを淹れるのを、少しの間だけ見守っていれば良いでしょうか？",
+  "action_intents": [
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "ASK"
+  ],
+  "final_action_intents": [
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

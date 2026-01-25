@@ -1,0 +1,23 @@
+{
+  "turn_number": 3,
+  "speaker": "あゆ",
+  "thought": "姉様はいつもそうだ。特に目的もなくテレビを見て、急に夕飯の話になる。まあ、夕飯の提案を求められているんだから、いくつか候補を挙げよう。でも、姉様の気分を損ねないように、あまり突っ込みはしない方が良さそうだ。",
+  "speech": "姉様、そうですね…。和食にするか、それとも洋食にするか、迷いますね。もし時間があれば、ハンバーグもいいかもしれません。おまかせするなら、私はパスタでもいいかな。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

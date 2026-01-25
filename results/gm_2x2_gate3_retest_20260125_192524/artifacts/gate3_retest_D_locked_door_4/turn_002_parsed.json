@@ -1,0 +1,26 @@
+{
+  "turn_number": 2,
+  "speaker": "やな",
+  "thought": "あゆが整理するって言ったけど、一体何を整理するんだろう？ 邪魔しちゃいないかな？ でも、退屈だからちょっと聞いてみようっと。",
+  "speech": "あゆは一体何を整理するのー？ *あゆの方を覗き込むように見る* 何か面白いもの出てくるかな？",
+  "action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

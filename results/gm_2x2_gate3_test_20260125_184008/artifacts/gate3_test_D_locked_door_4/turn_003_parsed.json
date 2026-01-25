@@ -1,0 +1,23 @@
+{
+  "turn_number": 3,
+  "speaker": "あゆ",
+  "thought": "姉様ったら、また突っ込んでる。面白いもの、ねえ。何を探してるんだろう。とりあえず、今の状況を分析して、的確に返答しよう。",
+  "speech": "姉様、面白いもの、ですか？ 私はただ、リビングが少し散らかっているように感じたので、少しだけ片付けようとしていました。何を探されているかによって、お手伝いできるかもしれません。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

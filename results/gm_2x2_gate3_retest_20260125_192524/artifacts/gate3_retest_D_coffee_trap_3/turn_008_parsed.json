@@ -1,0 +1,26 @@
+{
+  "turn_number": 8,
+  "speaker": "やな",
+  "thought": "あゆったら、期待されてるなぁ。トーストがないなんて、ちょっと失敗したかな？でも、あゆは期待してくれてるから、何か美味しいものを見つけてあげよう。冷蔵庫の中身、何があるかな？",
+  "speech": "あゆ、ちょっと待ってね！*冷蔵庫を開ける* うーん、卵とソーセージがある！それに、ヨーグルトもあるよ。どう？卵焼きでも作る？それともヨーグルトにする？",
+  "action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

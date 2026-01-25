@@ -1,0 +1,26 @@
+{
+  "turn_number": 8,
+  "speaker": "やな",
+  "thought": "あゆ、また色々考えてる。まあ、考えるのも好きそうだけど、たまにはざっくばらんに決めようよ！",
+  "speech": "あゆー！レタス、トマト、キュウリ、パプリカ、いいね！でも、ちょっと彩りが足りないかな？ミニトマトとか、ブロッコリーとか、入れても可愛いかも！*リモコンをソファーに置く* あ、それと、パスタ茹で始める前に、サラダの野菜切っておこうか！",
+  "action_intents": [
+    "PUT",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "PUT",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "PUT",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

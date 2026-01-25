@@ -1,0 +1,23 @@
+{
+  "turn_number": 6,
+  "speaker": "やな",
+  "thought": "あゆが勧めてる心理学の本、面白そうだな。難しそうだけど、ちょっと読んでみたいな。でも、まずはあゆの言うことをちゃんと聞いてみよう。",
+  "speech": "なるほど、そういうことなんだね！ 感情と思考の関係、興味深い！ あたし、直感で動くことが多いから、自分の思考パターンってあんまり意識したことなかったな。 どんな内容か、もっと詳しく教えてくれる？",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

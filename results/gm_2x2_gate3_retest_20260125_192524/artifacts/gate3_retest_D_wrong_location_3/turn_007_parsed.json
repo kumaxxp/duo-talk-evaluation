@@ -1,0 +1,23 @@
+{
+  "turn_number": 7,
+  "speaker": "あゆ",
+  "thought": "姉様はいつも行動力があってすごいな。クリームパスタにベーコンとマッシュルームか。悪くない選択肢だわ。サラダも作るなら、彩りも考えた方がいいかもしれない。",
+  "speech": "姉様、クリームパスタ、ベーコンとマッシュルーム、承知いたしました。サラダですね。彩りを考えると、レタスにトマト、キュウリ、パプリカ…といったところでしょうか？",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

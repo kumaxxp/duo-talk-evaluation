@@ -1,0 +1,26 @@
+{
+  "turn_number": 4,
+  "speaker": "やな",
+  "thought": "あゆはやっぱり慎重だなー。でも、クッキー作りを一緒に楽しんでほしいから、もう少しだけ誘ってみよう。レシピなんて気にせず、一緒にワイワイ作る方が楽しいんだよね！",
+  "speech": "あゆ、レシピなんて気にしないで！ざっくり作って、それでいいんだよー！それに、失敗しても美味しくなるから！一緒に楽しもうよ！ *あゆの方を笑顔で見つめる*",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

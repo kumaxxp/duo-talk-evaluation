@@ -1,0 +1,26 @@
+{
+  "turn_number": 6,
+  "speaker": "やな",
+  "thought": "あゆはやっぱり心配性だなぁ。でも、たまにはこういう風にダラダラするのも良いよね。美味しいもの見つかるかもしれないし！",
+  "speech": "あゆ、心配しないで、大丈夫！美味しいもの見つかること、きっとあるから！*テレビのボリュームを少し上げる* さて、今日は何が見たいかな？あゆは何か希望ある？",
+  "action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

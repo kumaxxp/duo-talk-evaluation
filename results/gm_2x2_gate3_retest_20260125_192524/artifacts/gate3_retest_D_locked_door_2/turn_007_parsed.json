@@ -1,0 +1,23 @@
+{
+  "turn_number": 7,
+  "speaker": "あゆ",
+  "thought": "姉様はゴロゴロしたい気分みたいだし、無理強いはしない方が良さそうだ。最近見た映画はいくつかあるけど、姉様が興味を持ちそうなものは…？",
+  "speech": "姉様、最近、私は「星の王子さま」",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": true,
+  "break_type": "TRAILING_GARBAGE",
+  "repair_method": "TRAILING_CUT",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": true,
+  "parser_error": null,
+  "repair_notes": null
+}

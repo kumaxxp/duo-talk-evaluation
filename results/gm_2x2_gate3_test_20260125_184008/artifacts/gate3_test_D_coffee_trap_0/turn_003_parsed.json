@@ -1,0 +1,26 @@
+{
+  "turn_number": 3,
+  "speaker": "あゆ",
+  "thought": "姉様はトーストを焼いてくれている。私は何か飲み物を用意しよう。ジュースか牛乳が良いかな？姉様はコーヒーを飲むようだ。冷蔵庫の中身を確認して、姉様の好みに合わせて牛乳も用意しようか。",
+  "speech": "はい、わかりました、姉様。*冷蔵庫から牛乳を取り出す* 牛乳も用意しますね。姉様はコーヒーがお好きなんですよね？",
+  "action_intents": [
+    "GET",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "GET",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "GET",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

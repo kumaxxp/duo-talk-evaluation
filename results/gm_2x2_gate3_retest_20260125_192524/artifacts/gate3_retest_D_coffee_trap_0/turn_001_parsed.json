@@ -1,0 +1,26 @@
+{
+  "turn_number": 1,
+  "speaker": "あゆ",
+  "thought": "姉様、朝から張り切ってるね。トースターにパンをセットするなんて、行動力すごいなぁ。私も何か手伝おうかな…でも、まずは状況を把握しよう。",
+  "speech": "おはようございます、姉様。*冷蔵庫を開けて中身を確認する* 何か飲み物も用意しましょうか？",
+  "action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

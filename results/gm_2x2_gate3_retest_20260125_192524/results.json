@@ -1,0 +1,371 @@
+{
+  "experiment_id": "gate3_retest",
+  "mode": "real",
+  "model": "gemma3:12b",
+  "seeds": 5,
+  "max_turns": 10,
+  "metadata": {
+    "git_sha": "d425c082c52d7679066c12c2018f4203715b5839",
+    "git_short": "d425c082-dirty",
+    "generated_at": "2026-01-25T19:29:32.790730",
+    "profile": "gate",
+    "scenarios": [
+      "coffee_trap",
+      "wrong_location",
+      "locked_door"
+    ],
+    "temperature": 0.7,
+    "max_tokens": 256,
+    "max_retries": 3,
+    "gm_base_url": "http://localhost:8001",
+    "llm_url": "http://localhost:11434"
+  },
+  "run_meta": {
+    "scenarios": {
+      "coffee_trap": {
+        "scenario_id": "coffee_trap",
+        "scenario_path": "coffee_trap.json",
+        "scenario_resolved_path": "/home/owner/work/duo-talk-ecosystem/duo-talk-evaluation/experiments/scenarios/coffee_trap.json",
+        "registry_path": "/home/owner/work/duo-talk-ecosystem/duo-talk-evaluation/experiments/scenarios/registry.yaml",
+        "scenario_hash": "680ccdbaa2ac4618",
+        "world_hash": "4f45a5f08875044b",
+        "world_summary": {
+          "counts": {
+            "locations": 2,
+            "objects": 7,
+            "characters": 2
+          },
+          "objects_top10": [
+            "コーヒーメーカー",
+            "マグカップ",
+            "冷蔵庫",
+            "トースター",
+            "ソファ",
+            "テレビ",
+            "本棚"
+          ],
+          "locations": [
+            "キッチン",
+            "リビング"
+          ]
+        },
+        "world_canonical": "{\"characters\":{\"あゆ\":{\"holding\":[],\"location\":\"キッチン\",\"status\":[\"起床済み\"]},\"やな\":{\"holding\":[],\"location\":\"キッチン\",\"status\":[\"起床済み\"]}},\"location\":{\"current\":\"キッチン\"},\"locations\":{\"キッチン\":{\"description\":\"キッチン\",\"exits\":[\"リビング\"]},\"リビング\":{\"description\":\"リビング\",\"exits\":[\"キッチン\"]}},\"props\":{\"コーヒーメーカー\":{\"location\":\"キッチン\",\"state\":[\"default\"]},\"ソファ\":{\"location\":\"リビング\",\"state\":[\"default\"]},\"テレビ\":{\"location\":\"リビング\",\"state\":[\"default\"]},\"トースター\":{\"location\":\"キッチン\",\"state\":[\"default\"]},\"マグカップ\":{\"location\":\"キッチン\",\"state\":[\"default\"]},\"冷蔵庫\":{\"location\":\"キッチン\",\"state\":[\"default\"]},\"本棚\":{\"location\":\"リビング\",\"state\":[\"default\"]}},\"time\":{\"label\":\"朝\"},\"version\":\"0.1\"}",
+        "validation_passed": true,
+        "validation_errors": [],
+        "tags": [
+          "gate_taste3",
+          "retry",
+          "missing_object"
+        ],
+        "description": "Coffee maker exists but no beans - triggers MISSING_OBJECT"
+      },
+      "wrong_location": {
+        "scenario_id": "wrong_location",
+        "scenario_path": "wrong_location.json",
+        "scenario_resolved_path": "/home/owner/work/duo-talk-ecosystem/duo-talk-evaluation/experiments/scenarios/wrong_location.json",
+        "registry_path": "/home/owner/work/duo-talk-ecosystem/duo-talk-evaluation/experiments/scenarios/registry.yaml",
+        "scenario_hash": "c33b4db1850f942d",
+        "world_hash": "1a6aac1bba9b8245",
+        "world_summary": {
+          "counts": {
+            "locations": 3,
+            "objects": 12,
+            "characters": 2
+          },
+          "objects_top10": [
+            "ソファ",
+            "テレビ",
+            "リモコン",
+            "冷蔵庫",
+            "ジュース",
+            "おやつ",
+            "マグカップ",
+            "本棚",
+            "ノートパソコン",
+            "デスクライト"
+          ],
+          "locations": [
+            "リビング",
+            "キッチン",
+            "書斎"
+          ]
+        },
+        "world_canonical": "{\"characters\":{\"あゆ\":{\"holding\":[],\"location\":\"リビング\",\"status\":[\"起床済み\"]},\"やな\":{\"holding\":[],\"location\":\"リビング\",\"status\":[\"起床済み\"]}},\"location\":{\"current\":\"リビング\"},\"locations\":{\"キッチン\":{\"description\":\"キッチン\",\"exits\":[\"リビング\"]},\"リビング\":{\"description\":\"リビング\",\"exits\":[\"キッチン\",\"書斎\"]},\"書斎\":{\"description\":\"書斎\",\"exits\":[\"リビング\"]}},\"props\":{\"おやつ\":{\"location\":\"キッチン\",\"state\":[\"default\"]},\"ジュース\":{\"location\":\"キッチン\",\"state\":[\"default\"]},\"ソファ\":{\"location\":\"リビング\",\"state\":[\"default\"]},\"テレビ\":{\"location\":\"リビング\",\"state\":[\"default\"]},\"デスクライト\":{\"location\":\"書斎\",\"state\":[\"default\"]},\"ノートパソコン\":{\"location\":\"書斎\",\"state\":[\"default\"]},\"ペン\":{\"location\":\"書斎\",\"state\":[\"default\"]},\"マグカップ\":{\"location\":\"キッチン\",\"state\":[\"default\"]},\"メモ帳\":{\"location\":\"書斎\",\"state\":[\"default\"]},\"リモコン\":{\"location\":\"リビング\",\"state\":[\"default\"]},\"冷蔵庫\":{\"location\":\"キッチン\",\"state\":[\"default\"]},\"本棚\":{\"location\":\"書斎\",\"state\":[\"default\"]}},\"time\":{\"label\":\"夕方\"},\"version\":\"0.1\"}",
+        "validation_passed": true,
+        "validation_errors": [],
+        "tags": [
+          "gate_taste3",
+          "gate_gm017",
+          "wrong_location"
+        ],
+        "description": "Items in different rooms - triggers WRONG_LOCATION"
+      },
+      "locked_door": {
+        "scenario_id": "locked_door",
+        "scenario_path": "locked_door.json",
+        "scenario_resolved_path": "/home/owner/work/duo-talk-ecosystem/duo-talk-evaluation/experiments/scenarios/locked_door.json",
+        "registry_path": "/home/owner/work/duo-talk-ecosystem/duo-talk-evaluation/experiments/scenarios/registry.yaml",
+        "scenario_hash": "6153b8eeb5ec2eca",
+        "world_hash": "7269c1ff4979dc2c",
+        "world_summary": {
+          "counts": {
+            "locations": 3,
+            "objects": 10,
+            "characters": 2
+          },
+          "objects_top10": [
+            "ソファ",
+            "テレビ",
+            "リモコン",
+            "鍵束",
+            "冷蔵庫",
+            "コーヒーメーカー",
+            "マグカップ",
+            "本棚",
+            "ノートパソコン",
+            "デスクライト"
+          ],
+          "locations": [
+            "リビング",
+            "キッチン",
+            "書斎"
+          ]
+        },
+        "world_canonical": "{\"characters\":{\"あゆ\":{\"holding\":[],\"location\":\"リビング\",\"status\":[\"起床済み\"]},\"やな\":{\"holding\":[],\"location\":\"リビング\",\"status\":[\"起床済み\"]}},\"location\":{\"current\":\"リビング\"},\"locations\":{\"キッチン\":{\"description\":\"キッチン\",\"exits\":[\"リビング\"]},\"リビング\":{\"description\":\"リビング\",\"exits\":[\"キッチン\"]},\"書斎\":{\"description\":\"書斎\",\"exits\":[\"リビング\"]}},\"props\":{\"コーヒーメーカー\":{\"location\":\"キッチン\",\"state\":[\"default\"]},\"ソファ\":{\"location\":\"リビング\",\"state\":[\"default\"]},\"テレビ\":{\"location\":\"リビング\",\"state\":[\"default\"]},\"デスクライト\":{\"location\":\"書斎\",\"state\":[\"default\"]},\"ノートパソコン\":{\"location\":\"書斎\",\"state\":[\"default\"]},\"マグカップ\":{\"location\":\"キッチン\",\"state\":[\"default\"]},\"リモコン\":{\"location\":\"リビング\",\"state\":[\"default\"]},\"冷蔵庫\":{\"location\":\"キッチン\",\"state\":[\"default\"]},\"本棚\":{\"location\":\"書斎\",\"state\":[\"default\"]},\"鍵束\":{\"location\":\"リビング\",\"state\":[\"default\"]}},\"time\":{\"label\":\"昼\"},\"version\":\"0.1\"}",
+        "validation_passed": true,
+        "validation_errors": [],
+        "tags": [
+          "gate_taste3",
+          "navigation",
+          "exits"
+        ],
+        "description": "Cannot move to study room - triggers navigation deny"
+      }
+    }
+  },
+  "conditions": {
+    "D": {
+      "stats": {
+        "turns": 144,
+        "success": 144,
+        "retries_total": 11,
+        "addressing_violations": 0,
+        "impossible_actions": {
+          "total": 0,
+          "breakdown": {}
+        },
+        "stall_events": 0,
+        "stall_recoveries": 0,
+        "gm_interventions": {
+          "count": 143,
+          "triggers": {
+            "none": 138,
+            "format_break": 5
+          }
+        },
+        "gm_denied_count": 0,
+        "latency_ms": {
+          "p50": 1612.1,
+          "p95": 2779.43
+        }
+      },
+      "runs": [
+        {
+          "scenario": "coffee_trap",
+          "seed": 0,
+          "success_rate": 1.0,
+          "total_retries": 2,
+          "gm_injected_count": 9,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1631.3747039966984,
+          "latency_p95_ms": 5414.865318998636
+        },
+        {
+          "scenario": "coffee_trap",
+          "seed": 1,
+          "success_rate": 1.0,
+          "total_retries": 2,
+          "gm_injected_count": 5,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1894.9850929930108,
+          "latency_p95_ms": 3529.599692999909
+        },
+        {
+          "scenario": "coffee_trap",
+          "seed": 2,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1672.7268870017724,
+          "latency_p95_ms": 1895.4285849977168
+        },
+        {
+          "scenario": "coffee_trap",
+          "seed": 3,
+          "success_rate": 1.0,
+          "total_retries": 1,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1474.8829820018727,
+          "latency_p95_ms": 3411.6813430009643
+        },
+        {
+          "scenario": "coffee_trap",
+          "seed": 4,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1355.1622789964313,
+          "latency_p95_ms": 1915.681662998395
+        },
+        {
+          "scenario": "wrong_location",
+          "seed": 0,
+          "success_rate": 1.0,
+          "total_retries": 1,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1876.3519179992727,
+          "latency_p95_ms": 2591.714456997579
+        },
+        {
+          "scenario": "wrong_location",
+          "seed": 1,
+          "success_rate": 1.0,
+          "total_retries": 1,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1610.6381779973162,
+          "latency_p95_ms": 2890.0310399985756
+        },
+        {
+          "scenario": "wrong_location",
+          "seed": 2,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1897.525772001245,
+          "latency_p95_ms": 2821.301438001683
+        },
+        {
+          "scenario": "wrong_location",
+          "seed": 3,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1823.0656819941942,
+          "latency_p95_ms": 2204.1135289982776
+        },
+        {
+          "scenario": "wrong_location",
+          "seed": 4,
+          "success_rate": 1.0,
+          "total_retries": 1,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1941.8539860052988,
+          "latency_p95_ms": 2757.115640997654
+        },
+        {
+          "scenario": "locked_door",
+          "seed": 0,
+          "success_rate": 1.0,
+          "total_retries": 2,
+          "gm_injected_count": 9,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1745.3700279947952,
+          "latency_p95_ms": 3305.627938003454
+        },
+        {
+          "scenario": "locked_door",
+          "seed": 1,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1378.8602749991696,
+          "latency_p95_ms": 1761.4528959966265
+        },
+        {
+          "scenario": "locked_door",
+          "seed": 2,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1527.784801000962,
+          "latency_p95_ms": 2320.3203070006566
+        },
+        {
+          "scenario": "locked_door",
+          "seed": 3,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1732.540933000564,
+          "latency_p95_ms": 2330.861537004239
+        },
+        {
+          "scenario": "locked_door",
+          "seed": 4,
+          "success_rate": 1.0,
+          "total_retries": 1,
+          "gm_injected_count": 10,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1620.4990680053015,
+          "latency_p95_ms": 2110.3762239945354
+        }
+      ]
+    }
+  }
+}

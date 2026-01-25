@@ -1,0 +1,26 @@
+{
+  "turn_number": 2,
+  "speaker": "やな",
+  "thought": "あゆは相変わらず本ばっかり読んでるな。ちょっとはテレビでも見ようよ。でも、言ったら拗ねるだろうから、まずは何読んでるのか聞いてみよう。",
+  "speech": "あゆー、何読んでるの？ どんな本かな？ *興味深そうにあゆの手に差し出された本を見る*",
+  "action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

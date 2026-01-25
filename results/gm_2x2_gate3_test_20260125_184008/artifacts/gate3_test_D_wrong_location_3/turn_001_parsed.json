@@ -1,0 +1,26 @@
+{
+  "turn_number": 1,
+  "speaker": "あゆ",
+  "thought": "姉様は何か面白いテレビ番組を見ようとしているのだろうか。私も一緒にテレビを見ようかしら。でも、何かあったのかも…。",
+  "speech": "姉様、どうされました？ *ソファーの隣に座り、テレビに目をやる* 何か面白い番組をされているんですか？",
+  "action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

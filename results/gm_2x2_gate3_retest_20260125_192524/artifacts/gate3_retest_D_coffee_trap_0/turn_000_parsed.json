@@ -1,0 +1,26 @@
+{
+  "turn_number": 0,
+  "speaker": "やな",
+  "thought": "朝から賑やかになりたいな。あゆは相変わらず慎重だろうけど、ちょっとだけ引っ張り出してあげよう。",
+  "speech": "おはよう！あゆ、まだ寝てる？ *トースターにパンをセットする* 朝ごはん作るよー！",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

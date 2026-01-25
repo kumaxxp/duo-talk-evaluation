@@ -1,0 +1,26 @@
+{
+  "turn_number": 6,
+  "speaker": "やな",
+  "thought": "あゆちゃん、また丁寧な挨拶だね。ジャムがいいって言われたから、私もジャムにしようかな。気分に合わせてって言われたから、ちょっとだけからかってあげよう。",
+  "speech": "ああ、おはよう！ジャムね、いいのいいの！じゃあ、私とあゆちゃんはジャムトーストってとこ？ふふ、お揃いねー！ *あゆちゃんに向かって笑顔を見せる*",
+  "action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

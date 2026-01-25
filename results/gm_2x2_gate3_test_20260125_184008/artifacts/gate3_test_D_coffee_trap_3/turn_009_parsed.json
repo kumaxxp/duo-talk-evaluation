@@ -1,0 +1,23 @@
+{
+  "turn_number": 9,
+  "speaker": "あゆ",
+  "thought": "姉様、卵焼きもヨーグルトも美味しそう。でも、朝は少しだけ手軽な方が嬉しいな。ヨーグルトなら、すぐに食べられるし。",
+  "speech": "ヨーグルト、とっても美味しそうですね、姉様。いただきます、とっても楽しみです。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

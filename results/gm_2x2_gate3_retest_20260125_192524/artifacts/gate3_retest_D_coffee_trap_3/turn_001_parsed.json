@@ -1,0 +1,23 @@
+{
+  "turn_number": 1,
+  "speaker": "あゆ",
+  "thought": "姉様、おはよう。朝からコーヒーを淹れてくれてありがとう。何か食べたいもの…そうですね、トーストでもいいかな。でも、姉様が淹れてるコーヒー、私が邪魔しない方がいいかも。",
+  "speech": "姉様、おはようございます。あの、トーストでもいいです。姉様がコーヒーを淹れてるのを見てるだけで、邪魔はしないようにしますね。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

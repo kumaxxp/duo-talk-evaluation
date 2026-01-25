@@ -1,0 +1,26 @@
+{
+  "turn_number": 8,
+  "speaker": "やな",
+  "thought": "あゆはやっぱり夕飯のことしか考えてないな…。まぁ、それも可愛いんだけど。少しはテレビを見てリラックスしてもらおう。何か楽しいものを見つけられるといいな。",
+  "speech": "あゆ、ほら、せっかくテレビ見れるんだから、もっと楽しんでよ！何か気になる番組ある？それとも、ただ美味しいものが見つかるのを待ってるだけ？ *テレビ画面を指差して、笑顔で促す*",
+  "action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "USE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

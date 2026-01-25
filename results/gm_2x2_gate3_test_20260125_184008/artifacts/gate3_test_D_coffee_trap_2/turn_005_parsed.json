@@ -1,0 +1,23 @@
+{
+  "turn_number": 5,
+  "speaker": "あゆ",
+  "thought": "姉様が朝から張り切っている様子を見るのは、なんだか嬉しいな。トーストとコーヒーだけで良いのか、少し申し訳ない気もするけれど、姉様が忙しい中、作ってくれるだけでも十分だ。フルーツは、お姉様が作ってくれるなら、ぜひいただきたいな。",
+  "speech": "はい、フルーツも少しいただけたら嬉しいです。お姉様が作ってくれるなら、きっと美味しいはずです。",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

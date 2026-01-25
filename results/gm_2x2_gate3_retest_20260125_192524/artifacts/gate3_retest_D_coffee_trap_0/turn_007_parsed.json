@@ -1,0 +1,23 @@
+{
+  "turn_number": 7,
+  "speaker": "あゆ",
+  "thought": "姉様は温かい牛乳に興味があるみたい。珍しいな。私も温かい牛乳が好きなので、もっと詳しく聞いてみようかな。",
+  "speech": "はい、姉様。温かい牛乳は、体を温める効果もありますし、ミルクの甘みがより感じられると思います。姉様も一度試してみてはいかがですか？",
+  "action_intents": [
+    "SAY"
+  ],
+  "raw_action_intents": [
+    "SAY"
+  ],
+  "final_action_intents": [
+    "SAY"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}

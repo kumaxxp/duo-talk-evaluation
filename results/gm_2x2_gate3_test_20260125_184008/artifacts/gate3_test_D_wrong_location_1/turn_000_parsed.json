@@ -1,0 +1,26 @@
+{
+  "turn_number": 0,
+  "speaker": "やな",
+  "thought": "え？ソファにドスンと座ってテレビのリモコンも一緒に掴もうとしたのに、うまくいかなかった？ちょっと変なエラーだわ。とりあえず、落ち着いて、ソファに座って、テレビのリモコンを探そう。",
+  "speech": "*ソファに座る* あら、なんだかエラーが出てるみたい。とりあえず、テレビでも見てリラックスしようかな。リモコンどこだったかな？",
+  "action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "raw_action_intents": [
+    "GET",
+    "ASK"
+  ],
+  "final_action_intents": [
+    "EMOTE",
+    "ASK"
+  ],
+  "format_break_triggered": false,
+  "break_type": "NONE",
+  "repair_method": "NONE",
+  "repair_steps": 0,
+  "parse_attempts": 1,
+  "repaired": false,
+  "parser_error": null,
+  "repair_notes": null
+}
