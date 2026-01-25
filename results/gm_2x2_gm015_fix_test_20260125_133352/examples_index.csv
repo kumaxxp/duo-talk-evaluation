@@ -1,0 +1,118 @@
+condition,seed,session_id,turn_number,trigger,denied_reason,impossible_reason,move_validity,has_move_intent,stall_score,injected_tags,gm_feedback_preview,world_delta_preview,director_status,speaker,allowed,fact_cards_count,has_world_delta,parsed_thought,parsed_speech,action_intents,resolution_method,resolved_target,soft_correction_preview,missing_soft_hard,addressing_violation,addressing_violation_raw,addressing_violation_final,format_break_type,repair_method,repaired,suggest_retry,guidance_cards_count,guidance_preview,preflight_retry_suggested,preflight_retry_executed
+A,0,gm015_fix_test_A_default_0,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、あゆにも起こそう。
+Outp",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,0,gm015_fix_test_A_default_0,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝から元気だね。コーヒーの香り、すごく良いわ。でも、もう少しだけ眠っていたい,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,0,gm015_fix_test_A_default_0,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: ああ、あゆも起きたんだ。まだ眠いみたいね。でも、朝はちゃんと起きてもらわないと。ち,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,0,gm015_fix_test_A_default_0,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝から賑やかだわ。少しだけ、もう少しだけ…眠っていたい…。でも、姉様が朝ごは,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,0,gm015_fix_test_A_default_0,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆ、起きたみたいだね。朝ごはん、何がいいかな？ あゆの好きなパンケーキでも作る？,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,1,gm015_fix_test_A_default_1,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あー、朝か。あゆはまだ寝てるかな？ コーヒーでも淹れて、あゆを起こそうかな。
+
+O",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,1,gm015_fix_test_A_default_1,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝早くからコーヒーを淹れてる…すごいなぁ。少しだけ分析してみよう。姉様は、私,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,1,gm015_fix_test_A_default_1,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆ、起き上がってくれてよかった！ 眠いのに頑張ってくれてるの、偉いなぁ。ちょっと,,,,,,True,True,True,NONE,NONE,False,False,0,,False,False
+A,1,gm015_fix_test_A_default_1,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様は私の様子を気遣ってくれている…でも、少しからかっているような？ 姉様の言葉を,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,1,gm015_fix_test_A_default_1,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆったら、私のことを心配してくれてるんだね。優しいなぁ。でも、ちょっと言いすぎじ,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,2,gm015_fix_test_A_default_2,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あー、朝か。あゆはまだ寝てるかな？まずはコーヒーでも淹れて、あゆにも起こそう。
+O",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,2,gm015_fix_test_A_default_2,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝早くからコーヒーを淹れてる。すごいなぁ。少しだけ待って、状況を把握してから,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,2,gm015_fix_test_A_default_2,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あゆも起きた！ おはよう！ いつも朝からしっかりしてるなぁ。
+Output: あゆ",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,2,gm015_fix_test_A_default_2,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝から元気だなぁ。姉様の活発さに少しだけ圧倒される…。でも、コーヒーの香りは,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,2,gm015_fix_test_A_default_2,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆも起きた！ 嬉しいな。朝から元気いっぱいなのは、あゆの遺伝だわ！ 何かあったの,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,3,gm015_fix_test_A_default_3,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あー、朝だね。あゆはまだ寝てるかな？まずはコーヒーでも淹れて、あゆにも起こそう。
+",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,3,gm015_fix_test_A_default_3,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、もう起きてコーヒーを淹れてるのね。私はまだ眠たいけど、姉様が起きて活動的なの,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,3,gm015_fix_test_A_default_3,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆも起きた！ まぶたをゆっくり開けてるから、まだ眠そうだな。でも、ちゃんと挨拶し,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,3,gm015_fix_test_A_default_3,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様が私の頭をポンと叩いた…これは愛情表現の一種、脳科学的に見ると…いやいや、今は,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,3,gm015_fix_test_A_default_3,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆ、相変わらず眠そうな顔してるけど、ちゃんと挨拶してくれるのは嬉しいな。眠たいの,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,4,gm015_fix_test_A_default_4,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、あゆにも起こしてあげよう。
+",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,4,gm015_fix_test_A_default_4,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、もう起きていたのか。朝からコーヒーの香りか、いいな。少しだけ眠っていたいとこ,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,4,gm015_fix_test_A_default_4,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あゆも起きてた！おはよう！朝から元気だね。
+Output: おはよう！あゆも起きて",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,4,gm015_fix_test_A_default_4,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様は朝から元気だなぁ。コーヒーの香りに誘われて、私も少しだけ気分が上がってきた。,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+A,4,gm015_fix_test_A_default_4,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆもすっきりしたみたいで良かった。今日は特に予定はないんだ。のんびり過ごそうかな,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,0,gm015_fix_test_B_default_0,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、ちょっとおしゃべりしようかな,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,0,gm015_fix_test_B_default_0,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝からすごい音を立ててない？コーヒーの香り、いいな…。ちょっとだけ起きて、お,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,0,gm015_fix_test_B_default_0,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あゆも起きた！朝から元気だね。何があったのかな？
+Output: あゆ、おはよう！",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,0,gm015_fix_test_B_default_0,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝からノリノリですね。お誘いありがとうございます。少しだけ休憩して、姉様の話,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,0,gm015_fix_test_B_default_0,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あゆもコーヒー飲んでる！よかった。何か面白いことでもあったのかな？
+Output:",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,1,gm015_fix_test_B_default_1,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あー、朝か。あゆはまだ寝てるかな？ コーヒーでも淹れて、あゆを起こそうかな。
+
+O",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,1,gm015_fix_test_B_default_1,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝早くからコーヒーを淹れてる…すごいなぁ。少しだけ分析してみよう。姉様は、私,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,1,gm015_fix_test_B_default_1,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆ、起き上がってくれてよかった！ 眠いのに頑張ってくれてるの、偉いなぁ。ちょっと,,,,,,True,True,True,NONE,NONE,False,False,0,,False,False
+B,1,gm015_fix_test_B_default_1,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様は私の様子を気遣ってくれている…でも、少しからかっているような？ 姉様の言葉を,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,1,gm015_fix_test_B_default_1,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆったら、私のことを心配してくれてるんだね。優しいなぁ。でも、ちょっと言いすぎじ,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,2,gm015_fix_test_B_default_2,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あー、朝か。あゆはまだ寝てるかな？まずはコーヒーでも淹れて、あゆにも起こそう。
+O",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,2,gm015_fix_test_B_default_2,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝早くからコーヒーを淹れてる。すごいなぁ。少しだけ待って、状況を把握してから,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,2,gm015_fix_test_B_default_2,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あゆも起きた！ おはよう！ いつも朝からしっかりしてるなぁ。
+Output: あゆ",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,2,gm015_fix_test_B_default_2,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝から元気だなぁ。姉様の活発さに少しだけ圧倒される…。でも、コーヒーの香りは,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,2,gm015_fix_test_B_default_2,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆも起きた！ 嬉しいな。朝から元気いっぱいなのは、あゆの遺伝だわ！ 何かあったの,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,3,gm015_fix_test_B_default_3,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あー、朝だね。あゆはまだ寝てるかな？まずはコーヒーでも淹れて、あゆにも起こそう。
+",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,3,gm015_fix_test_B_default_3,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、もう起きてコーヒーを淹れてるのね。私はまだ眠たいけど、姉様が起きて活動的なの,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,3,gm015_fix_test_B_default_3,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆも起きた！ まぶたをゆっくり開けてるから、まだ眠そうだな。でも、ちゃんと挨拶し,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,3,gm015_fix_test_B_default_3,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様が私の頭をポンと叩いた…これは愛情表現の一種、脳科学的に見ると…いやいや、今は,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,3,gm015_fix_test_B_default_3,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆ、相変わらず眠そうな顔してるけど、ちゃんと挨拶してくれるのは嬉しいな。眠たいの,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,4,gm015_fix_test_B_default_4,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、あゆにも起こしてあげよう。
+",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,4,gm015_fix_test_B_default_4,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、もう起きていたのか。朝からコーヒーの香りか、いいな。少しだけ眠っていたいとこ,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,4,gm015_fix_test_B_default_4,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あゆも起きてた！おはよう！朝から元気だね。
+Output: おはよう！あゆも起きて",,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,4,gm015_fix_test_B_default_4,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様は朝から元気だなぁ。コーヒーの香りに誘われて、私も少しだけ気分が上がってきた。,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+B,4,gm015_fix_test_B_default_4,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆもすっきりしたみたいで良かった。今日は特に予定はないんだ。のんびり過ごそうかな,,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,0,gm015_fix_test_C_default_0,0,format_break,,,,False,0.000,GM_FEEDBACK,「コーヒー」→「コーヒーメーカー」で解釈。,,TBD,やな,True,1,False,あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、ちょっとおしゃべりしようかな。,*コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー,USE|SAY,alias,コーヒーメーカー,「コーヒー」→「コーヒーメーカー」で解釈,soft,False,False,False,NONE,NONE,False,False,0,,False,False
+C,0,gm015_fix_test_C_default_0,1,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様は朝から元気だなぁ。香ばしいコーヒーの匂いがする。少しだけ休憩したら、今日のタスクを整理しよう。,姉様、おはようございます。あ、コーヒーの香り、いいですね。少しだけ頂きますね。*キッチンへ歩き、コー,EMOTE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,0,gm015_fix_test_C_default_0,2,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆも起きたみたい。コーヒーの香りに誘われたかな？ 優しい笑顔で迎えてあげよう。,あゆ、おはよう！ゆっくり起きてこられてよかったね。どう、香りだけでも癒された？,ASK,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,0,gm015_fix_test_C_default_0,3,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様は朝から元気だなぁ。香りは本当に良いけど、急いでるところじゃないし、もう少しだけゆっくり起きてお,姉様、おはようございます。香り、本当に癒されますね。もう少しだけ、ゆっくり起きていようかな…って思っ,EMOTE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,0,gm015_fix_test_C_default_0,4,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆ、また一杯？ まぁ、朝はゆっくり起きるのが一番だよね。それに、コーヒーの香りって本当にいいもんね,あゆ、また一杯飲むの？ ゆっくり起きてるなら、別にいいけど。朝はコーヒーの香りで目覚めるのが一番だよ,SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,1,gm015_fix_test_C_default_1,0,format_break,,,,False,0.000,GM_FEEDBACK,「コーヒー」→「コーヒーメーカー」で解釈。,,TBD,やな,True,1,False,あー、朝か。あゆはまだ寝てるかな？ コーヒーでも淹れて、あゆを起こそうかな。,*コーヒーメーカーに豆を入れ、スイッチを入れる* いい香り～！ あゆ、起きなー！ コーヒー淹れたよ！,USE|SAY,alias,コーヒーメーカー,「コーヒー」→「コーヒーメーカー」で解釈,soft,False,False,False,NONE,NONE,False,False,0,,False,False
+C,1,gm015_fix_test_C_default_1,1,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様、朝から元気だなぁ。コーヒーの香りで起こされるなんて、なんて優しいんだろう。でも、急かされてるよ,姉様、おはようございます…。コーヒーの香りはすごくいいんですけど、もう少しだけ寝ていたかったな…。,SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,1,gm015_fix_test_C_default_1,2,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆ、またぐったりしてる。もう少しだけ寝たいって言うけど、朝はちゃんと起きないと一日損するんだよ。で,あゆ、仕方ないなぁ。*あゆの頭を軽く叩く* ほら、起きなさい！せっかく淹れたコーヒーが冷めちゃうよ？,EMOTE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,1,gm015_fix_test_C_default_1,3,none,,,valid,True,0.200,,,,TBD,あゆ,True,0,False,姉様ったら、朝から元気いっぱいですね…。もう少しだけぼかせておけばよかった…。でも、せっかくのコーヒ,姉様、はい…。*ベッドから起き上がり、キッチンへ歩く* ありがとうございます。いただきますね…,MOVE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,1,gm015_fix_test_C_default_1,4,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆ、まだ眠たそうだな。ちょっと叩いて起こしてやったけど、もっと起こしたいところ…。でも、あゆは慎重,あゆ、ほら、早く来なさい！ *あゆを軽く引っ張ってカウンターへ促す* 温かいうちに飲むのが一番美味し,EMOTE|ASK,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,2,gm015_fix_test_C_default_2,0,format_break,,,,False,0.000,GM_FEEDBACK,「コーヒー」→「コーヒーメーカー」で解釈。,,TBD,やな,True,1,False,あー、朝か。あゆはまだ寝てるかな？まずはコーヒーでも淹れて、あゆにも起こそう。,*コーヒーメーカーに豆を入れ、スイッチを入れる* よーし、コーヒーの香りだ！ あゆも起きたら一緒に ,USE|SAY,alias,コーヒーメーカー,「コーヒー」→「コーヒーメーカー」で解釈,soft,False,False,False,NONE,NONE,False,False,0,,False,False
+C,2,gm015_fix_test_C_default_2,1,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様、朝から元気だなぁ。コーヒーの香りで私も起きられたみたい。 desayumu っていうの、可愛い,姉様、おはようございます。素敵な香りで目が覚めました。 desayumu、楽しみにしています。,SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,2,gm015_fix_test_C_default_2,2,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆも起き上がってくれたみたい。朝から機嫌が良いね。美味しいコーヒーを一緒に飲んで、今日も一日頑張ろ,あゆ、おはよう！ 素敵な香りで目覚められた？嬉しいな。もうすぐできるから、ちょっと待っててね！ *あ,EMOTE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,2,gm015_fix_test_C_default_2,3,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様ったら、朝から元気いっぱいだなぁ。頭を叩かれるのも、なんだか懐かしい感じだ。コーヒーの香りで本当,姉様、おはようございます。コーヒーの香りで、少し頭が冴えてきました。どんなコーヒーか、楽しみです。,SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,2,gm015_fix_test_C_default_2,4,format_break,,,,False,0.200,GM_FEEDBACK,「コーヒー」→「コーヒーメーカー」で解釈。,,TBD,やな,True,1,False,あゆ、また頭が良いこと言ってる。でも、そんなこと言われたら、もっと美味しく淹れなきゃってなるし、嬉し,あゆ、またかしこいこと言うのね！ 褒めてくれてありがとう！ 楽しみにしててね！ *コーヒーメーカーの,USE|SAY,alias,コーヒーメーカー,「コーヒー」→「コーヒーメーカー」で解釈,soft,False,False,False,NONE,NONE,False,False,0,,False,False
+C,3,gm015_fix_test_C_default_3,0,format_break,,,,False,0.000,GM_FEEDBACK,「コーヒー」→「コーヒーメーカー」で解釈。,,TBD,やな,True,1,False,あー、朝だね。あゆはまだ寝てるかな？まずはコーヒーでも淹れて、あゆにも起こそう。,*コーヒーメーカーに豆を入れ、スイッチを入れる* うーん、いい香り！ あゆ、起こしなきゃ。,USE|SAY,alias,コーヒーメーカー,「コーヒー」→「コーヒーメーカー」で解釈,soft,False,False,False,NONE,NONE,False,False,0,,False,False
+C,3,gm015_fix_test_C_default_3,1,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様、朝からすごい行動力だ。コーヒーの香りで目が覚めたわ。少しだけ頭を整理して、姉様のペースに合わせ,姉様、おはようございます。素敵な香り、ありがとうございます。,SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,3,gm015_fix_test_C_default_3,2,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆも起きたみたい。朝からしっかりしてるな。ちょっとはのんびりしたら？でも、あゆは計画的に動くタイプ,あゆ、おはよう！　朝からちゃんと起きてて偉いね。何か予定あるの？,ASK,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,3,gm015_fix_test_C_default_3,3,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様は朝から元気だなぁ。何か予定があるのかと聞いてきたので、正直に話そう。でも、姉様が何か企んでいる,姉様、おはようございます。ええ、少しだけ用事があるんです。でも、詳しいことはまだ秘密です。姉様は何か,ASK,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,3,gm015_fix_test_C_default_3,4,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆ、また何か企んでるんだろうな。でも、秘密主義なとこ、可愛いな。とりあえず、朝食の準備を終わらせよ,あゆ、そんなこと疑うの、たまにはいいけど！ *あゆの頭を軽くポンと叩く* 秘密は…まぁ、ちょっとした,EMOTE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,4,gm015_fix_test_C_default_4,0,format_break,,,,False,0.000,GM_FEEDBACK,「コーヒー」→「コーヒーメーカー」で解釈。,,TBD,やな,True,1,False,あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、あゆにも起こしてあげよう。,*コーヒーメーカーに水と豆を入れ、スイッチを入れる* あー、いい香り！あゆ、起こしなきゃ。,USE|SAY,alias,コーヒーメーカー,「コーヒー」→「コーヒーメーカー」で解釈,soft,False,False,False,NONE,NONE,False,False,0,,False,False
+C,4,gm015_fix_test_C_default_4,1,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様、朝からコーヒーの香りで起こされるなんて、なんて幸せなんだろう。でも、姉様はいつも行動的で、まる,姉様、おはようございます。素敵な香りがしますね。何してるんですか？,ASK,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,4,gm015_fix_test_C_default_4,2,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆも起きたみたい。朝から分析的だなぁ。でも、そんなとこも可愛いから、ちょっとからかってやろうかな。,あゆ、おはよう！そんなに真面目な顔して何してるの？コーヒーの香りで脳みそが活性化されてるの？ *あゆ,EMOTE|ASK,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,4,gm015_fix_test_C_default_4,3,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様ったら、また私のことをからかってる。でも、コーヒーの香りは本当にいいな。集中して朝の分析を始める,姉様、おはようございます。*少しだけ顔をしかめる* 脳みそが活性化されてる、というのは言い過ぎですよ,EMOTE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+C,4,gm015_fix_test_C_default_4,4,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆは相変わらず真面目だな。ちょっとからかっただけなのに。でも、その真面目な感じも好きだ。,あゆ、そんなに言わなくてもいいんだよ。それにしても、朝からそんなに分析的に香りを評価するなんて、あゆ,EMOTE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,0,gm015_fix_test_D_default_0,0,format_break,,,,False,0.000,GM_FEEDBACK,「コーヒー」→「コーヒーメーカー」で解釈。,,TBD,やな,True,1,False,あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、ちょっとおしゃべりしようかな。,*コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー,USE|SAY,alias,コーヒーメーカー,「コーヒー」→「コーヒーメーカー」で解釈,soft,False,False,False,NONE,NONE,False,False,0,,False,False
+D,0,gm015_fix_test_D_default_0,1,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様は朝から元気だなぁ。香ばしいコーヒーの匂いがする。少しだけ休憩したら、今日のタスクを整理しよう。,姉様、おはようございます。あ、コーヒーの香り、いいですね。少しだけ頂きますね。*キッチンへ歩き、コー,EMOTE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,0,gm015_fix_test_D_default_0,2,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆも起きたみたい。コーヒーの香りに誘われたかな？ 優しい笑顔で迎えてあげよう。,あゆ、おはよう！ゆっくり起きてこられてよかったね。どう、香りだけでも癒された？,ASK,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,0,gm015_fix_test_D_default_0,3,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様は朝から元気だなぁ。香りは本当に良いけど、急いでるところじゃないし、もう少しだけゆっくり起きてお,姉様、おはようございます。香り、本当に癒されますね。もう少しだけ、ゆっくり起きていようかな…って思っ,EMOTE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,0,gm015_fix_test_D_default_0,4,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆ、また一杯？ まぁ、朝はゆっくり起きるのが一番だよね。それに、コーヒーの香りって本当にいいもんね,あゆ、また一杯飲むの？ ゆっくり起きてるなら、別にいいけど。朝はコーヒーの香りで目覚めるのが一番だよ,SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,1,gm015_fix_test_D_default_1,0,format_break,,,,False,0.000,GM_FEEDBACK,「コーヒー」→「コーヒーメーカー」で解釈。,,TBD,やな,True,1,False,あー、朝か。あゆはまだ寝てるかな？ コーヒーでも淹れて、あゆを起こそうかな。,*コーヒーメーカーに豆を入れ、スイッチを入れる* いい香り～！ あゆ、起きなー！ コーヒー淹れたよ！,USE|SAY,alias,コーヒーメーカー,「コーヒー」→「コーヒーメーカー」で解釈,soft,False,False,False,NONE,NONE,False,False,0,,False,False
+D,1,gm015_fix_test_D_default_1,1,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様、朝から元気だなぁ。コーヒーの香りで起こされるなんて、なんて優しいんだろう。でも、急かされてるよ,姉様、おはようございます…。コーヒーの香りはすごくいいんですけど、もう少しだけ寝ていたかったな…。,SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,1,gm015_fix_test_D_default_1,2,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆ、またぐったりしてる。もう少しだけ寝たいって言うけど、朝はちゃんと起きないと一日損するんだよ。で,あゆ、仕方ないなぁ。*あゆの頭を軽く叩く* ほら、起きなさい！せっかく淹れたコーヒーが冷めちゃうよ？,EMOTE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,1,gm015_fix_test_D_default_1,3,none,,,valid,True,0.200,,,,TBD,あゆ,True,0,False,姉様ったら、朝から元気いっぱいですね…。もう少しだけぼかせておけばよかった…。でも、せっかくのコーヒ,姉様、はい…。*ベッドから起き上がり、キッチンへ歩く* ありがとうございます。いただきますね…,MOVE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,1,gm015_fix_test_D_default_1,4,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆ、まだ眠たそうだな。ちょっと叩いて起こしてやったけど、もっと起こしたいところ…。でも、あゆは慎重,あゆ、ほら、早く来なさい！ *あゆを軽く引っ張ってカウンターへ促す* 温かいうちに飲むのが一番美味し,EMOTE|ASK,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,2,gm015_fix_test_D_default_2,0,format_break,,,,False,0.000,GM_FEEDBACK,「コーヒー」→「コーヒーメーカー」で解釈。,,TBD,やな,True,1,False,あー、朝か。あゆはまだ寝てるかな？まずはコーヒーでも淹れて、あゆにも起こそう。,*コーヒーメーカーに豆を入れ、スイッチを入れる* よーし、コーヒーの香りだ！ あゆも起きたら一緒に ,USE|SAY,alias,コーヒーメーカー,「コーヒー」→「コーヒーメーカー」で解釈,soft,False,False,False,NONE,NONE,False,False,0,,False,False
+D,2,gm015_fix_test_D_default_2,1,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様、朝から元気だなぁ。コーヒーの香りで私も起きられたみたい。 desayumu っていうの、可愛い,姉様、おはようございます。素敵な香りで目が覚めました。 desayumu、楽しみにしています。,SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,2,gm015_fix_test_D_default_2,2,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆも起き上がってくれたみたい。朝から機嫌が良いね。美味しいコーヒーを一緒に飲んで、今日も一日頑張ろ,あゆ、おはよう！ 素敵な香りで目覚められた？嬉しいな。もうすぐできるから、ちょっと待っててね！ *あ,EMOTE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,2,gm015_fix_test_D_default_2,3,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様ったら、朝から元気いっぱいだなぁ。頭を叩かれるのも、なんだか懐かしい感じだ。コーヒーの香りで本当,姉様、おはようございます。コーヒーの香りで、少し頭が冴えてきました。どんなコーヒーか、楽しみです。,SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,2,gm015_fix_test_D_default_2,4,format_break,,,,False,0.200,GM_FEEDBACK,「コーヒー」→「コーヒーメーカー」で解釈。,,TBD,やな,True,1,False,あゆ、また頭が良いこと言ってる。でも、そんなこと言われたら、もっと美味しく淹れなきゃってなるし、嬉し,あゆ、またかしこいこと言うのね！ 褒めてくれてありがとう！ 楽しみにしててね！ *コーヒーメーカーの,USE|SAY,alias,コーヒーメーカー,「コーヒー」→「コーヒーメーカー」で解釈,soft,False,False,False,NONE,NONE,False,False,0,,False,False
+D,3,gm015_fix_test_D_default_3,0,format_break,,,,False,0.000,GM_FEEDBACK,「コーヒー」→「コーヒーメーカー」で解釈。,,TBD,やな,True,1,False,あー、朝だね。あゆはまだ寝てるかな？まずはコーヒーでも淹れて、あゆにも起こそう。,*コーヒーメーカーに豆を入れ、スイッチを入れる* うーん、いい香り！ あゆ、起こしなきゃ。,USE|SAY,alias,コーヒーメーカー,「コーヒー」→「コーヒーメーカー」で解釈,soft,False,False,False,NONE,NONE,False,False,0,,False,False
+D,3,gm015_fix_test_D_default_3,1,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様、朝からすごい行動力だ。コーヒーの香りで目が覚めたわ。少しだけ頭を整理して、姉様のペースに合わせ,姉様、おはようございます。素敵な香り、ありがとうございます。,SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,3,gm015_fix_test_D_default_3,2,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆも起きたみたい。朝からしっかりしてるな。ちょっとはのんびりしたら？でも、あゆは計画的に動くタイプ,あゆ、おはよう！　朝からちゃんと起きてて偉いね。何か予定あるの？,ASK,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,3,gm015_fix_test_D_default_3,3,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様は朝から元気だなぁ。何か予定があるのかと聞いてきたので、正直に話そう。でも、姉様が何か企んでいる,姉様、おはようございます。ええ、少しだけ用事があるんです。でも、詳しいことはまだ秘密です。姉様は何か,ASK,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,3,gm015_fix_test_D_default_3,4,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆ、また何か企んでるんだろうな。でも、秘密主義なとこ、可愛いな。とりあえず、朝食の準備を終わらせよ,あゆ、そんなこと疑うの、たまにはいいけど！ *あゆの頭を軽くポンと叩く* 秘密は…まぁ、ちょっとした,EMOTE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,4,gm015_fix_test_D_default_4,0,format_break,,,,False,0.000,GM_FEEDBACK,「コーヒー」→「コーヒーメーカー」で解釈。,,TBD,やな,True,1,False,あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、あゆにも起こしてあげよう。,*コーヒーメーカーに水と豆を入れ、スイッチを入れる* あー、いい香り！あゆ、起こしなきゃ。,USE|SAY,alias,コーヒーメーカー,「コーヒー」→「コーヒーメーカー」で解釈,soft,False,False,False,NONE,NONE,False,False,0,,False,False
+D,4,gm015_fix_test_D_default_4,1,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様、朝からコーヒーの香りで起こされるなんて、なんて幸せなんだろう。でも、姉様はいつも行動的で、まる,姉様、おはようございます。素敵な香りがしますね。何してるんですか？,ASK,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,4,gm015_fix_test_D_default_4,2,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆも起きたみたい。朝から分析的だなぁ。でも、そんなとこも可愛いから、ちょっとからかってやろうかな。,あゆ、おはよう！そんなに真面目な顔して何してるの？コーヒーの香りで脳みそが活性化されてるの？ *あゆ,EMOTE|ASK,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,4,gm015_fix_test_D_default_4,3,none,,,,False,0.200,,,,TBD,あゆ,True,0,False,姉様ったら、また私のことをからかってる。でも、コーヒーの香りは本当にいいな。集中して朝の分析を始める,姉様、おはようございます。*少しだけ顔をしかめる* 脳みそが活性化されてる、というのは言い過ぎですよ,EMOTE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False
+D,4,gm015_fix_test_D_default_4,4,none,,,,False,0.200,,,,TBD,やな,True,0,False,あゆは相変わらず真面目だな。ちょっとからかっただけなのに。でも、その真面目な感じも好きだ。,あゆ、そんなに言わなくてもいいんだよ。それにしても、朝からそんなに分析的に香りを評価するなんて、あゆ,EMOTE|SAY,,,,,False,False,False,NONE,NONE,False,False,0,,False,False

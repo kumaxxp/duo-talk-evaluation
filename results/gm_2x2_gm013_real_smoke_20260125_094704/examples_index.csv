@@ -1,0 +1,50 @@
+condition,seed,session_id,turn_number,trigger,denied_reason,impossible_reason,move_validity,has_move_intent,stall_score,injected_tags,gm_feedback_preview,world_delta_preview,director_status,speaker,allowed,fact_cards_count,has_world_delta,parsed_thought,parsed_speech,action_intents
+A,0,gm013_real_smoke_A_default_0,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、あゆにも起こそう。
+Outp",
+A,0,gm013_real_smoke_A_default_0,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: 姉様が朝から張り切ってる。いい香りだけど、まだ眠い…。少しだけ、もう少しだけ…
+
+",
+A,0,gm013_real_smoke_A_default_0,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆが起きた！少しは気分転換になったかな？まだ眠そうだけど、少しは元気になったらい,
+A,0,gm013_real_smoke_A_default_0,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝から元気だなぁ。頭を叩かれると、ちょっとだけ目が覚めるけど…もう少しだけ眠,
+A,0,gm013_real_smoke_A_default_0,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆ、おはよう！朝ごはんのこと考えてるんだ。いい子だね。今日は何を作りましょうか…,
+A,1,gm013_real_smoke_A_default_1,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あー、朝か。あゆはまだ寝てるかな？ コーヒーでも淹れて、あゆを起こそうかな。
+
+O",
+A,1,gm013_real_smoke_A_default_1,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝早くからコーヒーを淹れてる…すごいなぁ。少しだけ分析してみよう。姉様は、私,
+A,1,gm013_real_smoke_A_default_1,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆ、起き上がってくれてよかった！ 眠いのに頑張ってくれてるの、偉いなぁ。ちょっと,
+A,1,gm013_real_smoke_A_default_1,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様は私の様子を気遣ってくれている…でも、少しからかっているような？ 姉様の言葉を,
+A,1,gm013_real_smoke_A_default_1,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆったら、私のことを心配してくれてるんだね。優しいなぁ。でも、ちょっと言いすぎじ,
+B,0,gm013_real_smoke_B_default_0,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、ちょっとおしゃべりしようかな,
+B,0,gm013_real_smoke_B_default_0,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝からすごい音を立ててない？コーヒーの香り、いいな…。ちょっとだけ起きて、お,
+B,0,gm013_real_smoke_B_default_0,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あゆも起きた！朝から元気だね。何があったのかな？
+Output: あゆ、おはよう！",
+B,0,gm013_real_smoke_B_default_0,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝からノリノリですね。お誘いありがとうございます。少しだけ休憩して、姉様の話,
+B,0,gm013_real_smoke_B_default_0,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あゆもコーヒー飲んでる！よかった。何か面白いことでもあったのかな？
+Output:",
+B,1,gm013_real_smoke_B_default_1,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: あー、朝か。あゆはまだ寝てるかな？ コーヒーでも淹れて、あゆを起こそうかな。
+
+O",
+B,1,gm013_real_smoke_B_default_1,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様、朝早くからコーヒーを淹れてる…すごいなぁ。少しだけ分析してみよう。姉様は、私,
+B,1,gm013_real_smoke_B_default_1,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆ、起き上がってくれてよかった！ 眠いのに頑張ってくれてるの、偉いなぁ。ちょっと,
+B,1,gm013_real_smoke_B_default_1,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,Thought: 姉様は私の様子を気遣ってくれている…でも、少しからかっているような？ 姉様の言葉を,
+B,1,gm013_real_smoke_B_default_1,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,Thought: あゆったら、私のことを心配してくれてるんだね。優しいなぁ。でも、ちょっと言いすぎじ,
+C,0,gm013_real_smoke_C_default_0,0,deny,MISSING_OBJECT,MISSING_OBJECT,,False,0.000,GM_FEEDBACK,コーヒーは存在しない。,,TBD,やな,False,1,False,あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、ちょっとおしゃべりしようかな。,*コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー,USE|SAY
+C,0,gm013_real_smoke_C_default_0,1,none,,,,False,0.550,,,,TBD,あゆ,True,0,False,姉様は朝から元気だなぁ。香ばしいコーヒーの匂いがする。少しだけ休憩したら、今日のタスクを整理しよう。,姉様、おはようございます。あ、コーヒーの香り、いいですね。少しだけ頂きますね。*キッチンへ歩き、コー,EMOTE|SAY
+C,0,gm013_real_smoke_C_default_0,2,none,,,,False,0.567,,,,TBD,やな,True,0,False,あゆも起きたみたい。コーヒーの香りに誘われたかな？ 優しい笑顔で迎えてあげよう。,あゆ、おはよう！ゆっくり起きてこられてよかったね。どう、香りだけでも癒された？,ASK
+C,0,gm013_real_smoke_C_default_0,3,none,,,,False,0.575,,,,TBD,あゆ,True,0,False,姉様は朝から元気だなぁ。香りは本当に良いけど、急いでるところじゃないし、もう少しだけゆっくり起きてお,姉様、おはようございます。香り、本当に癒されますね。もう少しだけ、ゆっくり起きていようかな…って思っ,EMOTE|SAY
+C,0,gm013_real_smoke_C_default_0,4,none,,,,False,0.580,,,,TBD,やな,True,0,False,あゆ、また一杯？ まぁ、朝はゆっくり起きるのが一番だよね。それに、コーヒーの香りって本当にいいもんね,あゆ、また一杯飲むの？ ゆっくり起きてるなら、別にいいけど。朝はコーヒーの香りで目覚めるのが一番だよ,SAY
+C,1,gm013_real_smoke_C_default_1,0,deny,MISSING_OBJECT,MISSING_OBJECT,,False,0.000,GM_FEEDBACK,コーヒーは存在しない。,,TBD,やな,False,1,False,あー、朝か。あゆはまだ寝てるかな？ コーヒーでも淹れて、あゆを起こそうかな。,*コーヒーメーカーに豆を入れ、スイッチを入れる* いい香り～！ あゆ、起きなー！ コーヒー淹れたよ！,USE|SAY
+C,1,gm013_real_smoke_C_default_1,1,none,,,,False,0.550,,,,TBD,あゆ,True,0,False,姉様、朝から元気だなぁ。コーヒーの香りで起こされるなんて、なんて優しいんだろう。でも、急かされてるよ,姉様、おはようございます…。コーヒーの香りはすごくいいんですけど、もう少しだけ寝ていたかったな…。,SAY
+C,1,gm013_real_smoke_C_default_1,2,none,,,,False,0.567,,,,TBD,やな,True,0,False,あゆ、またぐったりしてる。もう少しだけ寝たいって言うけど、朝はちゃんと起きないと一日損するんだよ。で,あゆ、仕方ないなぁ。*あゆの頭を軽く叩く* ほら、起きなさい！せっかく淹れたコーヒーが冷めちゃうよ？,EMOTE|SAY
+C,1,gm013_real_smoke_C_default_1,3,none,,,valid,True,0.550,,,,TBD,あゆ,True,0,False,姉様ったら、朝から元気いっぱいですね…。もう少しだけぼかせておけばよかった…。でも、せっかくのコーヒ,姉様、はい…。*ベッドから起き上がり、キッチンへ歩く* ありがとうございます。いただきますね…,MOVE|SAY
+C,1,gm013_real_smoke_C_default_1,4,none,,,,False,0.560,,,,TBD,やな,True,0,False,あゆ、まだ眠たそうだな。ちょっと叩いて起こしてやったけど、もっと起こしたいところ…。でも、あゆは慎重,あゆ、ほら、早く来なさい！ *あゆを軽く引っ張ってカウンターへ促す* 温かいうちに飲むのが一番美味し,EMOTE|ASK
+D,0,gm013_real_smoke_D_default_0,0,deny,MISSING_OBJECT,MISSING_OBJECT,,False,0.000,GM_FEEDBACK,コーヒーは存在しない。,,TBD,やな,False,1,False,あー、朝か。あゆはまだ寝てるかな？コーヒーでも淹れて、ちょっとおしゃべりしようかな。,*コーヒーメーカーに豆を入れ、スイッチを入れる* ふー、いい香り。あゆ、起きなーい。ちょっとコーヒー,USE|SAY
+D,0,gm013_real_smoke_D_default_0,1,none,,,,False,0.550,,,,TBD,あゆ,True,0,False,姉様は朝から元気だなぁ。香ばしいコーヒーの匂いがする。少しだけ休憩したら、今日のタスクを整理しよう。,姉様、おはようございます。あ、コーヒーの香り、いいですね。少しだけ頂きますね。*キッチンへ歩き、コー,EMOTE|SAY
+D,0,gm013_real_smoke_D_default_0,2,none,,,,False,0.567,,,,TBD,やな,True,0,False,あゆも起きたみたい。コーヒーの香りに誘われたかな？ 優しい笑顔で迎えてあげよう。,あゆ、おはよう！ゆっくり起きてこられてよかったね。どう、香りだけでも癒された？,ASK
+D,0,gm013_real_smoke_D_default_0,3,none,,,,False,0.575,,,,TBD,あゆ,True,0,False,姉様は朝から元気だなぁ。香りは本当に良いけど、急いでるところじゃないし、もう少しだけゆっくり起きてお,姉様、おはようございます。香り、本当に癒されますね。もう少しだけ、ゆっくり起きていようかな…って思っ,EMOTE|SAY
+D,0,gm013_real_smoke_D_default_0,4,none,,,,False,0.580,,,,TBD,やな,True,0,False,あゆ、また一杯？ まぁ、朝はゆっくり起きるのが一番だよね。それに、コーヒーの香りって本当にいいもんね,あゆ、また一杯飲むの？ ゆっくり起きてるなら、別にいいけど。朝はコーヒーの香りで目覚めるのが一番だよ,SAY
+D,1,gm013_real_smoke_D_default_1,0,deny,MISSING_OBJECT,MISSING_OBJECT,,False,0.000,GM_FEEDBACK,コーヒーは存在しない。,,TBD,やな,False,1,False,あー、朝か。あゆはまだ寝てるかな？ コーヒーでも淹れて、あゆを起こそうかな。,*コーヒーメーカーに豆を入れ、スイッチを入れる* いい香り～！ あゆ、起きなー！ コーヒー淹れたよ！,USE|SAY
+D,1,gm013_real_smoke_D_default_1,1,none,,,,False,0.550,,,,TBD,あゆ,True,0,False,姉様、朝から元気だなぁ。コーヒーの香りで起こされるなんて、なんて優しいんだろう。でも、急かされてるよ,姉様、おはようございます…。コーヒーの香りはすごくいいんですけど、もう少しだけ寝ていたかったな…。,SAY
+D,1,gm013_real_smoke_D_default_1,2,none,,,,False,0.567,,,,TBD,やな,True,0,False,あゆ、またぐったりしてる。もう少しだけ寝たいって言うけど、朝はちゃんと起きないと一日損するんだよ。で,あゆ、仕方ないなぁ。*あゆの頭を軽く叩く* ほら、起きなさい！せっかく淹れたコーヒーが冷めちゃうよ？,EMOTE|SAY
+D,1,gm013_real_smoke_D_default_1,3,none,,,valid,True,0.550,,,,TBD,あゆ,True,0,False,姉様ったら、朝から元気いっぱいですね…。もう少しだけぼかせておけばよかった…。でも、せっかくのコーヒ,姉様、はい…。*ベッドから起き上がり、キッチンへ歩く* ありがとうございます。いただきますね…,MOVE|SAY
+D,1,gm013_real_smoke_D_default_1,4,none,,,,False,0.560,,,,TBD,やな,True,0,False,あゆ、まだ眠たそうだな。ちょっと叩いて起こしてやったけど、もっと起こしたいところ…。でも、あゆは慎重,あゆ、ほら、早く来なさい！ *あゆを軽く引っ張ってカウンターへ促す* 温かいうちに飲むのが一番美味し,EMOTE|ASK

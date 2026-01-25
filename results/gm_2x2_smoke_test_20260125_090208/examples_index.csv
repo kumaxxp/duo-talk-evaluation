@@ -1,0 +1,19 @@
+condition,scenario,seed,turn,speaker,allowed,denied_reason,stall_score,injection_trigger,fact_cards_count,has_world_delta,parsed_thought,parsed_speech
+A,default,0,0,やな,True,,0.000,,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、あゆ！"
+A,default,0,1,あゆ,True,,0.000,,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか"
+A,default,0,2,やな,True,,0.000,,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？"
+B,default,0,0,やな,True,,0.000,,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、あゆ！"
+B,default,0,1,あゆ,True,,0.000,,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか"
+B,default,0,2,やな,True,,0.000,,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？"
+C,default,0,0,やな,True,,0.000,,0,False,(朝のキッチン),おはよう、あゆ！
+C,default,0,1,あゆ,True,,0.375,world_delta,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか
+C,default,0,2,やな,True,,0.500,,0,False,(何食べよう),今日の朝ごはん何にする？
+D,default,0,0,やな,True,,0.000,,0,False,(朝のキッチン),おはよう、あゆ！
+D,default,0,1,あゆ,True,,0.375,world_delta,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか
+D,default,0,2,やな,True,,0.500,,0,False,(何食べよう),今日の朝ごはん何にする？

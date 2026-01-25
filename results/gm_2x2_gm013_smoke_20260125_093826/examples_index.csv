@@ -1,0 +1,301 @@
+condition,seed,session_id,turn_number,trigger,denied_reason,impossible_reason,move_validity,has_move_intent,stall_score,injected_tags,gm_feedback_preview,world_delta_preview,director_status,speaker,allowed,fact_cards_count,has_world_delta,parsed_thought,parsed_speech,action_intents
+A,0,gm013_smoke_A_default_0,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、あゆ！",
+A,0,gm013_smoke_A_default_0,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+A,0,gm013_smoke_A_default_0,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+A,0,gm013_smoke_A_default_0,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+A,0,gm013_smoke_A_default_0,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+A,0,gm013_smoke_A_default_0,5,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、姉様！",
+A,0,gm013_smoke_A_default_0,6,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+A,0,gm013_smoke_A_default_0,7,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+A,0,gm013_smoke_A_default_0,8,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+A,0,gm013_smoke_A_default_0,9,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+A,1,gm013_smoke_A_default_1,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+A,1,gm013_smoke_A_default_1,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+A,1,gm013_smoke_A_default_1,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+A,1,gm013_smoke_A_default_1,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+A,1,gm013_smoke_A_default_1,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、あゆ！",
+A,1,gm013_smoke_A_default_1,5,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+A,1,gm013_smoke_A_default_1,6,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+A,1,gm013_smoke_A_default_1,7,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+A,1,gm013_smoke_A_default_1,8,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+A,1,gm013_smoke_A_default_1,9,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、姉様！",
+A,2,gm013_smoke_A_default_2,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+A,2,gm013_smoke_A_default_2,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+A,2,gm013_smoke_A_default_2,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+A,2,gm013_smoke_A_default_2,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、姉様！",
+A,2,gm013_smoke_A_default_2,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+A,2,gm013_smoke_A_default_2,5,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+A,2,gm013_smoke_A_default_2,6,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+A,2,gm013_smoke_A_default_2,7,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+A,2,gm013_smoke_A_default_2,8,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、あゆ！",
+A,2,gm013_smoke_A_default_2,9,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+A,3,gm013_smoke_A_default_3,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+A,3,gm013_smoke_A_default_3,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+A,3,gm013_smoke_A_default_3,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、あゆ！",
+A,3,gm013_smoke_A_default_3,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+A,3,gm013_smoke_A_default_3,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+A,3,gm013_smoke_A_default_3,5,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+A,3,gm013_smoke_A_default_3,6,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+A,3,gm013_smoke_A_default_3,7,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、姉様！",
+A,3,gm013_smoke_A_default_3,8,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+A,3,gm013_smoke_A_default_3,9,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+A,4,gm013_smoke_A_default_4,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+A,4,gm013_smoke_A_default_4,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、姉様！",
+A,4,gm013_smoke_A_default_4,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+A,4,gm013_smoke_A_default_4,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+A,4,gm013_smoke_A_default_4,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+A,4,gm013_smoke_A_default_4,5,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+A,4,gm013_smoke_A_default_4,6,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、あゆ！",
+A,4,gm013_smoke_A_default_4,7,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+A,4,gm013_smoke_A_default_4,8,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+A,4,gm013_smoke_A_default_4,9,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+B,0,gm013_smoke_B_default_0,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、あゆ！",
+B,0,gm013_smoke_B_default_0,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+B,0,gm013_smoke_B_default_0,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+B,0,gm013_smoke_B_default_0,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+B,0,gm013_smoke_B_default_0,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+B,0,gm013_smoke_B_default_0,5,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、姉様！",
+B,0,gm013_smoke_B_default_0,6,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+B,0,gm013_smoke_B_default_0,7,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+B,0,gm013_smoke_B_default_0,8,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+B,0,gm013_smoke_B_default_0,9,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+B,1,gm013_smoke_B_default_1,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+B,1,gm013_smoke_B_default_1,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+B,1,gm013_smoke_B_default_1,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+B,1,gm013_smoke_B_default_1,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+B,1,gm013_smoke_B_default_1,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、あゆ！",
+B,1,gm013_smoke_B_default_1,5,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+B,1,gm013_smoke_B_default_1,6,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+B,1,gm013_smoke_B_default_1,7,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+B,1,gm013_smoke_B_default_1,8,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+B,1,gm013_smoke_B_default_1,9,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、姉様！",
+B,2,gm013_smoke_B_default_2,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+B,2,gm013_smoke_B_default_2,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+B,2,gm013_smoke_B_default_2,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+B,2,gm013_smoke_B_default_2,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、姉様！",
+B,2,gm013_smoke_B_default_2,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+B,2,gm013_smoke_B_default_2,5,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+B,2,gm013_smoke_B_default_2,6,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+B,2,gm013_smoke_B_default_2,7,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+B,2,gm013_smoke_B_default_2,8,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、あゆ！",
+B,2,gm013_smoke_B_default_2,9,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+B,3,gm013_smoke_B_default_3,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+B,3,gm013_smoke_B_default_3,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+B,3,gm013_smoke_B_default_3,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、あゆ！",
+B,3,gm013_smoke_B_default_3,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+B,3,gm013_smoke_B_default_3,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+B,3,gm013_smoke_B_default_3,5,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+B,3,gm013_smoke_B_default_3,6,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+B,3,gm013_smoke_B_default_3,7,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、姉様！",
+B,3,gm013_smoke_B_default_3,8,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+B,3,gm013_smoke_B_default_3,9,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+B,4,gm013_smoke_B_default_4,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+B,4,gm013_smoke_B_default_4,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、姉様！",
+B,4,gm013_smoke_B_default_4,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+B,4,gm013_smoke_B_default_4,3,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+B,4,gm013_smoke_B_default_4,4,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+B,4,gm013_smoke_B_default_4,5,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (同意)
+Output: うん、そうだね",
+B,4,gm013_smoke_B_default_4,6,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、あゆ！",
+B,4,gm013_smoke_B_default_4,7,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+B,4,gm013_smoke_B_default_4,8,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+B,4,gm013_smoke_B_default_4,9,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+C,0,gm013_smoke_C_default_0,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,(朝のキッチン),おはよう、あゆ！,SAY
+C,0,gm013_smoke_C_default_0,1,world_delta,,,,False,0.375,GM_FEEDBACK,あゆがマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:あゆがマグカップを取った...,TBD,あゆ,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+C,0,gm013_smoke_C_default_0,2,none,,,,False,0.500,,,,TBD,やな,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+C,0,gm013_smoke_C_default_0,3,world_delta,,,valid,True,0.375,GM_FEEDBACK,あゆがリビングに移動した,loc→リビング | あゆ→リビング | やな→リビング,TBD,あゆ,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+C,0,gm013_smoke_C_default_0,4,none,,,,False,0.450,,,,TBD,やな,True,0,False,(同意),うん、そうだね,SAY
+C,0,gm013_smoke_C_default_0,5,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(朝のキッチン),おはよう、姉様！,SAY
+C,0,gm013_smoke_C_default_0,6,world_delta,,,,False,0.375,GM_FEEDBACK,やながマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:やながマグカップを取った...,TBD,やな,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+C,0,gm013_smoke_C_default_0,7,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+C,0,gm013_smoke_C_default_0,8,world_delta,,,valid,True,0.375,GM_FEEDBACK,やながリビングに移動した,loc→リビング | やな→リビング | あゆ→リビング,TBD,やな,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+C,0,gm013_smoke_C_default_0,9,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(同意),うん、そうだね,SAY
+C,1,gm013_smoke_C_default_1,0,world_delta,,,,False,0.000,GM_FEEDBACK,やながマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:やながマグカップを取った...,TBD,やな,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+C,1,gm013_smoke_C_default_1,1,none,,,,False,0.375,,,,TBD,あゆ,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+C,1,gm013_smoke_C_default_1,2,world_delta,,,valid,True,0.250,GM_FEEDBACK,やながリビングに移動した,loc→リビング | やな→リビング | あゆ→リビング,TBD,やな,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+C,1,gm013_smoke_C_default_1,3,none,,,,False,0.375,,,,TBD,あゆ,True,0,False,(同意),うん、そうだね,SAY
+C,1,gm013_smoke_C_default_1,4,none,,,,False,0.450,,,,TBD,やな,True,0,False,(朝のキッチン),おはよう、あゆ！,SAY
+C,1,gm013_smoke_C_default_1,5,world_delta,,,,False,0.375,GM_FEEDBACK,あゆがマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:あゆがマグカップを取った...,TBD,あゆ,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+C,1,gm013_smoke_C_default_1,6,none,,,,False,0.500,,,,TBD,やな,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+C,1,gm013_smoke_C_default_1,7,world_delta,,,valid,True,0.375,GM_FEEDBACK,あゆがリビングに移動した,loc→リビング | あゆ→リビング | やな→リビング,TBD,あゆ,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+C,1,gm013_smoke_C_default_1,8,none,,,,False,0.500,,,,TBD,やな,True,0,False,(同意),うん、そうだね,SAY
+C,1,gm013_smoke_C_default_1,9,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(朝のキッチン),おはよう、姉様！,SAY
+C,2,gm013_smoke_C_default_2,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+C,2,gm013_smoke_C_default_2,1,world_delta,,,valid,True,0.375,GM_FEEDBACK,あゆがリビングに移動した,loc→リビング | あゆ→リビング | やな→リビング,TBD,あゆ,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+C,2,gm013_smoke_C_default_2,2,none,,,,False,0.500,,,,TBD,やな,True,0,False,(同意),うん、そうだね,SAY
+C,2,gm013_smoke_C_default_2,3,none,,,,False,0.562,,,,TBD,あゆ,True,0,False,(朝のキッチン),おはよう、姉様！,SAY
+C,2,gm013_smoke_C_default_2,4,world_delta,,,,False,0.450,GM_FEEDBACK,やながマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:やながマグカップを取った...,TBD,やな,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+C,2,gm013_smoke_C_default_2,5,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+C,2,gm013_smoke_C_default_2,6,world_delta,,,valid,True,0.375,GM_FEEDBACK,やながリビングに移動した,loc→リビング | やな→リビング | あゆ→リビング,TBD,やな,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+C,2,gm013_smoke_C_default_2,7,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(同意),うん、そうだね,SAY
+C,2,gm013_smoke_C_default_2,8,none,,,,False,0.500,,,,TBD,やな,True,0,False,(朝のキッチン),おはよう、あゆ！,SAY
+C,2,gm013_smoke_C_default_2,9,world_delta,,,,False,0.375,GM_FEEDBACK,あゆがマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:あゆがマグカップを取った...,TBD,あゆ,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+C,3,gm013_smoke_C_default_3,0,world_delta,,,valid,True,0.000,GM_FEEDBACK,やながリビングに移動した,loc→リビング | やな→リビング | あゆ→リビング,TBD,やな,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+C,3,gm013_smoke_C_default_3,1,none,,,,False,0.375,,,,TBD,あゆ,True,0,False,(同意),うん、そうだね,SAY
+C,3,gm013_smoke_C_default_3,2,none,,,,False,0.500,,,,TBD,やな,True,0,False,(朝のキッチン),おはよう、あゆ！,SAY
+C,3,gm013_smoke_C_default_3,3,world_delta,,,,False,0.375,GM_FEEDBACK,あゆがマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:あゆがマグカップを取った...,TBD,あゆ,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+C,3,gm013_smoke_C_default_3,4,none,,,,False,0.450,,,,TBD,やな,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+C,3,gm013_smoke_C_default_3,5,world_delta,,,valid,True,0.375,GM_FEEDBACK,あゆがリビングに移動した,loc→リビング | あゆ→リビング | やな→リビング,TBD,あゆ,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+C,3,gm013_smoke_C_default_3,6,none,,,,False,0.500,,,,TBD,やな,True,0,False,(同意),うん、そうだね,SAY
+C,3,gm013_smoke_C_default_3,7,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(朝のキッチン),おはよう、姉様！,SAY
+C,3,gm013_smoke_C_default_3,8,world_delta,,,,False,0.375,GM_FEEDBACK,やながマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:やながマグカップを取った...,TBD,やな,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+C,3,gm013_smoke_C_default_3,9,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+C,4,gm013_smoke_C_default_4,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,(同意),うん、そうだね,SAY
+C,4,gm013_smoke_C_default_4,1,none,,,,False,0.750,,,,TBD,あゆ,True,0,False,(朝のキッチン),おはよう、姉様！,SAY
+C,4,gm013_smoke_C_default_4,2,world_delta,,,,False,0.500,GM_FEEDBACK,やながマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:やながマグカップを取った...,TBD,やな,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+C,4,gm013_smoke_C_default_4,3,none,,,,False,0.562,,,,TBD,あゆ,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+C,4,gm013_smoke_C_default_4,4,world_delta,,,valid,True,0.450,GM_FEEDBACK,やながリビングに移動した,loc→リビング | やな→リビング | あゆ→リビング,TBD,やな,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+C,4,gm013_smoke_C_default_4,5,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(同意),うん、そうだね,SAY
+C,4,gm013_smoke_C_default_4,6,none,,,,False,0.500,,,,TBD,やな,True,0,False,(朝のキッチン),おはよう、あゆ！,SAY
+C,4,gm013_smoke_C_default_4,7,world_delta,,,,False,0.375,GM_FEEDBACK,あゆがマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:あゆがマグカップを取った...,TBD,あゆ,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+C,4,gm013_smoke_C_default_4,8,none,,,,False,0.500,,,,TBD,やな,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+C,4,gm013_smoke_C_default_4,9,world_delta,,,valid,True,0.375,GM_FEEDBACK,あゆがリビングに移動した,loc→リビング | あゆ→リビング | やな→リビング,TBD,あゆ,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+D,0,gm013_smoke_D_default_0,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,(朝のキッチン),おはよう、あゆ！,SAY
+D,0,gm013_smoke_D_default_0,1,world_delta,,,,False,0.375,GM_FEEDBACK,あゆがマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:あゆがマグカップを取った...,TBD,あゆ,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+D,0,gm013_smoke_D_default_0,2,none,,,,False,0.500,,,,TBD,やな,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+D,0,gm013_smoke_D_default_0,3,world_delta,,,valid,True,0.375,GM_FEEDBACK,あゆがリビングに移動した,loc→リビング | あゆ→リビング | やな→リビング,TBD,あゆ,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+D,0,gm013_smoke_D_default_0,4,none,,,,False,0.450,,,,TBD,やな,True,0,False,(同意),うん、そうだね,SAY
+D,0,gm013_smoke_D_default_0,5,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(朝のキッチン),おはよう、姉様！,SAY
+D,0,gm013_smoke_D_default_0,6,world_delta,,,,False,0.375,GM_FEEDBACK,やながマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:やながマグカップを取った...,TBD,やな,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+D,0,gm013_smoke_D_default_0,7,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+D,0,gm013_smoke_D_default_0,8,world_delta,,,valid,True,0.375,GM_FEEDBACK,やながリビングに移動した,loc→リビング | やな→リビング | あゆ→リビング,TBD,やな,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+D,0,gm013_smoke_D_default_0,9,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(同意),うん、そうだね,SAY
+D,1,gm013_smoke_D_default_1,0,world_delta,,,,False,0.000,GM_FEEDBACK,やながマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:やながマグカップを取った...,TBD,やな,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+D,1,gm013_smoke_D_default_1,1,none,,,,False,0.375,,,,TBD,あゆ,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+D,1,gm013_smoke_D_default_1,2,world_delta,,,valid,True,0.250,GM_FEEDBACK,やながリビングに移動した,loc→リビング | やな→リビング | あゆ→リビング,TBD,やな,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+D,1,gm013_smoke_D_default_1,3,none,,,,False,0.375,,,,TBD,あゆ,True,0,False,(同意),うん、そうだね,SAY
+D,1,gm013_smoke_D_default_1,4,none,,,,False,0.450,,,,TBD,やな,True,0,False,(朝のキッチン),おはよう、あゆ！,SAY
+D,1,gm013_smoke_D_default_1,5,world_delta,,,,False,0.375,GM_FEEDBACK,あゆがマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:あゆがマグカップを取った...,TBD,あゆ,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+D,1,gm013_smoke_D_default_1,6,none,,,,False,0.500,,,,TBD,やな,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+D,1,gm013_smoke_D_default_1,7,world_delta,,,valid,True,0.375,GM_FEEDBACK,あゆがリビングに移動した,loc→リビング | あゆ→リビング | やな→リビング,TBD,あゆ,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+D,1,gm013_smoke_D_default_1,8,none,,,,False,0.500,,,,TBD,やな,True,0,False,(同意),うん、そうだね,SAY
+D,1,gm013_smoke_D_default_1,9,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(朝のキッチン),おはよう、姉様！,SAY
+D,2,gm013_smoke_D_default_2,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+D,2,gm013_smoke_D_default_2,1,world_delta,,,valid,True,0.375,GM_FEEDBACK,あゆがリビングに移動した,loc→リビング | あゆ→リビング | やな→リビング,TBD,あゆ,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+D,2,gm013_smoke_D_default_2,2,none,,,,False,0.500,,,,TBD,やな,True,0,False,(同意),うん、そうだね,SAY
+D,2,gm013_smoke_D_default_2,3,none,,,,False,0.562,,,,TBD,あゆ,True,0,False,(朝のキッチン),おはよう、姉様！,SAY
+D,2,gm013_smoke_D_default_2,4,world_delta,,,,False,0.450,GM_FEEDBACK,やながマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:やながマグカップを取った...,TBD,やな,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+D,2,gm013_smoke_D_default_2,5,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+D,2,gm013_smoke_D_default_2,6,world_delta,,,valid,True,0.375,GM_FEEDBACK,やながリビングに移動した,loc→リビング | やな→リビング | あゆ→リビング,TBD,やな,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+D,2,gm013_smoke_D_default_2,7,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(同意),うん、そうだね,SAY
+D,2,gm013_smoke_D_default_2,8,none,,,,False,0.500,,,,TBD,やな,True,0,False,(朝のキッチン),おはよう、あゆ！,SAY
+D,2,gm013_smoke_D_default_2,9,world_delta,,,,False,0.375,GM_FEEDBACK,あゆがマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:あゆがマグカップを取った...,TBD,あゆ,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+D,3,gm013_smoke_D_default_3,0,world_delta,,,valid,True,0.000,GM_FEEDBACK,やながリビングに移動した,loc→リビング | やな→リビング | あゆ→リビング,TBD,やな,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+D,3,gm013_smoke_D_default_3,1,none,,,,False,0.375,,,,TBD,あゆ,True,0,False,(同意),うん、そうだね,SAY
+D,3,gm013_smoke_D_default_3,2,none,,,,False,0.500,,,,TBD,やな,True,0,False,(朝のキッチン),おはよう、あゆ！,SAY
+D,3,gm013_smoke_D_default_3,3,world_delta,,,,False,0.375,GM_FEEDBACK,あゆがマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:あゆがマグカップを取った...,TBD,あゆ,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+D,3,gm013_smoke_D_default_3,4,none,,,,False,0.450,,,,TBD,やな,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+D,3,gm013_smoke_D_default_3,5,world_delta,,,valid,True,0.375,GM_FEEDBACK,あゆがリビングに移動した,loc→リビング | あゆ→リビング | やな→リビング,TBD,あゆ,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+D,3,gm013_smoke_D_default_3,6,none,,,,False,0.500,,,,TBD,やな,True,0,False,(同意),うん、そうだね,SAY
+D,3,gm013_smoke_D_default_3,7,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(朝のキッチン),おはよう、姉様！,SAY
+D,3,gm013_smoke_D_default_3,8,world_delta,,,,False,0.375,GM_FEEDBACK,やながマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:やながマグカップを取った...,TBD,やな,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+D,3,gm013_smoke_D_default_3,9,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+D,4,gm013_smoke_D_default_4,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,(同意),うん、そうだね,SAY
+D,4,gm013_smoke_D_default_4,1,none,,,,False,0.750,,,,TBD,あゆ,True,0,False,(朝のキッチン),おはよう、姉様！,SAY
+D,4,gm013_smoke_D_default_4,2,world_delta,,,,False,0.500,GM_FEEDBACK,やながマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:やながマグカップを取った...,TBD,やな,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+D,4,gm013_smoke_D_default_4,3,none,,,,False,0.562,,,,TBD,あゆ,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+D,4,gm013_smoke_D_default_4,4,world_delta,,,valid,True,0.450,GM_FEEDBACK,やながリビングに移動した,loc→リビング | やな→リビング | あゆ→リビング,TBD,やな,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+D,4,gm013_smoke_D_default_4,5,none,,,,False,0.500,,,,TBD,あゆ,True,0,False,(同意),うん、そうだね,SAY
+D,4,gm013_smoke_D_default_4,6,none,,,,False,0.500,,,,TBD,やな,True,0,False,(朝のキッチン),おはよう、あゆ！,SAY
+D,4,gm013_smoke_D_default_4,7,world_delta,,,,False,0.375,GM_FEEDBACK,あゆがマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:あゆがマグカップを取った...,TBD,あゆ,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+D,4,gm013_smoke_D_default_4,8,none,,,,False,0.500,,,,TBD,やな,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+D,4,gm013_smoke_D_default_4,9,world_delta,,,valid,True,0.375,GM_FEEDBACK,あゆがリビングに移動した,loc→リビング | あゆ→リビング | やな→リビング,TBD,あゆ,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY

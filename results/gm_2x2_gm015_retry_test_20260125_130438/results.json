@@ -1,0 +1,230 @@
+{
+  "experiment_id": "gm015_retry_test",
+  "mode": "real",
+  "model": "gemma3:12b",
+  "seeds": 2,
+  "max_turns": 5,
+  "metadata": {
+    "git_sha": "a481b474a7bb9f38f7a320cee0534e287b152a24",
+    "git_short": "a481b474-dirty",
+    "generated_at": "2026-01-25T13:05:40.549002",
+    "scenarios": [
+      "default"
+    ],
+    "temperature": 0.7,
+    "max_tokens": 300,
+    "max_retries": 3,
+    "gm_base_url": "http://localhost:8001",
+    "llm_url": "http://localhost:11434"
+  },
+  "conditions": {
+    "A": {
+      "stats": {
+        "turns": 10,
+        "success": 10,
+        "retries_total": 0,
+        "addressing_violations": 0,
+        "impossible_actions": {
+          "total": 0,
+          "breakdown": {}
+        },
+        "stall_events": 0,
+        "stall_recoveries": 0,
+        "gm_interventions": {
+          "count": 0,
+          "triggers": {}
+        },
+        "gm_denied_count": 0,
+        "latency_ms": {
+          "p50": 1847.62,
+          "p95": 2034.49
+        }
+      },
+      "runs": [
+        {
+          "scenario": "default",
+          "seed": 0,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1847.6213360008842,
+          "latency_p95_ms": 2034.4931990002806
+        },
+        {
+          "scenario": "default",
+          "seed": 1,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1620.186066000315,
+          "latency_p95_ms": 1982.565786001942
+        }
+      ]
+    },
+    "B": {
+      "stats": {
+        "turns": 10,
+        "success": 10,
+        "retries_total": 0,
+        "addressing_violations": 0,
+        "impossible_actions": {
+          "total": 0,
+          "breakdown": {}
+        },
+        "stall_events": 0,
+        "stall_recoveries": 0,
+        "gm_interventions": {
+          "count": 0,
+          "triggers": {}
+        },
+        "gm_denied_count": 0,
+        "latency_ms": {
+          "p50": 1327.43,
+          "p95": 1991.15
+        }
+      },
+      "runs": [
+        {
+          "scenario": "default",
+          "seed": 0,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1036.6290800011484,
+          "latency_p95_ms": 1327.4285959996632
+        },
+        {
+          "scenario": "default",
+          "seed": 1,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 1602.6150480029173,
+          "latency_p95_ms": 1991.1538640008075
+        }
+      ]
+    },
+    "C": {
+      "stats": {
+        "turns": 10,
+        "success": 10,
+        "retries_total": 0,
+        "addressing_violations": 0,
+        "impossible_actions": {
+          "total": 0,
+          "breakdown": {}
+        },
+        "stall_events": 0,
+        "stall_recoveries": 0,
+        "gm_interventions": {
+          "count": 2,
+          "triggers": {
+            "format_break": 2
+          }
+        },
+        "gm_denied_count": 0,
+        "latency_ms": {
+          "p50": 1378.09,
+          "p95": 1879.36
+        }
+      },
+      "runs": [
+        {
+          "scenario": "default",
+          "seed": 0,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 1,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.16,
+          "latency_p50_ms": 1341.9717750002746,
+          "latency_p95_ms": 1614.5220030011842
+        },
+        {
+          "scenario": "default",
+          "seed": 1,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 1,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.16,
+          "latency_p50_ms": 1378.922246000002,
+          "latency_p95_ms": 1879.3646810008795
+        }
+      ]
+    },
+    "D": {
+      "stats": {
+        "turns": 10,
+        "success": 10,
+        "retries_total": 0,
+        "addressing_violations": 0,
+        "impossible_actions": {
+          "total": 0,
+          "breakdown": {}
+        },
+        "stall_events": 0,
+        "stall_recoveries": 0,
+        "gm_interventions": {
+          "count": 2,
+          "triggers": {
+            "format_break": 2
+          }
+        },
+        "gm_denied_count": 0,
+        "latency_ms": {
+          "p50": 1385.55,
+          "p95": 1894.4
+        }
+      },
+      "runs": [
+        {
+          "scenario": "default",
+          "seed": 0,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 1,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.16,
+          "latency_p50_ms": 1360.7212160022755,
+          "latency_p95_ms": 1605.750189999526
+        },
+        {
+          "scenario": "default",
+          "seed": 1,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 1,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.16,
+          "latency_p50_ms": 1388.4452550009883,
+          "latency_p95_ms": 1894.404681999731
+        }
+      ]
+    }
+  }
+}

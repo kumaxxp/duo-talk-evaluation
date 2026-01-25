@@ -1,0 +1,37 @@
+condition,seed,session_id,turn_number,trigger,denied_reason,impossible_reason,move_validity,has_move_intent,stall_score,injected_tags,gm_feedback_preview,world_delta_preview,director_status,speaker,allowed,fact_cards_count,has_world_delta,parsed_thought,parsed_speech,action_intents
+A,0,gm013_sim_test_A_default_0,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、あゆ！",
+A,0,gm013_sim_test_A_default_0,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+A,0,gm013_sim_test_A_default_0,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+A,1,gm013_sim_test_A_default_1,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+A,1,gm013_sim_test_A_default_1,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+A,1,gm013_sim_test_A_default_1,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+B,0,gm013_sim_test_B_default_0,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (朝のキッチン)
+Output: おはよう、あゆ！",
+B,0,gm013_sim_test_B_default_0,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+B,0,gm013_sim_test_B_default_0,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+B,1,gm013_sim_test_B_default_1,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (コーヒー飲みたい)
+Output: *マグカップを取る* コーヒー淹れようか",
+B,1,gm013_sim_test_B_default_1,1,none,,,,False,0.000,,,,TBD,あゆ,True,0,False,,"Thought: (何食べよう)
+Output: 今日の朝ごはん何にする？",
+B,1,gm013_sim_test_B_default_1,2,none,,,,False,0.000,,,,TBD,やな,True,0,False,,"Thought: (リビング行こうかな)
+Output: *リビングに移動* ちょっとテレビ見てくる",
+C,0,gm013_sim_test_C_default_0,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,(朝のキッチン),おはよう、あゆ！,SAY
+C,0,gm013_sim_test_C_default_0,1,world_delta,,,,False,0.375,GM_FEEDBACK,あゆがマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:あゆがマグカップを取った...,TBD,あゆ,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+C,0,gm013_sim_test_C_default_0,2,none,,,,False,0.500,,,,TBD,やな,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+C,1,gm013_sim_test_C_default_1,0,world_delta,,,,False,0.000,GM_FEEDBACK,やながマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:やながマグカップを取った...,TBD,やな,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+C,1,gm013_sim_test_C_default_1,1,none,,,,False,0.375,,,,TBD,あゆ,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+C,1,gm013_sim_test_C_default_1,2,world_delta,,,valid,True,0.250,GM_FEEDBACK,やながリビングに移動した,loc→リビング | やな→リビング | あゆ→リビング,TBD,やな,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY
+D,0,gm013_sim_test_D_default_0,0,none,,,,False,0.000,,,,TBD,やな,True,0,False,(朝のキッチン),おはよう、あゆ！,SAY
+D,0,gm013_sim_test_D_default_0,1,world_delta,,,,False,0.375,GM_FEEDBACK,あゆがマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:あゆがマグカップを取った...,TBD,あゆ,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+D,0,gm013_sim_test_D_default_0,2,none,,,,False,0.500,,,,TBD,やな,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+D,1,gm013_sim_test_D_default_1,0,world_delta,,,,False,0.000,GM_FEEDBACK,やながマグカップを取った,+hold:マグカップ | prop:マグカップ | +ev:やながマグカップを取った...,TBD,やな,True,1,True,(コーヒー飲みたい),*マグカップを取る* コーヒー淹れようか,GET|SAY
+D,1,gm013_sim_test_D_default_1,1,none,,,,False,0.375,,,,TBD,あゆ,True,0,False,(何食べよう),今日の朝ごはん何にする？,ASK
+D,1,gm013_sim_test_D_default_1,2,world_delta,,,valid,True,0.250,GM_FEEDBACK,やながリビングに移動した,loc→リビング | やな→リビング | あゆ→リビング,TBD,やな,True,1,True,(リビング行こうかな),*リビングに移動* ちょっとテレビ見てくるね,MOVE|SAY

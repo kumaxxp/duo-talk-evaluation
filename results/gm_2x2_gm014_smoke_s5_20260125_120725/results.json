@@ -1,0 +1,388 @@
+{
+  "experiment_id": "gm014_smoke_s5",
+  "mode": "sim",
+  "model": "simulation",
+  "seeds": 5,
+  "max_turns": 10,
+  "metadata": {
+    "git_sha": "a481b474a7bb9f38f7a320cee0534e287b152a24",
+    "git_short": "a481b474-dirty",
+    "generated_at": "2026-01-25T12:07:25.229775",
+    "scenarios": [
+      "default"
+    ],
+    "temperature": 0.7,
+    "max_tokens": 300,
+    "max_retries": 3,
+    "gm_base_url": "http://localhost:8001",
+    "llm_url": null
+  },
+  "conditions": {
+    "A": {
+      "stats": {
+        "turns": 50,
+        "success": 50,
+        "retries_total": 0,
+        "addressing_violations": 0,
+        "impossible_actions": {
+          "total": 0,
+          "breakdown": {}
+        },
+        "stall_events": 0,
+        "stall_recoveries": 0,
+        "gm_interventions": {
+          "count": 0,
+          "triggers": {}
+        },
+        "gm_denied_count": 0,
+        "latency_ms": {
+          "p50": 0.0,
+          "p95": 0.01
+        }
+      },
+      "runs": [
+        {
+          "scenario": "default",
+          "seed": 0,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 0.006006999683449976,
+          "latency_p95_ms": 0.011235000783926807
+        },
+        {
+          "scenario": "default",
+          "seed": 1,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 0.003682998794829473,
+          "latency_p95_ms": 0.00591000025451649
+        },
+        {
+          "scenario": "default",
+          "seed": 2,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 0.003576000381144695,
+          "latency_p95_ms": 0.004931000148644671
+        },
+        {
+          "scenario": "default",
+          "seed": 3,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 0.0035499997466104105,
+          "latency_p95_ms": 0.0061270002333913
+        },
+        {
+          "scenario": "default",
+          "seed": 4,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 0.004321000233176164,
+          "latency_p95_ms": 0.005330000931280665
+        }
+      ]
+    },
+    "B": {
+      "stats": {
+        "turns": 50,
+        "success": 50,
+        "retries_total": 0,
+        "addressing_violations": 0,
+        "impossible_actions": {
+          "total": 0,
+          "breakdown": {}
+        },
+        "stall_events": 0,
+        "stall_recoveries": 0,
+        "gm_interventions": {
+          "count": 0,
+          "triggers": {}
+        },
+        "gm_denied_count": 0,
+        "latency_ms": {
+          "p50": 0.0,
+          "p95": 0.01
+        }
+      },
+      "runs": [
+        {
+          "scenario": "default",
+          "seed": 0,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 0.003730001481017098,
+          "latency_p95_ms": 0.12941200111526996
+        },
+        {
+          "scenario": "default",
+          "seed": 1,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 0.0034450004022801295,
+          "latency_p95_ms": 0.005067999154562131
+        },
+        {
+          "scenario": "default",
+          "seed": 2,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 0.0035249995562480763,
+          "latency_p95_ms": 0.005592999514192343
+        },
+        {
+          "scenario": "default",
+          "seed": 3,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 0.003533999915816821,
+          "latency_p95_ms": 0.006926000423845835
+        },
+        {
+          "scenario": "default",
+          "seed": 4,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 0,
+          "gm_denied_count": 0,
+          "stall_event_count": 0,
+          "stall_recovery_count": 0,
+          "mean_stall_score": 0.0,
+          "latency_p50_ms": 0.00335000004270114,
+          "latency_p95_ms": 0.0047339999582618475
+        }
+      ]
+    },
+    "C": {
+      "stats": {
+        "turns": 50,
+        "success": 50,
+        "retries_total": 0,
+        "addressing_violations": 0,
+        "impossible_actions": {
+          "total": 0,
+          "breakdown": {}
+        },
+        "stall_events": 10,
+        "stall_recoveries": 10,
+        "gm_interventions": {
+          "count": 30,
+          "triggers": {
+            "world_delta": 20,
+            "stall": 10
+          }
+        },
+        "gm_denied_count": 0,
+        "latency_ms": {
+          "p50": 1.09,
+          "p95": 1.24
+        }
+      },
+      "runs": [
+        {
+          "scenario": "default",
+          "seed": 0,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 6,
+          "gm_denied_count": 0,
+          "stall_event_count": 2,
+          "stall_recovery_count": 2,
+          "mean_stall_score": 0.44800000000000006,
+          "latency_p50_ms": 1.1351819994160905,
+          "latency_p95_ms": 1.3370140004553832
+        },
+        {
+          "scenario": "default",
+          "seed": 1,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 6,
+          "gm_denied_count": 0,
+          "stall_event_count": 2,
+          "stall_recovery_count": 2,
+          "mean_stall_score": 0.42800000000000005,
+          "latency_p50_ms": 1.1048359992855694,
+          "latency_p95_ms": 1.2324599993007723
+        },
+        {
+          "scenario": "default",
+          "seed": 2,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 6,
+          "gm_denied_count": 0,
+          "stall_event_count": 2,
+          "stall_recovery_count": 2,
+          "mean_stall_score": 0.45549999999999996,
+          "latency_p50_ms": 1.170125000498956,
+          "latency_p95_ms": 1.3656280007126043
+        },
+        {
+          "scenario": "default",
+          "seed": 3,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 6,
+          "gm_denied_count": 0,
+          "stall_event_count": 2,
+          "stall_recovery_count": 1,
+          "mean_stall_score": 0.438,
+          "latency_p50_ms": 1.057186000252841,
+          "latency_p95_ms": 1.2233659999765223
+        },
+        {
+          "scenario": "default",
+          "seed": 4,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 6,
+          "gm_denied_count": 0,
+          "stall_event_count": 2,
+          "stall_recovery_count": 3,
+          "mean_stall_score": 0.47050000000000003,
+          "latency_p50_ms": 1.053132999004447,
+          "latency_p95_ms": 1.1188610005774535
+        }
+      ]
+    },
+    "D": {
+      "stats": {
+        "turns": 50,
+        "success": 50,
+        "retries_total": 0,
+        "addressing_violations": 0,
+        "impossible_actions": {
+          "total": 0,
+          "breakdown": {}
+        },
+        "stall_events": 10,
+        "stall_recoveries": 10,
+        "gm_interventions": {
+          "count": 30,
+          "triggers": {
+            "world_delta": 20,
+            "stall": 10
+          }
+        },
+        "gm_denied_count": 0,
+        "latency_ms": {
+          "p50": 1.07,
+          "p95": 1.16
+        }
+      },
+      "runs": [
+        {
+          "scenario": "default",
+          "seed": 0,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 6,
+          "gm_denied_count": 0,
+          "stall_event_count": 2,
+          "stall_recovery_count": 2,
+          "mean_stall_score": 0.44800000000000006,
+          "latency_p50_ms": 1.0101070001837797,
+          "latency_p95_ms": 1.0946419988613343
+        },
+        {
+          "scenario": "default",
+          "seed": 1,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 6,
+          "gm_denied_count": 0,
+          "stall_event_count": 2,
+          "stall_recovery_count": 2,
+          "mean_stall_score": 0.42800000000000005,
+          "latency_p50_ms": 1.0682350002753083,
+          "latency_p95_ms": 1.118958000006387
+        },
+        {
+          "scenario": "default",
+          "seed": 2,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 6,
+          "gm_denied_count": 0,
+          "stall_event_count": 2,
+          "stall_recovery_count": 2,
+          "mean_stall_score": 0.45549999999999996,
+          "latency_p50_ms": 1.1008569999830797,
+          "latency_p95_ms": 1.2708920003206003
+        },
+        {
+          "scenario": "default",
+          "seed": 3,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 6,
+          "gm_denied_count": 0,
+          "stall_event_count": 2,
+          "stall_recovery_count": 1,
+          "mean_stall_score": 0.438,
+          "latency_p50_ms": 1.074120998964645,
+          "latency_p95_ms": 1.1185479997948278
+        },
+        {
+          "scenario": "default",
+          "seed": 4,
+          "success_rate": 1.0,
+          "total_retries": 0,
+          "gm_injected_count": 6,
+          "gm_denied_count": 0,
+          "stall_event_count": 2,
+          "stall_recovery_count": 3,
+          "mean_stall_score": 0.47050000000000003,
+          "latency_p50_ms": 1.0940350002783816,
+          "latency_p95_ms": 1.2065020000591176
+        }
+      ]
+    }
+  }
+}

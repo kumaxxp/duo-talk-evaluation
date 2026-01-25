@@ -1,0 +1,228 @@
+{
+  "metadata": {
+    "experiment_id": "smoke_test",
+    "git_sha": "a481b474a7bb9f38f7a320cee0534e287b152a24",
+    "git_short": "a481b474-dirty",
+    "generated_at": "2026-01-25T09:02:08.211507",
+    "seeds": [
+      0
+    ],
+    "scenarios": [
+      "default"
+    ],
+    "max_turns": 3,
+    "temperature": 0.7,
+    "max_retries": 3,
+    "gm_base_url": "http://localhost:8001"
+  },
+  "results": [
+    {
+      "condition": "A",
+      "scenario": "default",
+      "seed": 0,
+      "inject_enabled": false,
+      "gm_enabled": false,
+      "total_retries": 0,
+      "success_rate": 1.0,
+      "gm_injected_count": 0,
+      "gm_denied_count": 0,
+      "mean_stall_score": 0.0,
+      "latency_p50_ms": 0.00037200015867711045,
+      "latency_p95_ms": 0.0005669999154633842,
+      "timestamp": "2026-01-25T09:02:08.197336",
+      "denied_reason_histogram": {},
+      "injection_trigger_counts": {},
+      "stall_event_count": 0,
+      "turns": [
+        {
+          "turn_number": 0,
+          "speaker": "やな",
+          "allowed": true,
+          "denied_reason": null,
+          "stall_score": 0.0,
+          "fact_cards": [],
+          "latency_ms": 0.0005669999154633842,
+          "injection_trigger": null
+        },
+        {
+          "turn_number": 1,
+          "speaker": "あゆ",
+          "allowed": true,
+          "denied_reason": null,
+          "stall_score": 0.0,
+          "fact_cards": [],
+          "latency_ms": 0.00037200015867711045,
+          "injection_trigger": null
+        },
+        {
+          "turn_number": 2,
+          "speaker": "やな",
+          "allowed": true,
+          "denied_reason": null,
+          "stall_score": 0.0,
+          "fact_cards": [],
+          "latency_ms": 0.00024400014808634296,
+          "injection_trigger": null
+        }
+      ]
+    },
+    {
+      "condition": "B",
+      "scenario": "default",
+      "seed": 0,
+      "inject_enabled": true,
+      "gm_enabled": false,
+      "total_retries": 0,
+      "success_rate": 1.0,
+      "gm_injected_count": 0,
+      "gm_denied_count": 0,
+      "mean_stall_score": 0.0,
+      "latency_p50_ms": 0.00034000004234258085,
+      "latency_p95_ms": 0.00046500008465955034,
+      "timestamp": "2026-01-25T09:02:08.197448",
+      "denied_reason_histogram": {},
+      "injection_trigger_counts": {},
+      "stall_event_count": 0,
+      "turns": [
+        {
+          "turn_number": 0,
+          "speaker": "やな",
+          "allowed": true,
+          "denied_reason": null,
+          "stall_score": 0.0,
+          "fact_cards": [],
+          "latency_ms": 0.00046500008465955034,
+          "injection_trigger": null
+        },
+        {
+          "turn_number": 1,
+          "speaker": "あゆ",
+          "allowed": true,
+          "denied_reason": null,
+          "stall_score": 0.0,
+          "fact_cards": [],
+          "latency_ms": 0.00034000004234258085,
+          "injection_trigger": null
+        },
+        {
+          "turn_number": 2,
+          "speaker": "やな",
+          "allowed": true,
+          "denied_reason": null,
+          "stall_score": 0.0,
+          "fact_cards": [],
+          "latency_ms": 0.00021999994714860804,
+          "injection_trigger": null
+        }
+      ]
+    },
+    {
+      "condition": "C",
+      "scenario": "default",
+      "seed": 0,
+      "inject_enabled": false,
+      "gm_enabled": true,
+      "total_retries": 0,
+      "success_rate": 1.0,
+      "gm_injected_count": 1,
+      "gm_denied_count": 0,
+      "mean_stall_score": 0.2916666666666667,
+      "latency_p50_ms": 1.207975999932387,
+      "latency_p95_ms": 1.2652860000343935,
+      "timestamp": "2026-01-25T09:02:08.202182",
+      "denied_reason_histogram": {},
+      "injection_trigger_counts": {
+        "world_delta": 1
+      },
+      "stall_event_count": 0,
+      "turns": [
+        {
+          "turn_number": 0,
+          "speaker": "やな",
+          "allowed": true,
+          "denied_reason": null,
+          "stall_score": 0.0,
+          "fact_cards": [],
+          "latency_ms": 1.2652860000343935,
+          "injection_trigger": null
+        },
+        {
+          "turn_number": 1,
+          "speaker": "あゆ",
+          "allowed": true,
+          "denied_reason": null,
+          "stall_score": 0.375,
+          "fact_cards": [
+            "FACT: あゆがマグカップを取った"
+          ],
+          "latency_ms": 1.207975999932387,
+          "injection_trigger": "world_delta"
+        },
+        {
+          "turn_number": 2,
+          "speaker": "やな",
+          "allowed": true,
+          "denied_reason": null,
+          "stall_score": 0.49999999999999994,
+          "fact_cards": [],
+          "latency_ms": 1.0832540001501911,
+          "injection_trigger": null
+        }
+      ]
+    },
+    {
+      "condition": "D",
+      "scenario": "default",
+      "seed": 0,
+      "inject_enabled": true,
+      "gm_enabled": true,
+      "total_retries": 0,
+      "success_rate": 1.0,
+      "gm_injected_count": 1,
+      "gm_denied_count": 0,
+      "mean_stall_score": 0.2916666666666667,
+      "latency_p50_ms": 1.042214999870339,
+      "latency_p95_ms": 1.0995870002261654,
+      "timestamp": "2026-01-25T09:02:08.206349",
+      "denied_reason_histogram": {},
+      "injection_trigger_counts": {
+        "world_delta": 1
+      },
+      "stall_event_count": 0,
+      "turns": [
+        {
+          "turn_number": 0,
+          "speaker": "やな",
+          "allowed": true,
+          "denied_reason": null,
+          "stall_score": 0.0,
+          "fact_cards": [],
+          "latency_ms": 1.042214999870339,
+          "injection_trigger": null
+        },
+        {
+          "turn_number": 1,
+          "speaker": "あゆ",
+          "allowed": true,
+          "denied_reason": null,
+          "stall_score": 0.375,
+          "fact_cards": [
+            "FACT: あゆがマグカップを取った"
+          ],
+          "latency_ms": 1.0995870002261654,
+          "injection_trigger": "world_delta"
+        },
+        {
+          "turn_number": 2,
+          "speaker": "やな",
+          "allowed": true,
+          "denied_reason": null,
+          "stall_score": 0.49999999999999994,
+          "fact_cards": [],
+          "latency_ms": 1.0326589999749558,
+          "injection_trigger": null
+        }
+      ]
+    }
+  ]
+}
