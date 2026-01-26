@@ -40,7 +40,12 @@ jobs:
           python -c "from gui_nicegui.components.timeline import turns_to_timeline_items; print('gui_nicegui OK')"
           python -c "from experiments.semantic_matcher.eval_types import MissingObjectSample; print('experiments OK')"
 
-      - name: Run tests
+      - name: Run hakoniwa matcher tests
+        run: |
+          export PYTHONPATH="${PYTHONPATH}:$(pwd)"
+          python -m pytest tests/test_hakoniwa_matcher.py -v --tb=long
+
+      - name: Run all tests
         run: |
           export PYTHONPATH="${PYTHONPATH}:$(pwd)"
           python -m pytest tests/ -v --tb=short
