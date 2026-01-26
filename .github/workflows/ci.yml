@@ -31,6 +31,15 @@ jobs:
         run: |
           ruff check src/ tests/ experiments/ hakoniwa/ --exit-zero
 
+      - name: Debug imports
+        run: |
+          echo "=== Installed packages ==="
+          pip list | grep -E "duo|hakoniwa|evaluation"
+          echo "=== Testing imports ==="
+          python -c "from hakoniwa.logic.matcher import suggest_match; print('hakoniwa OK')"
+          python -c "from gui_nicegui.components.timeline import turns_to_timeline_items; print('gui_nicegui OK')"
+          python -c "from experiments.semantic_matcher.eval_types import MissingObjectSample; print('experiments OK')"
+
       - name: Run tests
         run: |
           export PYTHONPATH="${PYTHONPATH}:$(pwd)"
