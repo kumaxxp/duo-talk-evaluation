@@ -11,6 +11,9 @@ Snapshot tests for:
 
 Note: PreflightResult.give_up is both a field and classmethod, causing
 name collision in dataclass. Tests check behavior via guidance_cards content.
+
+Note: These tests require duo-talk-gm to be available (sibling repo).
+They are skipped in CI environments where the repo is not present.
 """
 
 import sys
@@ -22,12 +25,32 @@ import pytest
 GM_ROOT = Path(__file__).parent.parent.parent / "duo-talk-gm"
 sys.path.insert(0, str(GM_ROOT / "src"))
 
-from duo_talk_gm.core.action_judge import ActionJudge
-from duo_talk_gm.core.preflight import PreflightChecker
-from duo_talk_gm.core.stall_detector import StallDetector
-from duo_talk_gm.models.enums import DeniedReason, IntentType
-from duo_talk_gm.models.gm_response import ActionIntent, ParsedOutput
-from duo_talk_gm.models.world_state import WorldState
+# Check if duo_talk_gm is available (for CI skip)
+try:
+    from duo_talk_gm.core.action_judge import ActionJudge
+    from duo_talk_gm.core.preflight import PreflightChecker
+    from duo_talk_gm.core.stall_detector import StallDetector
+    from duo_talk_gm.models.enums import DeniedReason, IntentType
+    from duo_talk_gm.models.gm_response import ActionIntent, ParsedOutput
+    from duo_talk_gm.models.world_state import WorldState
+
+    GM_AVAILABLE = True
+except ImportError:
+    GM_AVAILABLE = False
+    ActionJudge = None
+    PreflightChecker = None
+    StallDetector = None
+    DeniedReason = None
+    IntentType = None
+    ActionIntent = None
+    ParsedOutput = None
+    WorldState = None
+
+# Skip all tests in this module if duo_talk_gm is not available
+pytestmark = pytest.mark.skipif(
+    not GM_AVAILABLE,
+    reason="duo-talk-gm not available (CI environment)"
+)
 
 
 def is_give_up_result(result) -> bool:
