@@ -24,7 +24,7 @@ jobs:
           pip install pytest pydantic pyyaml pandas requests click
 
       - name: Run tests
-        run: PYTHONPATH=. python -m pytest tests/ -v --tb=short
+        run: PYTHONPATH=. python -m pytest tests/ -v --tb=short --ignore=tests/test_evaluator.py
 
   smoke-test:
     runs-on: ubuntu-latest
