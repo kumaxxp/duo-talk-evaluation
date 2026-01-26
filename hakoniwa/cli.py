@@ -23,6 +23,42 @@ from hakoniwa.config import (
 from hakoniwa.persistence import load_dry_run, load_world_state
 from hakoniwa.serializer.canonical import compute_hash
 
+# Supported schema versions for PlayState
+SUPPORTED_SCHEMA_VERSIONS = ["1.0.0"]
+
+
+def _diagnose_hash_mismatch(content: str) -> str:
+    """Diagnose the cause of hash mismatch.
+
+    Args:
+        content: The file content that failed hash verification
+
+    Returns:
+        Diagnostic message describing the likely cause
+    """
+    # Try to parse JSON
+    try:
+        data = json.loads(content)
+    except json.JSONDecodeError as e:
+        return f"JSON parse failed: {e.msg} (line {e.lineno}, col {e.colno})"
+
+    # JSON is valid, check schema_version
+    if "schema_version" not in data:
+        return "Missing required field: schema_version"
+
+    schema_version = data.get("schema_version")
+    if schema_version not in SUPPORTED_SCHEMA_VERSIONS:
+        return f"schema_version '{schema_version}' not supported (expected: {', '.join(SUPPORTED_SCHEMA_VERSIONS)})"
+
+    # Check other required fields
+    required = ["scenario_name", "current_location", "holding"]
+    missing = [f for f in required if f not in data]
+    if missing:
+        return f"Missing required fields: {', '.join(missing)}"
+
+    # All structure OK - file was just edited
+    return "File content modified (valid structure, hash outdated)"
+
 
 def _validate_play_state(path: Path) -> tuple[bool, list[str], dict | None]:
     """Validate PlayState format (from play_mode save).
@@ -50,9 +86,11 @@ def _validate_play_state(path: Path) -> tuple[bool, list[str], dict | None]:
         actual_hash = compute_hash(content)
 
         if actual_hash != expected_hash:
-            return False, [f"Hash mismatch"], None
+            # Hash mismatch - run diagnostics to determine cause
+            detail = _diagnose_hash_mismatch(content)
+            return False, ["Hash mismatch", f"Detail: {detail}"], None
 
-        data = __import__("json").loads(content)
+        data = json.loads(content)
 
         # Check PlayState required fields
         required = ["schema_version", "scenario_name", "current_location", "holding"]
