@@ -576,3 +576,246 @@ class TestHelpUpdatedForNewCommands:
         help_text = get_help_text()
 
         assert "map" in help_text
+
+    def test_help_includes_use(self):
+        """Help should include use command (P-Next1)."""
+        from scripts.play_mode import get_help_text
+
+        help_text = get_help_text()
+
+        assert "use" in help_text
+
+
+class TestUseCommand:
+    """Tests for 'use <key> <door>' command (P-Next1)."""
+
+    def test_parse_use_command(self):
+        """Should parse 'use' command with key and door."""
+        from scripts.play_mode import parse_command
+
+        cmd = parse_command("use iron_key north_door")
+
+        assert cmd["action"] == "use"
+        assert cmd["target"] == "iron_key north_door"
+
+    def test_parse_use_command_aliases(self):
+        """Should parse 'unlock' and '解錠' as use aliases."""
+        from scripts.play_mode import parse_command
+
+        assert parse_command("unlock iron_key door")["action"] == "use"
+        assert parse_command("使う iron_key door")["action"] == "use"
+        assert parse_command("解錠 iron_key door")["action"] == "use"
+
+    def test_use_unlocks_door_with_correct_key(self):
+        """Should unlock door when correct key is used."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack", "mirror"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=["iron_key"],
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "props": ["coat_rack", "mirror"],
+                        "exits": ["locked_study"],
+                        "locked_exits": {
+                            "locked_study": {
+                                "door_name": "north_door",
+                                "required_key": "iron_key",
+                                "locked": True,
+                            }
+                        },
+                    },
+                    "locked_study": {"props": [], "exits": ["start_hall"]},
+                }
+            },
+            unlocked_doors=[],
+        )
+
+        cmd = {"action": "use", "target": "iron_key north_door"}
+        output, new_state = execute_command(cmd, state)
+
+        assert "解錠" in output or "unlock" in output.lower()
+        assert "north_door" in new_state["unlocked_doors"]
+
+    def test_use_fails_without_key_in_inventory(self):
+        """Should fail when player doesn't have the key."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=[],  # No key
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "props": ["coat_rack"],
+                        "exits": ["locked_study"],
+                        "locked_exits": {
+                            "locked_study": {
+                                "door_name": "north_door",
+                                "required_key": "iron_key",
+                                "locked": True,
+                            }
+                        },
+                    }
+                }
+            },
+            unlocked_doors=[],
+        )
+
+        cmd = {"action": "use", "target": "iron_key north_door"}
+        output, new_state = execute_command(cmd, state)
+
+        assert "持っていません" in output or "don't have" in output.lower()
+        assert "north_door" not in new_state["unlocked_doors"]
+
+    def test_use_fails_with_wrong_key(self):
+        """Should fail when wrong key is used."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=["old_locket"],  # Wrong item
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "props": ["coat_rack"],
+                        "exits": ["locked_study"],
+                        "locked_exits": {
+                            "locked_study": {
+                                "door_name": "north_door",
+                                "required_key": "iron_key",
+                                "locked": True,
+                            }
+                        },
+                    }
+                }
+            },
+            unlocked_doors=[],
+        )
+
+        cmd = {"action": "use", "target": "old_locket north_door"}
+        output, new_state = execute_command(cmd, state)
+
+        assert "開けられません" in output or "doesn't work" in output.lower()
+        assert "north_door" not in new_state["unlocked_doors"]
+
+
+class TestLockedDoorPreflight:
+    """Tests for locked door preflight check (P-Next1)."""
+
+    def test_move_to_locked_exit_shows_preflight(self):
+        """Should show preflight message when moving to locked exit."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=[],
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "props": ["coat_rack"],
+                        "exits": ["locked_study"],
+                        "locked_exits": {
+                            "locked_study": {
+                                "door_name": "north_door",
+                                "required_key": "iron_key",
+                                "locked": True,
+                            }
+                        },
+                    },
+                    "locked_study": {"props": [], "exits": ["start_hall"]},
+                }
+            },
+            unlocked_doors=[],
+        )
+
+        cmd = {"action": "move", "target": "locked_study"}
+        output, new_state = execute_command(cmd, state)
+
+        assert "PREFLIGHT" in output or "🔒" in output
+        assert "施錠" in output or "locked" in output.lower()
+        # Should not move
+        assert new_state["current_location"] == "start_hall"
+
+    def test_move_to_unlocked_exit_succeeds(self):
+        """Should allow movement after door is unlocked."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=["iron_key"],
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "props": ["coat_rack"],
+                        "exits": ["locked_study"],
+                        "locked_exits": {
+                            "locked_study": {
+                                "door_name": "north_door",
+                                "required_key": "iron_key",
+                                "locked": True,
+                            }
+                        },
+                    },
+                    "locked_study": {"props": ["bookshelf"], "exits": ["start_hall"]},
+                }
+            },
+            unlocked_doors=["north_door"],  # Already unlocked
+        )
+
+        cmd = {"action": "move", "target": "locked_study"}
+        output, new_state = execute_command(cmd, state)
+
+        assert new_state["current_location"] == "locked_study"
+        assert "PREFLIGHT" not in output
+
+
+class TestGoalDetection:
+    """Tests for goal detection on move (P-Next1)."""
+
+    def test_move_to_goal_shows_clear_message(self):
+        """Should show CLEAR message when reaching goal."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="locked_study",
+            available_objects=[],
+            available_exits=["goal_attic"],
+            character_positions={"やな": "locked_study"},
+            holding=[],
+            scenario_data={
+                "locations": {
+                    "locked_study": {"props": [], "exits": ["goal_attic"]},
+                    "goal_attic": {"props": ["treasure"], "exits": ["locked_study"], "is_goal": True},
+                }
+            },
+            unlocked_doors=[],
+        )
+
+        cmd = {"action": "move", "target": "goal_attic"}
+        output, new_state = execute_command(cmd, state)
+
+        assert new_state["current_location"] == "goal_attic"
+        assert "CLEAR" in output or "クリア" in output or "🎉" in output
