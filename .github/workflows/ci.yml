@@ -34,11 +34,18 @@ jobs:
       - name: Debug imports
         run: |
           echo "=== Installed packages ==="
-          pip list | grep -E "duo|hakoniwa|evaluation"
-          echo "=== Testing imports ==="
-          python -c "from hakoniwa.logic.matcher import suggest_match; print('hakoniwa OK')"
-          python -c "from gui_nicegui.components.timeline import turns_to_timeline_items; print('gui_nicegui OK')"
-          python -c "from experiments.semantic_matcher.eval_types import MissingObjectSample; print('experiments OK')"
+          pip list | grep -E "duo|hakoniwa|evaluation" || true
+          echo "=== Python path ==="
+          python -c "import sys; print('\\n'.join(sys.path))"
+          echo "=== Directory listing ==="
+          ls -la
+          echo "=== Testing hakoniwa import ==="
+          python -c "from hakoniwa.logic.matcher import suggest_match; print('hakoniwa OK')" || echo "hakoniwa FAILED"
+          echo "=== Testing gui_nicegui import ==="
+          python -c "from gui_nicegui.components.timeline import turns_to_timeline_items; print('gui_nicegui OK')" || echo "gui_nicegui FAILED"
+          echo "=== Testing experiments import ==="
+          python -c "from experiments.semantic_matcher.eval_types import MissingObjectSample; print('experiments OK')" || echo "experiments FAILED"
+        continue-on-error: true
 
       - name: Run hakoniwa matcher tests
         run: |
