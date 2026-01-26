@@ -28,6 +28,12 @@ from gui_nicegui.data.results import (
 )
 from gui_nicegui.data.turns import to_view_model
 from gui_nicegui.data.diff import generate_repair_diff, generate_speech_diff
+from gui_nicegui.components.timeline import (
+    create_timeline, create_mini_timeline, turns_to_timeline_items, TimelineItem
+)
+from gui_nicegui.components.diff_viewer import (
+    create_diff_viewer, create_inline_diff, create_change_summary, create_change_badge
+)
 from gui_nicegui.data.guidance import extract_available_from_card
 from gui_nicegui.data.pack import get_demo_scenarios, create_pack_run_id, get_pack_run_dir
 from gui_nicegui.data.latest import save_latest_pointer, load_latest_pointer
@@ -285,6 +291,12 @@ def refresh_results():
                             "color=deep-orange"
                         )
 
+                # Mini timeline preview
+                turns = load_turns_log(run_path)
+                if turns:
+                    timeline_items = turns_to_timeline_items(turns)
+                    create_mini_timeline(timeline_items, max_display=25)
+
                 ui.label(f"Profile: {info.get('profile', 'N/A')}").classes(
                     "text-xs text-gray-500"
                 )
@@ -314,10 +326,24 @@ def show_turns_dialog(run_path: Path, filter_issues: bool = False, auto_focus_fi
         filter_issues: If True, show only issue turns
         auto_focus_first: If True, auto-expand first issue turn details
     """
-    raw_turns = load_turns_log(run_path)
+    all_turns = load_turns_log(run_path)
+    raw_turns = filter_issue_turns(all_turns) if filter_issues else all_turns
 
-    if filter_issues:
-        raw_turns = filter_issue_turns(raw_turns)
+    # State for timeline selection
+    selected_turn_idx = {"value": -1}
+    turn_cards_container = None
+
+    def on_timeline_select(idx: int):
+        """Handle timeline item selection."""
+        selected_turn_idx["value"] = idx
+        if turn_cards_container:
+            turn_cards_container.clear()
+            with turn_cards_container:
+                # Show only selected turn expanded, or all turns
+                for i, raw_turn in enumerate(raw_turns):
+                    vm = to_view_model(raw_turn)
+                    is_selected = i == idx
+                    create_turn_card(vm, raw_turn, auto_expand=is_selected)
 
     with ui.dialog() as dialog, ui.card().classes("w-11/12 max-w-6xl"):
         with ui.row().classes("w-full items-center justify-between"):
@@ -328,7 +354,17 @@ def show_turns_dialog(run_path: Path, filter_issues: bool = False, auto_focus_fi
         if not raw_turns:
             ui.label("No turns found").classes("text-gray-500")
         else:
-            with ui.scroll_area().classes("h-[70vh]"):
+            # Timeline at the top (using all turns for context)
+            timeline_items = turns_to_timeline_items(all_turns)
+            create_timeline(
+                timeline_items,
+                on_select=on_timeline_select,
+                selected_index=selected_turn_idx["value"],
+            )
+
+            # Turn cards below
+            turn_cards_container = ui.scroll_area().classes("h-[60vh]")
+            with turn_cards_container:
                 for i, raw_turn in enumerate(raw_turns):
                     vm = to_view_model(raw_turn)
                     # Auto-expand first issue turn when requested
@@ -420,33 +456,34 @@ def create_turn_details(vm: dict, raw_turn: dict):
                 ui.label("repaired_output:").classes("text-xs font-bold mt-2")
                 ui.code(vm.get("repaired_output", "")[:500]).classes("text-xs")
 
-        # Diff panel
+        # Diff panel (improved with visual diff viewer)
         with ui.tab_panel(diff_tab):
+            has_any_diff = False
+
             # raw_output vs repaired_output diff
             if vm.get("repaired_output"):
-                repair_diff = generate_repair_diff(
-                    vm.get("raw_output", ""),
-                    vm.get("repaired_output")
-                )
-                if repair_diff["has_changes"]:
-                    ui.label("Output Repair:").classes("text-xs font-bold")
-                    if repair_diff["removed"]:
-                        ui.label(f"- {repair_diff['removed'][:200]}").classes(
-                            "text-xs text-red-600 font-mono"
-                        )
-                    if repair_diff["added"]:
-                        ui.label(f"+ {repair_diff['added'][:200]}").classes(
-                            "text-xs text-green-600 font-mono"
-                        )
+                raw_output = vm.get("raw_output", "")
+                repaired_output = vm.get("repaired_output", "")
+                if raw_output != repaired_output:
+                    has_any_diff = True
+                    create_diff_viewer(
+                        raw_output,
+                        repaired_output,
+                        title="🔧 Output Repair",
+                        max_length=400,
+                    )
 
             # raw_speech vs final_speech diff
             raw_speech = vm.get("raw_speech", "")
             final_speech = vm.get("final_speech", "")
             if raw_speech and final_speech and raw_speech != final_speech:
-                speech_diff = generate_speech_diff(raw_speech, final_speech)
-                ui.label("Speech Correction:").classes("text-xs font-bold mt-2")
-                ui.label(f"Before: {raw_speech[:150]}").classes("text-xs text-gray-500")
-                ui.label(f"After: {final_speech[:150]}").classes("text-xs")
+                has_any_diff = True
+                ui.separator().classes("my-2")
+                ui.label("💬 Speech Correction").classes("text-sm font-bold")
+                create_inline_diff(raw_speech, final_speech)
+
+            if not has_any_diff:
+                ui.label("No differences detected").classes("text-gray-500 text-sm")
 
         # Meta panel
         with ui.tab_panel(meta_tab):
