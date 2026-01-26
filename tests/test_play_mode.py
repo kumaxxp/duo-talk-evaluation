@@ -586,6 +586,174 @@ class TestHelpUpdatedForNewCommands:
         assert "use" in help_text
 
 
+class TestShortAliases:
+    """Tests for short command aliases (P-Next1/PR2)."""
+
+    def test_parse_g_as_move(self):
+        """'g' should be alias for move."""
+        from scripts.play_mode import parse_command
+
+        cmd = parse_command("g リビング")
+        assert cmd["action"] == "move"
+        assert cmd["target"] == "リビング"
+
+    def test_parse_t_as_take(self):
+        """'t' should be alias for take."""
+        from scripts.play_mode import parse_command
+
+        cmd = parse_command("t コーヒー豆")
+        assert cmd["action"] == "take"
+        assert cmd["target"] == "コーヒー豆"
+
+    def test_parse_o_as_open(self):
+        """'o' should be alias for open."""
+        from scripts.play_mode import parse_command
+
+        cmd = parse_command("o 引き出し")
+        assert cmd["action"] == "open"
+        assert cmd["target"] == "引き出し"
+
+    def test_parse_x_as_search(self):
+        """'x' should be alias for search (examine)."""
+        from scripts.play_mode import parse_command
+
+        cmd = parse_command("x 本棚")
+        assert cmd["action"] == "search"
+        assert cmd["target"] == "本棚"
+
+    def test_parse_examine_as_search(self):
+        """'examine' should be alias for search."""
+        from scripts.play_mode import parse_command
+
+        cmd = parse_command("examine 壁")
+        assert cmd["action"] == "search"
+        assert cmd["target"] == "壁"
+
+
+class TestSuggestCommand:
+    """Tests for command suggestion on typos (P-Next1/PR2)."""
+
+    def test_suggest_for_common_typo(self):
+        """Should suggest correct command for common typos."""
+        from scripts.play_mode import suggest_command
+
+        result_lok = suggest_command("lok")
+        result_mov = suggest_command("mov")
+        result_tke = suggest_command("tke")
+
+        assert result_lok is not None and "look" in result_lok
+        assert result_mov is not None and "move" in result_mov
+        assert result_tke is not None and "take" in result_tke
+
+    def test_suggest_for_partial_match(self):
+        """Should suggest command for partial input."""
+        from scripts.play_mode import suggest_command
+
+        # Should match commands starting with partial input
+        result = suggest_command("hel")
+        assert result is not None
+        assert "help" in result
+
+    def test_no_suggestion_for_valid_command(self):
+        """Should return None for unrecognized input without close match."""
+        from scripts.play_mode import suggest_command
+
+        result = suggest_command("xyzabc")
+        assert result is None
+
+    def test_unknown_command_shows_suggestion(self):
+        """Unknown command should show suggestion in output."""
+        from scripts.play_mode import execute_command, PlayState, ParsedCommand
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="キッチン",
+            available_objects=[],
+            available_exits=[],
+            character_positions={},
+            holding=[],
+            scenario_data={},
+            unlocked_doors=[],
+        )
+
+        cmd = ParsedCommand(action="unknown", target="lok")
+        output, _ = execute_command(cmd, state)
+
+        assert "不明なコマンド" in output
+        assert "help" in output
+
+
+class TestImprovedHelp:
+    """Tests for improved help formatting (P-Next1/PR2)."""
+
+    def test_help_has_categories(self):
+        """Help should have category headers."""
+        from scripts.play_mode import get_help_text
+
+        help_text = get_help_text()
+
+        assert "探索" in help_text
+        assert "アイテム" in help_text
+        assert "情報" in help_text
+        assert "システム" in help_text
+
+    def test_help_shows_aliases(self):
+        """Help should show command aliases."""
+        from scripts.play_mode import get_help_text
+
+        help_text = get_help_text()
+
+        # Check that short aliases are shown
+        assert "(l)" in help_text  # look alias
+        assert "(g)" in help_text or "go, g" in help_text  # move alias
+        assert "(t)" in help_text or "get, t" in help_text  # take alias
+
+    def test_help_has_examples(self):
+        """Help should include usage examples."""
+        from scripts.play_mode import get_help_text
+
+        help_text = get_help_text()
+
+        assert "使用例" in help_text
+        assert "move リビング" in help_text or "リビング" in help_text
+
+
+class TestCommandAliasesDictionary:
+    """Tests for COMMAND_ALIASES dictionary (P-Next1/PR2)."""
+
+    def test_command_aliases_exists(self):
+        """COMMAND_ALIASES dictionary should exist."""
+        from scripts.play_mode import COMMAND_ALIASES
+
+        assert isinstance(COMMAND_ALIASES, dict)
+        assert "look" in COMMAND_ALIASES
+        assert "move" in COMMAND_ALIASES
+
+    def test_all_commands_have_aliases(self):
+        """All main commands should have aliases defined."""
+        from scripts.play_mode import COMMAND_ALIASES
+
+        expected_commands = [
+            "look", "move", "take", "open", "search", "use",
+            "where", "inventory", "map", "help", "quit", "status"
+        ]
+        for cmd in expected_commands:
+            assert cmd in COMMAND_ALIASES, f"Missing alias for: {cmd}"
+
+    def test_japanese_aliases_included(self):
+        """Japanese aliases should be included."""
+        from scripts.play_mode import COMMAND_ALIASES
+
+        # Check some Japanese aliases exist
+        all_aliases = []
+        for aliases in COMMAND_ALIASES.values():
+            all_aliases.extend(aliases)
+
+        assert "見る" in all_aliases
+        assert "移動" in all_aliases
+        assert "取る" in all_aliases
+
+
 class TestUseCommand:
     """Tests for 'use <key> <door>' command (P-Next1)."""
 

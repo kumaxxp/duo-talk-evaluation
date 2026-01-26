@@ -151,6 +151,23 @@ def format_character_status(positions: dict[str, str]) -> str:
 # =============================================================================
 
 
+# Command aliases for quick reference
+COMMAND_ALIASES: dict[str, list[str]] = {
+    "look": ["look", "l", "見る", "look around"],
+    "move": ["move", "go", "g", "移動", "行く"],
+    "take": ["take", "get", "t", "取る", "拾う"],
+    "open": ["open", "o", "開ける", "開く"],
+    "search": ["search", "inspect", "x", "examine", "調べる", "探す"],
+    "use": ["use", "unlock", "使う", "解錠"],
+    "where": ["where", "w", "どこ", "現在地"],
+    "inventory": ["inventory", "inv", "i", "持ち物", "所持品"],
+    "map": ["map", "m", "地図", "マップ"],
+    "help": ["help", "h", "?", "ヘルプ"],
+    "quit": ["quit", "exit", "q", "終了"],
+    "status": ["status", "st", "状態", "ステータス"],
+}
+
+
 def parse_command(user_input: str) -> ParsedCommand:
     """Parse user input into command.
 
@@ -168,33 +185,62 @@ def parse_command(user_input: str) -> ParsedCommand:
     action = parts[0].lower()
     target = parts[1] if len(parts) > 1 else None
 
-    # Normalize commands
-    if action in ("look", "l", "見る"):
-        return ParsedCommand(action="look", target=target)
-    elif action in ("move", "go", "移動"):
-        return ParsedCommand(action="move", target=target)
-    elif action in ("take", "get", "取る"):
-        return ParsedCommand(action="take", target=target)
-    elif action in ("open", "開ける"):
-        return ParsedCommand(action="open", target=target)
-    elif action in ("search", "inspect", "調べる"):
-        return ParsedCommand(action="search", target=target)
-    elif action in ("where", "w", "どこ"):
-        return ParsedCommand(action="where", target=None)
-    elif action in ("inventory", "inv", "i", "持ち物"):
-        return ParsedCommand(action="inventory", target=None)
-    elif action in ("map", "m", "地図"):
-        return ParsedCommand(action="map", target=None)
-    elif action in ("help", "h", "?"):
-        return ParsedCommand(action="help", target=None)
-    elif action in ("quit", "exit", "q"):
-        return ParsedCommand(action="quit", target=None)
-    elif action in ("status", "st", "状態"):
-        return ParsedCommand(action="status", target=None)
-    elif action in ("use", "unlock", "使う", "解錠"):
-        return ParsedCommand(action="use", target=target)
-    else:
-        return ParsedCommand(action="unknown", target=user_input)
+    # Normalize commands using alias dictionary
+    for cmd, aliases in COMMAND_ALIASES.items():
+        if action in aliases:
+            # where, inventory, map, help, quit, status don't use targets
+            if cmd in ("where", "inventory", "map", "help", "quit", "status"):
+                return ParsedCommand(action=cmd, target=None)
+            return ParsedCommand(action=cmd, target=target)
+
+    return ParsedCommand(action="unknown", target=user_input)
+
+
+def suggest_command(user_input: str) -> str | None:
+    """Suggest a similar command for typos or unknown input.
+
+    Args:
+        user_input: The unknown user input
+
+    Returns:
+        Suggestion message or None if no good match
+    """
+    if not user_input:
+        return None
+
+    action = user_input.split()[0].lower()
+
+    # Common typos and suggestions
+    suggestions: dict[str, str] = {
+        "lok": "look",
+        "loo": "look",
+        "mve": "move",
+        "mov": "move",
+        "tke": "take",
+        "tak": "take",
+        "opn": "open",
+        "serch": "search",
+        "srch": "search",
+        "wher": "where",
+        "invent": "inventory",
+        "invetory": "inventory",
+        "mp": "map",
+        "hlp": "help",
+        "hep": "help",
+        "ext": "quit",
+        "exi": "quit",
+    }
+
+    if action in suggestions:
+        return f"もしかして: {suggestions[action]}"
+
+    # Check if it starts like a known command
+    for cmd, aliases in COMMAND_ALIASES.items():
+        for alias in aliases:
+            if len(action) >= 2 and alias.startswith(action):
+                return f"もしかして: {alias}"
+
+    return None
 
 
 def get_help_text() -> str:
@@ -204,19 +250,36 @@ def get_help_text() -> str:
         Help text string
     """
     return """
-📖 コマンド一覧:
-  look, l           - 現在地の情報を表示
-  move <場所>       - 指定した場所に移動
-  take <物>         - 物を拾う
-  open <容器>       - 容器を開けて中身を見る
-  use <鍵> <ドア>   - 鍵を使って施錠を解除
-  search [対象]     - 隠されたものを探す
-  where, w          - 現在地とキャラクター位置
-  inventory, inv, i - 所持品一覧
-  map, m            - 全体マップを表示
-  status, st        - キャラクター状態を表示
-  help, h           - このヘルプを表示
-  quit, q           - 終了
+📖 コマンド一覧
+
+【探索】
+  look (l)              現在地の情報を表示
+  move <場所> (go, g)   指定した場所に移動
+  search [対象] (x)     隠されたものを探す
+  map (m)               全体マップを表示
+
+【アイテム】
+  take <物> (get, t)    物を拾う
+  open <容器> (o)       容器を開けて中身を見る
+  use <鍵> <ドア>       鍵を使って施錠を解除
+  inventory (inv, i)    所持品一覧
+
+【情報】
+  where (w)             現在地とキャラクター位置
+  status (st)           キャラクター状態を表示
+  help (h, ?)           このヘルプを表示
+
+【システム】
+  quit (q)              終了
+
+【使用例】
+  move リビング         リビングに移動
+  take コーヒー豆       コーヒー豆を拾う
+  open 引き出し         引き出しを開ける
+  use iron_key door     鍵でドアを解錠
+  x 本棚                本棚を調べる
+
+💡 ヒント: 括弧内は省略形です (例: l = look)
 """
 
 
@@ -491,7 +554,12 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
         return "終了します。", state
 
     else:
-        return f"不明なコマンド: {cmd.get('target', '')}。'help' でコマンド一覧を表示", state
+        msg = f"❓ 不明なコマンド: {cmd.get('target', '')}"
+        suggestion = suggest_command(cmd.get("target", ""))
+        if suggestion:
+            msg += f"\n💡 {suggestion}"
+        msg += "\n📖 'help' でコマンド一覧を表示"
+        return msg, state
 
 
 # =============================================================================
@@ -512,7 +580,10 @@ def run_play_mode(scenario_path: Path):
         sys.exit(1)
 
     print(f"\n🎮 Play Mode: {state['scenario_name']}")
-    print("'help' でコマンド一覧、'quit' で終了")
+    print("─" * 40)
+    print("💡 クイックコマンド: l=見る g=移動 t=取る o=開ける x=調べる")
+    print("   h=ヘルプ m=マップ i=所持品 q=終了")
+    print("─" * 40)
     print()
     print(format_world_state(state))
     print()
