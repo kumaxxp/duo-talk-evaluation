@@ -60,6 +60,7 @@ COMPONENTS = {
     "core": ECOSYSTEM_ROOT / "duo-talk-core",
     "director": ECOSYSTEM_ROOT / "duo-talk-director",
     "evaluation": ECOSYSTEM_ROOT / "duo-talk-evaluation",
+    "gm": ECOSYSTEM_ROOT / "duo-talk-gm",
 }
 
 
@@ -239,7 +240,7 @@ def main():
     parser = argparse.ArgumentParser(description="CI Test Runner")
     parser.add_argument(
         "--component",
-        choices=["all", "core", "director", "evaluation"],
+        choices=["all", "core", "director", "evaluation", "gm"],
         default="all",
         help="Component to test",
     )

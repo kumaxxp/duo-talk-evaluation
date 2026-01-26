@@ -18,7 +18,7 @@ scenarios:
   # Taste-3: MISSING_OBJECT scenarios
   - scenario_id: coffee_trap
     path: coffee_trap.json
-    tags: [gate_taste3, retry, missing_object]
+    tags: [demo, gate_taste3, retry, missing_object]
     recommended_profile: dev
     description: "Coffee maker exists but no beans - triggers MISSING_OBJECT"
 
@@ -31,13 +31,20 @@ scenarios:
   # GM-017: WRONG_LOCATION scenarios
   - scenario_id: wrong_location
     path: wrong_location.json
-    tags: [gate_taste3, gate_gm017, wrong_location]
+    tags: [demo, gate_taste3, gate_gm017, wrong_location]
     recommended_profile: dev
     description: "Items in different rooms - triggers WRONG_LOCATION"
 
   # Gate-3: Navigation constraint scenarios
   - scenario_id: locked_door
     path: locked_door.json
-    tags: [gate_taste3, navigation, exits]
+    tags: [demo, gate_taste3, navigation, exits]
     recommended_profile: gate
     description: "Cannot move to study room - triggers navigation deny"
+
+  # Hidden object scenarios (container/accessibility)
+  - scenario_id: hidden_object_simple
+    path: hidden_object_simple.json
+    tags: [gate_taste3, missing_object, container]
+    recommended_profile: dev
+    description: "Key inside drawer - tests container accessibility"

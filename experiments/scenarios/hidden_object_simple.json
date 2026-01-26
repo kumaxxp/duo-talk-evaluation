@@ -1,0 +1,38 @@
+{
+  "name": "hidden_object_simple",
+  "description": "GM-017: オブジェクトが別のコンテナ内にある状況。直接アクセス不可をテスト。",
+  "locations": {
+    "リビング": {
+      "props": ["ソファ", "テレビ", "リモコン", "サイドテーブル", "引き出し"],
+      "exits": ["キッチン", "玄関"],
+      "containers": {
+        "引き出し": ["鍵", "古いメモ"]
+      },
+      "hidden_objects": ["ソファの下の古い手紙"]
+    },
+    "キッチン": {
+      "props": ["冷蔵庫", "コーヒーメーカー", "マグカップ"],
+      "exits": ["リビング"],
+      "containers": {
+        "冷蔵庫": ["牛乳", "バター"]
+      }
+    },
+    "玄関": {
+      "props": ["靴箱", "傘立て"],
+      "exits": ["リビング"],
+      "hidden_objects": ["マットの下の予備鍵"]
+    }
+  },
+  "characters": {
+    "やな": {
+      "location": "リビング",
+      "holding": []
+    },
+    "あゆ": {
+      "location": "リビング",
+      "holding": []
+    }
+  },
+  "time_of_day": "morning",
+  "notes": "containers/hidden_objects拡張テスト用。引き出しの中に鍵とメモ、ソファの下に古い手紙が隠されている。"
+}
