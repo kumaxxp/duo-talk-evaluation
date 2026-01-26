@@ -48,3 +48,10 @@ scenarios:
     tags: [gate_taste3, missing_object, container]
     recommended_profile: dev
     description: "Key inside drawer - tests container accessibility"
+
+  # P-Next2: Flagship multi-room exploration
+  - scenario_id: mystery_mansion
+    path: scn_mystery_mansion_v1.json
+    tags: [demo, p-next2, flagship, locked_door, container, goal]
+    recommended_profile: gate
+    description: "P-Next2 Flagship: 3部屋の洋館探索。鍵を見つけて書斎を解錠し、屋根裏を目指す。"
