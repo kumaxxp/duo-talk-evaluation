@@ -1,0 +1,60 @@
+{
+  "name": "mystery_mansion",
+  "description": "P-Next2 Flagship: 3部屋の洋館探索。鍵を見つけて書斎を解錠し、屋根裏を目指す。",
+  "lint_allow": {
+    "unidirectional_exits": []
+  },
+  "locations": {
+    "start_hall": {
+      "props": ["coat_rack", "umbrella_stand", "mirror"],
+      "exits": ["locked_study"],
+      "containers": {
+        "coat_rack": ["iron_key"],
+        "umbrella_stand": ["old_locket"]
+      },
+      "red_herrings": {
+        "old_locket": {
+          "description": "古びたロケットペンダント。中には色褪せた写真が入っている。",
+          "hint": "思い出の品のようだが、何かに使えるものではなさそう..."
+        }
+      },
+      "locked_exits": {
+        "locked_study": {
+          "door_name": "north_door",
+          "required_key": "iron_key",
+          "locked": true,
+          "hint_on_locked": "ドアには鍵穴があります。鍵が必要なようです。",
+          "suggestions": ["inspect north_door", "look around", "inspect coat_rack"]
+        }
+      }
+    },
+    "locked_study": {
+      "props": ["bookshelf", "desk", "reading_lamp", "ladder_hatch"],
+      "exits": ["start_hall", "goal_attic"]
+    },
+    "goal_attic": {
+      "props": ["old_trunk", "dusty_portraits", "treasure_chest"],
+      "exits": ["locked_study"],
+      "is_goal": true
+    }
+  },
+  "characters": {
+    "やな": {
+      "location": "start_hall",
+      "holding": []
+    },
+    "あゆ": {
+      "location": "start_hall",
+      "holding": []
+    }
+  },
+  "time_of_day": "evening",
+  "notes": "Flagship scenario for P-Next2. Clear condition: reach goal_attic. Requires iron_key from coat_rack to unlock north_door. Red herring: old_locket in umbrella_stand (decorative item, no gameplay use).",
+  "clear_condition": {
+    "type": "reach_location",
+    "target": "goal_attic"
+  },
+  "preflight_messages": {
+    "locked_door_no_key": "[PREFLIGHT] 🔒 {door_name} は施錠されています。{hint}\n💡 次の行動候補: {suggestions}"
+  }
+}
