@@ -5,6 +5,7 @@ Usage: python scripts/play_mode.py <scenario_id>
        make play s=<scenario_id>
 """
 
+import hashlib
 import json
 import sys
 from datetime import datetime
@@ -197,7 +198,19 @@ def save_play_state(state: PlayState, path: Path | None = None) -> Path:
         "scenario_data": state["scenario_data"],  # Include full scenario state
     }
 
-    path.write_text(json.dumps(save_data, ensure_ascii=False, indent=2), encoding="utf-8")
+    # Serialize to canonical JSON (sorted keys for reproducibility)
+    content = json.dumps(save_data, ensure_ascii=False, indent=2, sort_keys=True)
+    if not content.endswith("\n"):
+        content += "\n"
+
+    # Write state file
+    path.write_text(content, encoding="utf-8")
+
+    # Write hash file for hakoniwa CLI compatibility
+    content_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
+    hash_path = Path(str(path) + ".sha256")
+    hash_path.write_text(content_hash, encoding="utf-8")
+
     return path
 
 
