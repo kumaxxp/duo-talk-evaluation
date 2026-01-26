@@ -32,7 +32,9 @@ jobs:
           ruff check src/ tests/ experiments/ hakoniwa/ --exit-zero
 
       - name: Run tests
-        run: python -m pytest tests/ -v --tb=short
+        run: |
+          export PYTHONPATH="${PYTHONPATH}:$(pwd)"
+          python -m pytest tests/ -v --tb=short
 
       - name: Upload test results (placeholder)
         uses: actions/upload-artifact@v4
