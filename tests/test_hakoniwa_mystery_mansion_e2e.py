@@ -69,6 +69,10 @@ class TestMysteryMansionSaveLoad:
         assert save_data["scenario_id"] == "mystery_mansion"
         assert len(save_data["history"]) == 2
 
+        # Verify schema_version is included
+        assert "manifest" in save_data
+        assert save_data["manifest"]["schema_version"] == "1.0.0"
+
     def test_load_restores_state_correctly(self, save_path, sample_world_state):
         """load_world_state should restore state correctly."""
         # Save state
@@ -84,6 +88,9 @@ class TestMysteryMansionSaveLoad:
         assert loaded_state.history[1].speaker == "あゆ"
         assert loaded_state.runtime.turn_index == 2
         assert loaded_state.runtime.last_actor == "あゆ"
+
+        # Verify schema_version is restored
+        assert loaded_state.manifest.schema_version == "1.0.0"
 
     def test_e2e_two_process_workflow(self, tmp_path, sample_world_state):
         """Full E2E test: Process 1 saves, Process 2 loads via CLI."""
@@ -122,6 +129,7 @@ class TestMysteryMansionSaveLoad:
         assert result.returncode == 0, f"Load failed: {result.stderr}"
         assert "mystery_mansion" in result.stdout
         assert "turn_count" in result.stdout
+        assert "schema_version" in result.stdout
 
     def test_save_path_follows_naming_convention(self, tmp_path, sample_world_state):
         """Save path should follow scn_{scenario}_v{version}_state.json convention."""
