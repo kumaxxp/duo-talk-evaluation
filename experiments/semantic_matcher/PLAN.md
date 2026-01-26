@@ -211,18 +211,96 @@ experiments/semantic_matcher/
 - [x] eval.py（CLI）
 - [x] tests/test_semantic_matcher_eval.py（19件パス）
 
-### Phase 3: 実データ評価（次回）
+### Phase 3: 実データ評価 ✅ 完了
 
-- [ ] 既存 results/ での MISSING_OBJECT 集計
-- [ ] Semantic Matcher 適用評価
-- [ ] False Positive 率計測
-- [ ] レポート作成
+- [x] 既存 results/ での MISSING_OBJECT 集計
+- [x] Semantic Matcher 適用評価
+- [x] False Positive 率計測
+- [x] レポート作成
+
+**評価結果サマリー** (2026-01-26):
+- **FP率**: 0.0% (全閾値で誤提案なし) ✅
+- **Recall**: 14.3% (7件中1件を救済)
+- **Precision**: 100.0%
+- 詳細: `results/semantic_matcher_eval/REPORT.md`
 
 ### Phase 4: 統合検討（将来）
 
 - [ ] main への統合判断
 - [ ] GM 2x2 Runner との連携設計
 - [ ] P0 Freeze 解除の要否検討
+
+---
+
+## FP分析と追加ガード案 (Phase 3実測結果)
+
+### 実測結果
+
+| 項目 | 値 |
+|------|-----|
+| 評価サンプル数 | 9件 (GT判定可能) |
+| FP発生数 | **0件** |
+| FP率 | **0.0%** |
+
+**結論**: 現状の fuzzy matching では FP は発生していない。
+
+### 未マッチパターン分析
+
+FP=0だが、Recall向上のため未マッチパターンを分析:
+
+| パターン | 例 | 失敗理由 | 発生頻度 |
+|----------|-----|----------|----------|
+| `Xの〜` | `冷蔵庫の牛乳` | 修飾部分が類似度を下げる | 高 |
+| 長文記述 | `ソファーに深く腰掛け、少し間` | 動作記述が混入 | 中 |
+| 複合修飾 | `本棚の植物図鑑らしき本` | 多段修飾で類似度極低 | 中 |
+
+### FP抑制のための追加ガード案
+
+**重要**: Auto-adopt は禁止のまま、suggestion 限定で以下を検討。
+
+#### 案 1: 「Xの〜」パターン抽出
+
+```python
+import re
+
+def extract_container_noun(query: str) -> str | None:
+    """「Xの〜」パターンからXを抽出。"""
+    match = re.match(r'^(.+?)の', query)
+    if match:
+        return match.group(1)
+    return None
+```
+
+**リスク**: 「テレビのリモコン」→「テレビ」は正しいが、
+「姉のカバン」→「姉」は誤り（姉はオブジェクトではない）。
+→ **world_objects に存在する場合のみ採用** で回避。
+
+#### 案 2: 長さフィルタ
+
+```python
+MAX_QUERY_LENGTH = 20  # これ以上は suggestion しない
+
+def should_skip_long_query(query: str) -> bool:
+    return len(query) > MAX_QUERY_LENGTH
+```
+
+**理由**: 長文は「アクション記述」である可能性が高く、
+オブジェクト名マッチには適さない。
+
+#### 案 3: 同スコア近接時の棄却
+
+```python
+MIN_SCORE_GAP = 0.1
+
+def has_ambiguous_candidates(candidates: list) -> bool:
+    if len(candidates) >= 2:
+        gap = candidates[0].score - candidates[1].score
+        return gap < MIN_SCORE_GAP
+    return False
+```
+
+**理由**: 同程度のスコアで複数候補がある場合、
+どちらが正解か判断できないため suggestion を控える。
 
 ---
 
