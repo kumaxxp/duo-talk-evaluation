@@ -2,7 +2,7 @@
 
 **Branch**: `experiments/semantic_matcher`
 **Created**: 2026-01-26
-**Status**: 実験フェーズ（mainへの統合なし）
+**Status**: 評価フェーズ（mainへの統合なし）
 
 ---
 
@@ -31,9 +31,79 @@ Semantic Matcher は **既存 World 内のオブジェクト集合に対して�
 
 ---
 
+## 評価ハーネス
+
+### 入力データソース
+
+評価ハーネスは以下のログファイルからMISSING_OBJECTサンプルを抽出:
+
+| ファイル | 抽出フィールド | 説明 |
+|----------|----------------|------|
+| `turns_log.json` | `invented_objects` | LLMが発明したオブジェクト名 |
+| `turns_log.json` | `blocked_target_before/after` | GMにブロックされたターゲット |
+| `turns_log.json` | `denied_reason == "MISSING_OBJECT"` | ハード拒否されたケース |
+| `world_canonical.json` | `props` | 有効なオブジェクト一覧 |
+
+### Ground Truth (GT) の決定方法
+
+GTは以下のヒューリスティクスで自動推定:
+
+1. **部分文字列マッチ**: クエリがワールドオブジェクトの部分文字列
+   - 例: "カップ" → "マグカップ"
+2. **resolved_target フィールド**: ターンログに解決済みターゲットがある場合
+3. **marker_targets_after**: 事後マーカーターゲットに有効オブジェクトがある場合
+
+**重要**: GTが推定できないサンプルは `excluded_samples` としてカウントし、
+メトリクス計算からは除外する。
+
+### 評価メトリクス
+
+```
+Recall (救出率)    = TP / Total Samples
+Precision (精度)   = TP / (TP + FP)
+FP Rate (誤提示率) = FP / Total Samples
+F1 Score           = 2 * Precision * Recall / (Precision + Recall)
+```
+
+### Threshold Grid
+
+| 閾値 | 用途 |
+|------|------|
+| 0.70 | 緩い閾値（Recall重視） |
+| 0.75 | 中間 |
+| 0.80 | バランス |
+| 0.85 | 中間 |
+| 0.90 | 厳しい閾値（Precision重視） |
+
+**Best threshold は F1 Score で決定。**
+
+### CLI 使用方法
+
+```bash
+# 最新のrun結果を評価
+python -m experiments.semantic_matcher.eval --run results/gm_2x2_dev_*/
+
+# カスタム閾値で評価
+python -m experiments.semantic_matcher.eval --thresholds 0.7,0.8,0.9
+
+# 出力先を指定
+python -m experiments.semantic_matcher.eval --output results/my_eval/
+```
+
+### 出力ファイル
+
+| ファイル | 内容 |
+|----------|------|
+| `summary.json` | 全メトリクスのJSON形式 |
+| `summary.md` | マークダウンレポート |
+| `samples.json` | 評価サンプル一覧 |
+| `audit.jsonl` | 全マッチング操作のログ |
+
+---
+
 ## 方式案
 
-### 案 A: Fuzzy String Matching（rapidfuzz）
+### 案 A: Fuzzy String Matching（rapidfuzz）✅ 採用
 
 **概要**: 文字列の編集距離・類似度スコアに基づくマッチング。
 
@@ -47,8 +117,6 @@ Semantic Matcher は **既存 World 内のオブジェクト集合に対して�
 - 意味的な類似性を捉えられない（"椅子" と "座席" は低スコア）
 - 閾値チューニングが必要
 
-**実装優先度**: **高**（まずこちらで検証）
-
 ```python
 from rapidfuzz import fuzz, process
 
@@ -61,74 +129,33 @@ def fuzzy_match(query: str, candidates: list[str], threshold: float = 0.7) -> li
     ]
 ```
 
-### 案 B: Embedding + Vector Search
+### 案 B: Embedding + Vector Search（将来検討）
 
 **概要**: テキストをベクトル化し、コサイン類似度で検索。
 
-**メリット**:
-- 意味的な類似性を捉えられる
-- "コーヒー" と "コーヒー豆" のような関連性を検出可能
-
-**デメリット**:
-- 外部API依存（OpenAI Embedding / SentenceTransformers）
-- レイテンシが増加
-- 実装が複雑
-- モデルサイズ・コストの考慮が必要
-
 **実装優先度**: **低**（案Aで不足の場合に検討）
-
-```python
-from sentence_transformers import SentenceTransformer
-
-model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
-
-def embedding_match(query: str, candidates: list[str], threshold: float = 0.8) -> list[MatchCandidate]:
-    query_vec = model.encode(query)
-    candidate_vecs = model.encode(candidates)
-    similarities = cosine_similarity([query_vec], candidate_vecs)[0]
-    ...
-```
 
 ---
 
 ## ガードレール
 
-### 1. マッチ対象の制限
+### 1. Auto-Adopt 禁止（評価中）
 
 ```python
-def match(query: str, world_objects: set[str]) -> list[MatchCandidate]:
-    """
-    マッチは world_objects 内のオブジェクトに対してのみ行う。
-    world_objects に存在しないオブジェクトは絶対に返さない。
-    """
-    ...
+matcher = FuzzyMatcher(
+    suggest_threshold=0.7,
+    allow_auto_adopt=False,  # CRITICAL: 評価中は常にFalse
+)
 ```
 
-### 2. Confidence 閾値
-
-| 閾値 | 動作 |
-|------|------|
-| >= 0.9 | 自動採用（高信頼） |
-| 0.7 - 0.9 | 候補提示（人間確認推奨） |
-| < 0.7 | 不一致（マッチなし） |
-
-**重要**: 初期実装では自動採用を禁止し、全て「候補提示」に留める。
-
-### 3. 一般名詞の除外
-
-「床」「壁」「空気」などの一般的すぎる名詞は、マッチ候補として
-**提示はするが、採用は禁止** する。
+### 2. 一般名詞の除外
 
 ```python
 GENERIC_NOUNS = {"床", "壁", "天井", "空気", "部屋", "場所"}
-
-def should_auto_adopt(candidate: MatchCandidate) -> bool:
-    if candidate.name in GENERIC_NOUNS:
-        return False  # 一般名詞は自動採用しない
-    ...
+# これらは自動採用禁止
 ```
 
-### 4. 監査ログ
+### 3. 監査ログ必須
 
 全てのマッチング操作をJSONL形式で記録:
 
@@ -138,45 +165,12 @@ def should_auto_adopt(candidate: MatchCandidate) -> bool:
   "input_query": "コーヒー",
   "world_objects": ["コーヒー豆", "コーヒーメーカー", "マグカップ"],
   "candidates": [
-    {"name": "コーヒー豆", "score": 0.85, "method": "fuzzy"},
-    {"name": "コーヒーメーカー", "score": 0.72, "method": "fuzzy"}
+    {"name": "コーヒー豆", "score": 0.85, "method": "fuzzy"}
   ],
   "adopted": null,
-  "rejection_reason": "below_auto_threshold"
+  "status": "suggested"
 }
 ```
-
----
-
-## 評価計画
-
-### 1. 既存ログでの MISSING_OBJECT 再計測
-
-```bash
-# 既存の評価結果から MISSING_OBJECT を抽出
-grep -r "MISSING_OBJECT" results/ | wc -l
-
-# Semantic Matcher 適用後の再評価
-python experiments/semantic_matcher/evaluate.py --results-dir results/
-```
-
-### 2. False Positive 率の監視（最重要）
-
-誤マッチ（本来別のオブジェクトなのにマッチしてしまう）を重点監視:
-
-| メトリクス | 目標 |
-|-----------|------|
-| True Positive Rate | >= 90% |
-| False Positive Rate | <= 2% |
-| Precision | >= 95% |
-
-### 3. 可視化（2分確認）
-
-NiceGUI または CLI ログで以下を確認可能にする:
-
-- マッチング候補一覧
-- スコア分布
-- 採用/却下の理由
 
 ---
 
@@ -186,39 +180,45 @@ NiceGUI または CLI ログで以下を確認可能にする:
 experiments/semantic_matcher/
 ├── PLAN.md              # この計画書
 ├── __init__.py
-├── types.py             # DTO定義（MatchCandidate, MatchResult, AuditLog）
+├── types.py             # DTO定義（MatchCandidate, MatchResult, AuditLogEntry）
 ├── matcher.py           # Matcher インターフェース
 ├── fuzzy.py             # Fuzzy matching 実装
 ├── audit_log.py         # 監査ログ出力
-├── evaluate.py          # 評価スクリプト（将来）
-└── tests/
-    ├── __init__.py
-    ├── test_fuzzy.py    # Fuzzy matcher テスト
-    ├── test_matcher.py  # Matcher インターフェーステスト
-    └── test_guardrails.py # ガードレールテスト
+├── eval_types.py        # 評価ハーネス用DTO
+├── extractor.py         # ログからサンプル抽出
+├── evaluator.py         # 評価エンジン
+└── eval.py              # CLI エントリポイント
 ```
 
 ---
 
 ## 実装フェーズ
 
-### Phase 1: 骨組み（今回実施）
+### Phase 1: 骨組み ✅ 完了
 
 - [x] ディレクトリ構成
-- [ ] types.py（DTO）
-- [ ] matcher.py（インターフェース）
-- [ ] fuzzy.py（rapidfuzz 使用、なければ標準lib暫定）
-- [ ] audit_log.py（JSONL出力）
-- [ ] 最小テスト
+- [x] types.py（DTO）
+- [x] matcher.py（インターフェース）
+- [x] fuzzy.py（rapidfuzz/difflib fallback）
+- [x] audit_log.py（JSONL出力）
+- [x] 最小テスト（35件パス）
 
-### Phase 2: 評価（次回）
+### Phase 2: 評価ハーネス ✅ 完了
 
-- [ ] 既存ログでの MISSING_OBJECT 集計
-- [ ] Semantic Matcher 適用
+- [x] eval_types.py（MissingObjectSample, EvalResult, EvalMetrics）
+- [x] extractor.py（turns_log.json からサンプル抽出）
+- [x] evaluator.py（Threshold Grid 評価）
+- [x] eval.py（CLI）
+- [x] tests/test_semantic_matcher_eval.py（19件パス）
+
+### Phase 3: 実データ評価（次回）
+
+- [ ] 既存 results/ での MISSING_OBJECT 集計
+- [ ] Semantic Matcher 適用評価
 - [ ] False Positive 率計測
 - [ ] レポート作成
 
-### Phase 3: 統合検討（将来）
+### Phase 4: 統合検討（将来）
 
 - [ ] main への統合判断
 - [ ] GM 2x2 Runner との連携設計
@@ -234,6 +234,7 @@ experiments/semantic_matcher/
 | パフォーマンス劣化 | キャッシュ、バッチ処理 |
 | 日本語特有の問題 | 形態素解析の追加検討 |
 | World Expansion の誘発 | No World Expansion ガードレール |
+| GT不在サンプル過多 | exclusion_rate モニタリング |
 
 ---
 

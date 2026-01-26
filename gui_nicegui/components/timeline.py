@@ -62,13 +62,13 @@ def create_timeline(
 
         # Legend
         with ui.row().classes("gap-2 mb-2 text-xs"):
-            ui.html('<span class="inline-block w-3 h-3 bg-green-500 rounded-full"></span>')
+            ui.html('<span class="inline-block w-3 h-3 bg-green-500 rounded-full"></span>', sanitize=False)
             ui.label("OK")
-            ui.html('<span class="inline-block w-3 h-3 bg-yellow-500 rounded-full"></span>')
+            ui.html('<span class="inline-block w-3 h-3 bg-yellow-500 rounded-full"></span>', sanitize=False)
             ui.label("Retry")
-            ui.html('<span class="inline-block w-3 h-3 bg-orange-500 rounded-full"></span>')
+            ui.html('<span class="inline-block w-3 h-3 bg-orange-500 rounded-full"></span>', sanitize=False)
             ui.label("Format")
-            ui.html('<span class="inline-block w-3 h-3 bg-red-500 rounded-full"></span>')
+            ui.html('<span class="inline-block w-3 h-3 bg-red-500 rounded-full"></span>', sanitize=False)
             ui.label("GiveUp")
 
         # Timeline container with horizontal scroll

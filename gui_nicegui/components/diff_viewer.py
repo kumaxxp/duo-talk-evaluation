@@ -103,7 +103,7 @@ def create_inline_diff(
                 html_parts.append(f'<span class="text-gray-500">...+{len(added) - 10}</span>')
 
         if html_parts:
-            ui.html(" ".join(html_parts)).classes("text-sm")
+            ui.html(" ".join(html_parts), sanitize=False).classes("text-sm")
         else:
             ui.label("Structural changes only").classes("text-xs text-gray-500")
 
