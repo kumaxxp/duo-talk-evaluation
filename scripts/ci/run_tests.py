@@ -191,35 +191,39 @@ def _parse_coverage(output: str) -> Optional[float]:
 def run_all_tests(
     components: list[str],
     coverage: bool = False,
+    json_output: bool = False,
 ) -> CIReport:
     """Run tests for all specified components
 
     Args:
         components: List of component names to test
         coverage: Whether to run with coverage
+        json_output: If True, status messages go to stderr (for clean JSON stdout)
 
     Returns:
         CIReport with all results
     """
     results = []
+    # Use stderr for status when JSON output is requested
+    out = sys.stderr if json_output else sys.stdout
 
     for comp in components:
         if comp not in COMPONENTS:
             print(f"Unknown component: {comp}", file=sys.stderr)
             continue
 
-        print(f"\n{'='*60}")
-        print(f"Running tests for: {comp}")
-        print(f"{'='*60}")
+        print(f"\n{'='*60}", file=out)
+        print(f"Running tests for: {comp}", file=out)
+        print(f"{'='*60}", file=out)
 
         result = run_pytest(COMPONENTS[comp], coverage=coverage)
         results.append(result)
 
         status = "✅ PASSED" if result.success else "❌ FAILED"
-        print(f"\n{comp}: {status}")
-        print(f"  Passed: {result.passed}, Failed: {result.failed}, Errors: {result.errors}")
+        print(f"\n{comp}: {status}", file=out)
+        print(f"  Passed: {result.passed}, Failed: {result.failed}, Errors: {result.errors}", file=out)
         if result.coverage is not None:
-            print(f"  Coverage: {result.coverage:.1f}%")
+            print(f"  Coverage: {result.coverage:.1f}%", file=out)
 
     total_passed = sum(r.passed for r in results)
     total_failed = sum(r.failed for r in results)
@@ -263,7 +267,7 @@ def main():
         components = [args.component]
 
     # Run tests
-    report = run_all_tests(components, coverage=args.coverage)
+    report = run_all_tests(components, coverage=args.coverage, json_output=args.json)
 
     # Output results
     if args.json:
