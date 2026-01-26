@@ -26,6 +26,7 @@ class PlayState(TypedDict):
     character_positions: dict[str, str]
     holding: list[str]
     scenario_data: dict
+    unlocked_doors: list[str]  # Doors that have been unlocked
 
 
 class ParsedCommand(TypedDict):
@@ -82,6 +83,7 @@ def load_scenario_for_play(scenario_path: Path) -> PlayState:
         character_positions=character_positions,
         holding=[],
         scenario_data=scenario,
+        unlocked_doors=[],
     )
 
 
@@ -189,6 +191,8 @@ def parse_command(user_input: str) -> ParsedCommand:
         return ParsedCommand(action="quit", target=None)
     elif action in ("status", "st", "状態"):
         return ParsedCommand(action="status", target=None)
+    elif action in ("use", "unlock", "使う", "解錠"):
+        return ParsedCommand(action="use", target=target)
     else:
         return ParsedCommand(action="unknown", target=user_input)
 
@@ -205,6 +209,7 @@ def get_help_text() -> str:
   move <場所>       - 指定した場所に移動
   take <物>         - 物を拾う
   open <容器>       - 容器を開けて中身を見る
+  use <鍵> <ドア>   - 鍵を使って施錠を解除
   search [対象]     - 隠されたものを探す
   where, w          - 現在地とキャラクター位置
   inventory, inv, i - 所持品一覧
@@ -248,8 +253,28 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
             available = ", ".join(state["available_exits"])
             return f"'{target}' には移動できません。移動可能: {available}", state
 
-        # Update location
+        # Check for locked exits (Preflight check)
         locations = state["scenario_data"].get("locations", {})
+        current_loc_data = locations.get(state["current_location"], {})
+        locked_exits = current_loc_data.get("locked_exits", {})
+
+        if target in locked_exits:
+            lock_info = locked_exits[target]
+            door_name = lock_info.get("door_name", target)
+
+            # Check if door is still locked
+            if lock_info.get("locked", False) and door_name not in state["unlocked_doors"]:
+                # Preflight: Locked door - give hints, not hard deny
+                hint = lock_info.get("hint_on_locked", "施錠されています。")
+                suggestions = lock_info.get("suggestions", ["look around"])
+                suggestions_str = " / ".join(suggestions)
+
+                return (
+                    f"[PREFLIGHT] 🔒 {door_name} は施錠されています。{hint}\n"
+                    f"💡 次の行動候補: {suggestions_str}"
+                ), state
+
+        # Update location
         new_loc_data = locations.get(target, {})
 
         new_state = PlayState(
@@ -260,9 +285,17 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
             character_positions=state["character_positions"],
             holding=state["holding"],
             scenario_data=state["scenario_data"],
+            unlocked_doors=state["unlocked_doors"],
         )
 
-        return f"📍 {target} に移動しました\n\n{format_world_state(new_state)}", new_state
+        # Check for goal
+        is_goal = new_loc_data.get("is_goal", False)
+        result = f"📍 {target} に移動しました\n\n{format_world_state(new_state)}"
+
+        if is_goal:
+            result += "\n\n🎉 [CLEAR] ゴールに到達しました！クリアおめでとうございます！"
+
+        return result, new_state
 
     elif cmd["action"] == "take":
         target = cmd["target"]
@@ -285,6 +318,7 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
             character_positions=state["character_positions"],
             holding=new_holding,
             scenario_data=state["scenario_data"],
+            unlocked_doors=state["unlocked_doors"],
         )
 
         return f"🎒 {target} を拾いました", new_state
@@ -322,6 +356,7 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
             character_positions=state["character_positions"],
             holding=state["holding"],
             scenario_data=state["scenario_data"],
+            unlocked_doors=state["unlocked_doors"],
         )
 
         contents_str = ", ".join(contents)
@@ -359,6 +394,7 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
             character_positions=state["character_positions"],
             holding=state["holding"],
             scenario_data=new_scenario_data,
+            unlocked_doors=state["unlocked_doors"],
         )
 
         found_str = ", ".join(hidden_objects)
@@ -395,6 +431,61 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
             exits_str = ", ".join(exits) if exits else "(行き止まり)"
             lines.append(f"{marker} {loc_name} → {exits_str}")
         return "\n".join(lines), state
+
+    elif cmd["action"] == "use":
+        target = cmd["target"]
+        if not target:
+            return "使用するアイテムとドアを指定してください (例: use iron_key north_door)", state
+
+        # Parse "key door" format
+        parts = target.split()
+        if len(parts) < 2:
+            return "使用するアイテムとドアを指定してください (例: use iron_key north_door)", state
+
+        key_item = parts[0]
+        door_name = parts[1]
+
+        # Check if player has the key
+        if key_item not in state["holding"]:
+            return f"🎒 '{key_item}' を持っていません。(所持品: {', '.join(state['holding']) or 'なし'})", state
+
+        # Find locked exit that matches the door
+        locations = state["scenario_data"].get("locations", {})
+        current_loc_data = locations.get(state["current_location"], {})
+        locked_exits = current_loc_data.get("locked_exits", {})
+
+        # Find the exit with matching door_name
+        target_exit = None
+        lock_info = None
+        for exit_name, info in locked_exits.items():
+            if info.get("door_name") == door_name:
+                target_exit = exit_name
+                lock_info = info
+                break
+
+        if not lock_info:
+            return f"🚪 '{door_name}' という施錠されたドアは見当たりません", state
+
+        # Check if key matches
+        required_key = lock_info.get("required_key")
+        if key_item != required_key:
+            return f"🔑 '{key_item}' では '{door_name}' を開けられません", state
+
+        # Unlock the door
+        new_unlocked = [*state["unlocked_doors"], door_name]
+
+        new_state = PlayState(
+            scenario_name=state["scenario_name"],
+            current_location=state["current_location"],
+            available_objects=state["available_objects"],
+            available_exits=state["available_exits"],
+            character_positions=state["character_positions"],
+            holding=state["holding"],
+            scenario_data=state["scenario_data"],
+            unlocked_doors=new_unlocked,
+        )
+
+        return f"🔓 {key_item} で {door_name} を解錠しました！{target_exit} への道が開けました", new_state
 
     elif cmd["action"] == "quit":
         return "終了します。", state

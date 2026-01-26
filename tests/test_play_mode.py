@@ -191,6 +191,7 @@ class TestOpenCommand:
                     }
                 }
             },
+            unlocked_doors=[],
         )
 
         cmd = {"action": "open", "target": "引き出し"}
@@ -294,6 +295,7 @@ class TestSearchCommand:
                     }
                 }
             },
+            unlocked_doors=[],
         )
 
         cmd = {"action": "search", "target": "ソファ"}
@@ -349,6 +351,7 @@ class TestSearchCommand:
                     }
                 }
             },
+            unlocked_doors=[],
         )
 
         cmd = {"action": "search", "target": None}
