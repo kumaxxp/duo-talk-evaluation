@@ -7,8 +7,12 @@ Usage: python scripts/play_mode.py <scenario_id>
 
 import json
 import sys
+from datetime import datetime
 from pathlib import Path
 from typing import TypedDict
+
+# Default save path for state files
+DEFAULT_STATE_PATH = Path("artifacts/scn_mystery_mansion_v1_state.json")
 
 
 # =============================================================================
@@ -95,6 +99,8 @@ def load_scenario_for_play(scenario_path: Path) -> PlayState:
 def format_world_state(state: PlayState) -> str:
     """Format world state for CLI display.
 
+    Shows exit-door mapping for locked doors (BUG-004 fix).
+
     Args:
         state: Current play state
 
@@ -120,8 +126,21 @@ def format_world_state(state: PlayState) -> str:
     lines.append(f"")
     lines.append(f"🚪 出口:")
 
+    # Get locked exits info for door mapping display (BUG-004)
+    locations = state["scenario_data"].get("locations", {})
+    current_loc_data = locations.get(state["current_location"], {})
+    locked_exits = current_loc_data.get("locked_exits", {})
+
     for exit_loc in state["available_exits"]:
-        lines.append(f"  - {exit_loc}")
+        # Check if this exit has a locked door
+        if exit_loc in locked_exits:
+            lock_info = locked_exits[exit_loc]
+            door_name = lock_info.get("door_name", exit_loc)
+            is_unlocked = door_name in state.get("unlocked_doors", [])
+            lock_icon = "🔓" if is_unlocked else "🔒"
+            lines.append(f"  - {exit_loc} (via {door_name} {lock_icon})")
+        else:
+            lines.append(f"  - {exit_loc}")
 
     if not state["available_exits"]:
         lines.append("  (なし)")
@@ -147,6 +166,80 @@ def format_character_status(positions: dict[str, str]) -> str:
 
 
 # =============================================================================
+# Save/Load Functions
+# =============================================================================
+
+
+def save_play_state(state: PlayState, path: Path | None = None) -> Path:
+    """Save play state to JSON file.
+
+    Args:
+        state: Current play state
+        path: Optional path to save to (default: artifacts/scn_mystery_mansion_v1_state.json)
+
+    Returns:
+        Path where state was saved
+    """
+    if path is None:
+        path = DEFAULT_STATE_PATH
+
+    # Ensure parent directory exists
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Create saveable data (exclude non-serializable scenario_data reference)
+    save_data = {
+        "schema_version": "1.0.0",
+        "saved_at": datetime.now().isoformat(),
+        "scenario_name": state["scenario_name"],
+        "current_location": state["current_location"],
+        "holding": state["holding"],
+        "unlocked_doors": state["unlocked_doors"],
+        "scenario_data": state["scenario_data"],  # Include full scenario state
+    }
+
+    path.write_text(json.dumps(save_data, ensure_ascii=False, indent=2), encoding="utf-8")
+    return path
+
+
+def load_play_state(path: Path) -> PlayState:
+    """Load play state from JSON file.
+
+    Args:
+        path: Path to load from
+
+    Returns:
+        PlayState restored from file
+
+    Raises:
+        FileNotFoundError: If file doesn't exist
+    """
+    if not path.exists():
+        raise FileNotFoundError(f"State file not found: {path}")
+
+    save_data = json.loads(path.read_text(encoding="utf-8"))
+
+    # Reconstruct PlayState
+    scenario_data = save_data["scenario_data"]
+    locations = scenario_data.get("locations", {})
+    current_location = save_data["current_location"]
+    current_loc_data = locations.get(current_location, {})
+
+    return PlayState(
+        scenario_name=save_data["scenario_name"],
+        current_location=current_location,
+        available_objects=current_loc_data.get("props", []),
+        available_exits=current_loc_data.get("exits", []),
+        character_positions={
+            name: data.get("location", "不明")
+            for name, data in scenario_data.get("characters", {}).items()
+        },
+        holding=save_data["holding"],
+        scenario_data=scenario_data,
+        unlocked_doors=save_data["unlocked_doors"],
+    )
+
+
+# =============================================================================
 # Command Parsing
 # =============================================================================
 
@@ -165,6 +258,27 @@ COMMAND_ALIASES: dict[str, list[str]] = {
     "help": ["help", "h", "?", "ヘルプ"],
     "quit": ["quit", "exit", "q", "終了"],
     "status": ["status", "st", "状態", "ステータス"],
+    "save": ["save", "セーブ", "保存"],
+    "load": ["load", "ロード", "読み込み"],
+}
+
+# Direction aliases for movement (location-specific)
+# Maps direction -> exit name by current location
+DIRECTION_ALIASES: dict[str, dict[str, str]] = {
+    "start_hall": {
+        "north": "locked_study",
+        "n": "locked_study",
+    },
+    "locked_study": {
+        "up": "goal_attic",
+        "u": "goal_attic",
+        "south": "start_hall",
+        "s": "start_hall",
+    },
+    "goal_attic": {
+        "down": "locked_study",
+        "d": "locked_study",
+    },
 }
 
 
@@ -188,12 +302,57 @@ def parse_command(user_input: str) -> ParsedCommand:
     # Normalize commands using alias dictionary
     for cmd, aliases in COMMAND_ALIASES.items():
         if action in aliases:
-            # where, inventory, map, help, quit, status don't use targets
+            # Commands that don't use targets
             if cmd in ("where", "inventory", "map", "help", "quit", "status"):
                 return ParsedCommand(action=cmd, target=None)
+            # save/load use optional path
+            if cmd in ("save", "load"):
+                return ParsedCommand(action=cmd, target=target)
             return ParsedCommand(action=cmd, target=target)
 
     return ParsedCommand(action="unknown", target=user_input)
+
+
+def _find_similar_objects(query: str, candidates: list[str], threshold: float = 0.5) -> list[str]:
+    """Find similar objects using basic fuzzy matching.
+
+    P2: BUG-006 - Semantic Matcher verification path.
+    Uses simple substring/prefix matching and difflib for suggestions.
+
+    Args:
+        query: The search query
+        candidates: List of available object names
+        threshold: Similarity threshold (0.0-1.0)
+
+    Returns:
+        List of similar object names (deduplicated)
+    """
+    import difflib
+
+    suggestions = []
+
+    # First, check for substring matches
+    query_lower = query.lower()
+    for candidate in candidates:
+        if query_lower in candidate.lower() or candidate.lower() in query_lower:
+            suggestions.append(candidate)
+
+    # If no substring matches, use difflib
+    if not suggestions:
+        close_matches = difflib.get_close_matches(
+            query, candidates, n=2, cutoff=threshold
+        )
+        suggestions.extend(close_matches)
+
+    # Deduplicate while preserving order
+    seen = set()
+    unique_suggestions = []
+    for s in suggestions:
+        if s not in seen:
+            seen.add(s)
+            unique_suggestions.append(s)
+
+    return unique_suggestions[:2]  # Return max 2 suggestions
 
 
 def suggest_command(user_input: str) -> str | None:
@@ -254,14 +413,14 @@ def get_help_text() -> str:
 
 【探索】
   look (l)              現在地の情報を表示
-  move <場所> (go, g)   指定した場所に移動
-  search [対象] (x)     隠されたものを探す
+  move <場所> (go, g)   指定した場所に移動 ※方角も可 (north, up等)
+  search [対象] (x)     対象を調べる / 隠されたものを探す
   map (m)               全体マップを表示
 
 【アイテム】
   take <物> (get, t)    物を拾う
   open <容器> (o)       容器を開けて中身を見る
-  use <鍵> <ドア>       鍵を使って施錠を解除
+  use <鍵> <ドア>       鍵を使って施錠を解除 ※出口名でもOK
   inventory (inv, i)    所持品一覧
 
 【情報】
@@ -269,17 +428,24 @@ def get_help_text() -> str:
   status (st)           キャラクター状態を表示
   help (h, ?)           このヘルプを表示
 
+【セーブ/ロード】
+  save [path]           状態を保存 (デフォルト: artifacts/*.json)
+  load [path]           状態を読み込み
+
 【システム】
   quit (q)              終了
 
 【使用例】
-  move リビング         リビングに移動
-  take コーヒー豆       コーヒー豆を拾う
-  open 引き出し         引き出しを開ける
-  use iron_key door     鍵でドアを解錠
-  x 本棚                本棚を調べる
+  t iron_key            iron_key を拾う (t = take)
+  o coat_rack           coat_rack を開ける (o = open)
+  x coat_rack           coat_rack を調べる (x = search)
+  g north               北へ移動 (g = go)
+  go up                 上へ移動 (階段など)
+  use iron_key locked_study   鍵で出口を解錠
+  save                  状態をセーブ
+  load                  セーブデータをロード
 
-💡 ヒント: 括弧内は省略形です (例: l = look)
+💡 ヒント: 括弧内は省略形です (例: l=look, t=take, o=open, x=search)
 """
 
 
@@ -307,13 +473,42 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
     elif cmd["action"] == "help":
         return get_help_text(), state
 
+    elif cmd["action"] == "save":
+        # P0: BUG-001 Save/Load blocker fix
+        path = Path(cmd["target"]) if cmd["target"] else None
+        try:
+            saved_path = save_play_state(state, path)
+            return f"💾 セーブ完了: {saved_path.absolute()}", state
+        except Exception as e:
+            return f"❌ セーブ失敗: {e}", state
+
+    elif cmd["action"] == "load":
+        # P0: BUG-001 Save/Load blocker fix
+        path = Path(cmd["target"]) if cmd["target"] else DEFAULT_STATE_PATH
+        try:
+            new_state = load_play_state(path)
+            return f"📂 ロード完了: {path}\n\n{format_world_state(new_state)}", new_state
+        except FileNotFoundError:
+            return f"❌ ファイルが見つかりません: {path}", state
+        except Exception as e:
+            return f"❌ ロード失敗: {e}", state
+
     elif cmd["action"] == "move":
         target = cmd["target"]
         if not target:
             return "移動先を指定してください (例: move リビング)", state
 
+        # P1: BUG-005 - Resolve direction aliases (up, north, etc.)
+        current_loc = state["current_location"]
+        if current_loc in DIRECTION_ALIASES:
+            target = DIRECTION_ALIASES[current_loc].get(target.lower(), target)
+
         if target not in state["available_exits"]:
             available = ", ".join(state["available_exits"])
+            # Show direction hints if available
+            if current_loc in DIRECTION_ALIASES:
+                directions = list(DIRECTION_ALIASES[current_loc].keys())
+                return f"'{cmd['target']}' には移動できません。移動可能: {available} (方角: {', '.join(directions)})", state
             return f"'{target}' には移動できません。移動可能: {available}", state
 
         # Check for locked exits (Preflight check)
@@ -364,6 +559,10 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
         target = cmd["target"]
         if not target:
             return "取る物を指定してください (例: take コーヒーメーカー)", state
+
+        # P1: BUG-002 - Check if already in inventory
+        if target in state["holding"]:
+            return f"🎒 '{target}' は既に持っています", state
 
         if target not in state["available_objects"]:
             available = ", ".join(state["available_objects"])
@@ -432,6 +631,29 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
         locations = state["scenario_data"].get("locations", {})
         current_loc_data = locations.get(state["current_location"], {})
         hidden_objects = current_loc_data.get("hidden_objects", [])
+        containers = current_loc_data.get("containers", {})
+
+        # P1: BUG-003 - If target is a container, suggest open command
+        if target and target in containers:
+            contents_hint = "何かが入っているようです" if containers[target] else "空のようです"
+            return (
+                f"🔍 {target} を調べました。{contents_hint}\n"
+                f"💡 ヒント: 'open {target}' で中身を確認できます"
+            ), state
+
+        # P2: BUG-006 - If target doesn't exist, try semantic matcher suggestions
+        if target:
+            all_objects = state["available_objects"] + list(containers.keys())
+            if target not in all_objects:
+                # Try to find similar objects using basic fuzzy matching
+                suggestions = _find_similar_objects(target, all_objects)
+                if suggestions:
+                    suggestion_str = ", ".join(suggestions)
+                    return (
+                        f"🔍 '{target}' はここにありません。\n"
+                        f"💡 もしかして: {suggestion_str}"
+                    ), state
+                return f"🔍 '{target}' はここにありません。利用可能: {', '.join(all_objects)}", state
 
         if not hidden_objects:
             if target:
@@ -506,7 +728,7 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
             return "使用するアイテムとドアを指定してください (例: use iron_key north_door)", state
 
         key_item = parts[0]
-        door_name = parts[1]
+        door_or_exit = parts[1]
 
         # Check if player has the key
         if key_item not in state["holding"]:
@@ -517,17 +739,34 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
         current_loc_data = locations.get(state["current_location"], {})
         locked_exits = current_loc_data.get("locked_exits", {})
 
-        # Find the exit with matching door_name
+        # P1: BUG-004 - Accept both exit_name and door_name
+        # First try to match by door_name
         target_exit = None
         lock_info = None
+        door_name = None
+
         for exit_name, info in locked_exits.items():
-            if info.get("door_name") == door_name:
+            if info.get("door_name") == door_or_exit:
                 target_exit = exit_name
                 lock_info = info
+                door_name = door_or_exit
                 break
 
+        # If no match by door_name, try by exit_name
+        if not lock_info and door_or_exit in locked_exits:
+            target_exit = door_or_exit
+            lock_info = locked_exits[door_or_exit]
+            door_name = lock_info.get("door_name", door_or_exit)
+
         if not lock_info:
-            return f"🚪 '{door_name}' という施錠されたドアは見当たりません", state
+            # Show available doors with their exit mappings
+            available_doors = []
+            for exit_name, info in locked_exits.items():
+                d_name = info.get("door_name", exit_name)
+                available_doors.append(f"{d_name} ({exit_name})")
+            if available_doors:
+                return f"🚪 '{door_or_exit}' という施錠されたドアは見当たりません。\n💡 利用可能: {', '.join(available_doors)}", state
+            return f"🚪 '{door_or_exit}' という施錠されたドアは見当たりません", state
 
         # Check if key matches
         required_key = lock_info.get("required_key")
@@ -582,7 +821,7 @@ def run_play_mode(scenario_path: Path):
     print(f"\n🎮 Play Mode: {state['scenario_name']}")
     print("─" * 40)
     print("💡 クイックコマンド: l=見る g=移動 t=取る o=開ける x=調べる")
-    print("   h=ヘルプ m=マップ i=所持品 q=終了")
+    print("   h=ヘルプ m=マップ i=所持品 save/load=セーブ q=終了")
     print("─" * 40)
     print()
     print(format_world_state(state))

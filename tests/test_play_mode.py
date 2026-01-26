@@ -66,6 +66,8 @@ class TestPlayModeDisplay:
             "available_exits": ["リビング"],
             "character_positions": {"やな": "キッチン", "あゆ": "キッチン"},
             "holding": [],
+            "scenario_data": {"locations": {"キッチン": {"exits": ["リビング"]}}},
+            "unlocked_doors": [],
         }
 
         output = format_world_state(state)
@@ -715,7 +717,8 @@ class TestImprovedHelp:
         help_text = get_help_text()
 
         assert "使用例" in help_text
-        assert "move リビング" in help_text or "リビング" in help_text
+        # Examples include short aliases
+        assert "t iron_key" in help_text or "iron_key" in help_text
 
 
 class TestCommandAliasesDictionary:
@@ -987,3 +990,428 @@ class TestGoalDetection:
 
         assert new_state["current_location"] == "goal_attic"
         assert "CLEAR" in output or "クリア" in output or "🎉" in output
+
+
+# =============================================================================
+# P0: BUG-001 Save/Load Tests
+# =============================================================================
+
+
+class TestSaveLoadCommand:
+    """Tests for save/load commands (P0: BUG-001)."""
+
+    def test_parse_save_command(self):
+        """Should parse 'save' command."""
+        from scripts.play_mode import parse_command
+
+        cmd = parse_command("save")
+        assert cmd["action"] == "save"
+        assert cmd["target"] is None
+
+    def test_parse_save_with_path(self):
+        """Should parse 'save <path>' command."""
+        from scripts.play_mode import parse_command
+
+        cmd = parse_command("save /tmp/test_state.json")
+        assert cmd["action"] == "save"
+        assert cmd["target"] == "/tmp/test_state.json"
+
+    def test_parse_load_command(self):
+        """Should parse 'load' command."""
+        from scripts.play_mode import parse_command
+
+        cmd = parse_command("load")
+        assert cmd["action"] == "load"
+        assert cmd["target"] is None
+
+    def test_save_default_path_creates_file(self, tmp_path):
+        """P0: BUG-001 - save should create file at default path."""
+        from scripts.play_mode import execute_command, PlayState, save_play_state
+        import scripts.play_mode as play_mode
+
+        # Temporarily change default path
+        original_default = play_mode.DEFAULT_STATE_PATH
+        play_mode.DEFAULT_STATE_PATH = tmp_path / "test_state.json"
+
+        try:
+            state = PlayState(
+                scenario_name="test",
+                current_location="start_hall",
+                available_objects=["coat_rack"],
+                available_exits=["locked_study"],
+                character_positions={"やな": "start_hall"},
+                holding=["iron_key"],
+                scenario_data={"locations": {}, "characters": {}},
+                unlocked_doors=["north_door"],
+            )
+
+            cmd = {"action": "save", "target": None}
+            output, _ = execute_command(cmd, state)
+
+            assert "セーブ完了" in output
+            assert play_mode.DEFAULT_STATE_PATH.exists()
+        finally:
+            play_mode.DEFAULT_STATE_PATH = original_default
+
+    def test_save_custom_path_creates_file(self, tmp_path):
+        """P0: BUG-001 - save should create file at custom path."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=["iron_key"],
+            scenario_data={"locations": {}, "characters": {}},
+            unlocked_doors=["north_door"],
+        )
+
+        custom_path = tmp_path / "custom_state.json"
+        cmd = {"action": "save", "target": str(custom_path)}
+        output, _ = execute_command(cmd, state)
+
+        assert "セーブ完了" in output
+        assert custom_path.exists()
+
+    def test_load_then_inventory_contains_iron_key(self, tmp_path):
+        """P0: BUG-001 - load should restore inventory with iron_key."""
+        from scripts.play_mode import execute_command, PlayState, save_play_state, load_play_state
+
+        # Create and save a state with iron_key
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=["iron_key"],
+            scenario_data={
+                "locations": {
+                    "start_hall": {"props": ["coat_rack"], "exits": ["locked_study"]}
+                },
+                "characters": {"やな": {"location": "start_hall"}}
+            },
+            unlocked_doors=["north_door"],
+        )
+
+        save_path = tmp_path / "test_state.json"
+        save_play_state(state, save_path)
+
+        # Load the state
+        loaded_state = load_play_state(save_path)
+
+        assert "iron_key" in loaded_state["holding"]
+        assert loaded_state["current_location"] == "start_hall"
+        assert "north_door" in loaded_state["unlocked_doors"]
+
+
+# =============================================================================
+# P1: BUG-002 Alias Expansion Tests
+# =============================================================================
+
+
+class TestAliasExpansionFix:
+    """Tests for alias expansion fix (P1: BUG-002)."""
+
+    def test_alias_t_maps_to_take(self):
+        """P1: BUG-002 - 't' should map to 'take' with target."""
+        from scripts.play_mode import parse_command
+
+        cmd = parse_command("t iron_key")
+        assert cmd["action"] == "take"
+        assert cmd["target"] == "iron_key"
+
+    def test_take_when_already_in_inventory_returns_consistent_message(self):
+        """P1: BUG-002 - take should say 'already have' when in inventory."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=["iron_key"],  # Already have iron_key
+            scenario_data={},
+            unlocked_doors=[],
+        )
+
+        cmd = {"action": "take", "target": "iron_key"}
+        output, _ = execute_command(cmd, state)
+
+        assert "既に持っています" in output
+
+
+# =============================================================================
+# P1: BUG-003 Inspect Container Tests
+# =============================================================================
+
+
+class TestInspectContainerFix:
+    """Tests for inspect container fix (P1: BUG-003)."""
+
+    def test_inspect_coat_rack_reveals_key_or_suggests_open(self):
+        """P1: BUG-003 - inspect coat_rack should suggest open."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack", "mirror"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=[],
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "props": ["coat_rack", "mirror"],
+                        "exits": ["locked_study"],
+                        "containers": {"coat_rack": ["iron_key"]},
+                    }
+                }
+            },
+            unlocked_doors=[],
+        )
+
+        cmd = {"action": "search", "target": "coat_rack"}
+        output, _ = execute_command(cmd, state)
+
+        # Should either reveal key or suggest open command
+        assert "open coat_rack" in output or "iron_key" in output
+
+
+# =============================================================================
+# P1: BUG-004 Exit/Door Mapping Tests
+# =============================================================================
+
+
+class TestExitDoorMappingFix:
+    """Tests for exit/door mapping fix (P1: BUG-004)."""
+
+    def test_use_key_with_exit_name_resolves_to_door(self):
+        """P1: BUG-004 - use should accept exit name and resolve to door."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=["iron_key"],
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "props": ["coat_rack"],
+                        "exits": ["locked_study"],
+                        "locked_exits": {
+                            "locked_study": {
+                                "door_name": "north_door",
+                                "required_key": "iron_key",
+                                "locked": True,
+                            }
+                        },
+                    }
+                }
+            },
+            unlocked_doors=[],
+        )
+
+        # Use exit name instead of door name
+        cmd = {"action": "use", "target": "iron_key locked_study"}
+        output, new_state = execute_command(cmd, state)
+
+        assert "解錠" in output
+        assert "north_door" in new_state["unlocked_doors"]
+
+    def test_status_shows_exit_to_door_mapping(self):
+        """P1: BUG-004 - look should show exit-door mapping."""
+        from scripts.play_mode import format_world_state, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=[],
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "props": ["coat_rack"],
+                        "exits": ["locked_study"],
+                        "locked_exits": {
+                            "locked_study": {
+                                "door_name": "north_door",
+                                "required_key": "iron_key",
+                                "locked": True,
+                            }
+                        },
+                    }
+                }
+            },
+            unlocked_doors=[],
+        )
+
+        output = format_world_state(state)
+
+        # Should show door name with exit
+        assert "north_door" in output
+        assert "locked_study" in output
+        assert "🔒" in output  # Should show locked icon
+
+
+# =============================================================================
+# P1: BUG-005 Direction Alias Tests
+# =============================================================================
+
+
+class TestDirectionAliasFix:
+    """Tests for direction alias fix (P1: BUG-005)."""
+
+    def test_go_up_from_locked_study_moves_to_goal_attic(self):
+        """P1: BUG-005 - 'go up' should move to goal_attic from locked_study."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="locked_study",
+            available_objects=["bookshelf"],
+            available_exits=["start_hall", "goal_attic"],
+            character_positions={"やな": "locked_study"},
+            holding=[],
+            scenario_data={
+                "locations": {
+                    "locked_study": {"props": ["bookshelf"], "exits": ["start_hall", "goal_attic"]},
+                    "goal_attic": {"props": ["treasure"], "exits": ["locked_study"], "is_goal": True},
+                }
+            },
+            unlocked_doors=[],
+        )
+
+        cmd = {"action": "move", "target": "up"}
+        output, new_state = execute_command(cmd, state)
+
+        assert new_state["current_location"] == "goal_attic"
+
+    def test_go_north_from_start_hall_moves_to_locked_study_when_unlocked(self):
+        """P1: BUG-005 - 'go north' should move to locked_study when unlocked."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=["iron_key"],
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "props": ["coat_rack"],
+                        "exits": ["locked_study"],
+                        "locked_exits": {
+                            "locked_study": {
+                                "door_name": "north_door",
+                                "required_key": "iron_key",
+                                "locked": True,
+                            }
+                        },
+                    },
+                    "locked_study": {"props": ["bookshelf"], "exits": ["start_hall"]},
+                }
+            },
+            unlocked_doors=["north_door"],  # Already unlocked
+        )
+
+        cmd = {"action": "move", "target": "north"}
+        output, new_state = execute_command(cmd, state)
+
+        assert new_state["current_location"] == "locked_study"
+
+
+# =============================================================================
+# P2: BUG-006 Semantic Matcher Tests
+# =============================================================================
+
+
+class TestSemanticMatcherVerification:
+    """Tests for semantic matcher verification (P2: BUG-006)."""
+
+    def test_search_triggers_suggestion_on_missing_object(self):
+        """P2: BUG-006 - search should suggest similar objects when not found."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack", "umbrella_stand"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=[],
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "props": ["coat_rack", "umbrella_stand"],
+                        "exits": ["locked_study"],
+                        "containers": {},
+                    }
+                }
+            },
+            unlocked_doors=[],
+        )
+
+        # Search for something similar but not exact
+        cmd = {"action": "search", "target": "coat"}
+        output, _ = execute_command(cmd, state)
+
+        # Should suggest coat_rack
+        assert "もしかして" in output or "coat_rack" in output
+
+    def test_suggestion_does_not_auto_adopt(self):
+        """P2: BUG-006 - suggestion should not auto-adopt."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack", "umbrella_stand"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=[],
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "props": ["coat_rack", "umbrella_stand"],
+                        "exits": ["locked_study"],
+                        "containers": {"coat_rack": ["iron_key"]},
+                    }
+                }
+            },
+            unlocked_doors=[],
+        )
+
+        # Search for typo
+        cmd = {"action": "search", "target": "coatrack"}
+        output, new_state = execute_command(cmd, state)
+
+        # Should NOT have opened the container automatically
+        assert "iron_key" not in new_state["available_objects"]
+        # Should show suggestion
+        assert "もしかして" in output or "ありません" in output
+
+
+class TestHelpIncludesSaveLoad:
+    """Tests for help text including save/load (P0: BUG-001)."""
+
+    def test_help_includes_save_load(self):
+        """Help should include save/load commands."""
+        from scripts.play_mode import get_help_text
+
+        help_text = get_help_text()
+
+        assert "save" in help_text
+        assert "load" in help_text
+        assert "セーブ" in help_text or "保存" in help_text
