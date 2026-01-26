@@ -33,7 +33,7 @@ jobs:
 
       - name: Run tests
         run: |
-          python scripts/ci/run_tests.py --component evaluation --coverage --json > test-results.json
+          python scripts/ci/run_tests.py --component evaluation --json > test-results.json
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
