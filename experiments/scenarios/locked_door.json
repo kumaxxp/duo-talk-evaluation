@@ -1,6 +1,9 @@
 {
   "name": "locked_door",
   "description": "Gate-3: ナビゲーション制約。書斎に行こうとするがexitsに含まれていない（鍵がかかっている想定）。",
+  "lint_allow": {
+    "unidirectional_exits": ["書斎"]
+  },
   "locations": {
     "リビング": {
       "props": ["ソファ", "テレビ", "リモコン", "鍵束"],
