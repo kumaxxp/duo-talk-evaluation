@@ -1,0 +1,168 @@
+# HAKONIWA-G3 Engine v1.0.0 Release Notes
+
+**Release Date**: 2026-01-26
+**Tag**: `v1.0.0`
+**Commit**: `3b27e24`
+
+---
+
+## Overview
+
+HAKONIWA-G3 Engine v1.0.0 は、duo-talk 評価システムの安定版ベースラインです。
+以下のフェーズを完了し、本番運用可能な状態を達成しました。
+
+---
+
+## Included Features
+
+### P0: Core Engine (Frozen)
+
+- **gm_2x2_runner.py**: GM 2x2 評価エンジン（Lane-Core として保護）
+- **WorldStateDTO**: ワールド状態の正規表現
+- **評価メトリクス**: 5軸評価（character_consistency, topic_novelty, relationship_quality, naturalness, concreteness）
+- **Retry/FormatBreak 検出**: リトライ成功率・フォーマット違反の自動計測
+
+### P-Next3: HAKONIWA Module
+
+- **hakoniwa/**: ワールド状態管理モジュール
+  - `persistence/`: save_world_state / load_world_state API
+  - `dto/`: WorldState / Manifest DTO
+  - `cli.py`: `hakoniwa load <path> [--dry-run]`
+
+### P-Next2: Mystery Mansion Scenario
+
+- **experiments/scenarios/mystery_mansion.json**: 施錠ドア・複数部屋の検証シナリオ
+- **registry.yaml**: シナリオメタデータ管理
+- **E2E テスト**: Save/Load 往復テスト
+
+### P-Next1: Play Mode & GUI MVP
+
+- **scripts/play_mode.py**: インタラクティブCLI探索ツール
+  - コマンドエイリアス（g=move, t=take, o=open, x=search）
+  - 施錠ドアの Preflight チェック
+  - ゴール到達検出
+- **gui_nicegui/**: NiceGUI ベースの評価ダッシュボード
+  - Demo Pack ワンクリック実行
+  - Timeline 可視化
+  - Diff Viewer（Output Repair / Speech Correction）
+  - Issues Only フィルタ
+
+---
+
+## Quick Start
+
+```bash
+# 1. 環境アクティベート
+conda activate duo-talk
+
+# 2. GUI起動（最も簡単な開始方法）
+make gui
+# → http://localhost:8080 で Demo Pack を実行
+
+# 3. シナリオ探索（CLI）
+make play s=coffee_trap
+# → l=見る, g=移動, t=取る, o=開ける, x=調べる, h=ヘルプ
+
+# 4. Save/Load テスト
+python -c "from hakoniwa.persistence import save_world_state, load_world_state; print('OK')"
+
+# 5. テスト実行
+make test
+# または
+make ci-gate
+```
+
+---
+
+## Baseline Protection Policy
+
+### main ブランチの運用ルール
+
+1. **v1.0.0 タグをベースラインとして保護**
+   - 緊急バグ修正以外は main への直接コミット禁止
+   - 研究・実験コードは `experiments/` ブランチに隔離
+
+2. **P0 Freeze 継続**
+   - `gm_2x2_runner.py` は変更禁止（Lane-Core）
+   - WorldStateDTO 構造の変更禁止
+   - 評価メトリクス定義の変更禁止
+
+3. **ブランチ命名規則**
+   - 研究: `experiments/<topic>`
+   - 機能追加: `feature/<name>`
+   - バグ修正: `fix/<issue>`
+   - リリース: `release/<version>`
+
+### タグ基準
+
+| タグ形式 | 意味 |
+|---------|------|
+| `v1.0.0` | 安定版ベースライン |
+| `v1.0.x` | バグ修正のみ |
+| `v1.1.0` | 機能追加（後方互換） |
+| `v2.0.0` | 破壊的変更あり |
+
+---
+
+## Test Coverage
+
+```
+587 passed, 12 skipped
+Coverage: >80% (core modules)
+```
+
+### テストカテゴリ
+
+- **Unit Tests**: 個別関数・ユーティリティ
+- **Integration Tests**: API エンドポイント・データフロー
+- **E2E Tests**: Save/Load 往復・シナリオ実行
+
+---
+
+## Known Limitations
+
+1. **MISSING_OBJECT 問題**（約5%発生）
+   - シナリオ定義と GM 応答の名前不一致
+   - P-Next4 で Semantic Matcher による改善を予定
+
+2. **GUI パフォーマンス**
+   - 大量ターン（100+）表示時にレンダリング遅延
+   - 現状は Issues Only フィルタで回避
+
+3. **hakoniwa CLI**
+   - `--dry-run` 以外のオプションは最小実装
+   - 本格的な CLI UX は将来拡張
+
+---
+
+## Reproduction Commands
+
+```bash
+# v1.0.0 の状態を再現
+git checkout v1.0.0
+
+# 動作確認
+make ci-gate
+
+# GUI 起動
+make gui
+```
+
+---
+
+## Contributors
+
+- kumaxxp
+- Claude Code (AI Assistant)
+
+---
+
+## Next Steps (P-Next4+)
+
+- **Topic A: Semantic Matcher** - MISSING_OBJECT 低減
+- **Topic B: Streaming Visualizer** - リアルタイム評価表示
+- **Topic C: Advanced Scenarios** - マルチターン・分岐シナリオ
+
+---
+
+*Last Updated: 2026-01-26*
