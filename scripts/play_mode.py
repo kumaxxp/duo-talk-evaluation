@@ -304,7 +304,12 @@ def parse_command(user_input: str) -> ParsedCommand:
     Returns:
         ParsedCommand with action and target
     """
-    parts = user_input.strip().split(maxsplit=1)
+    # Guard: Ignore Markdown bullet points (paste accident prevention)
+    stripped = user_input.strip()
+    if stripped.startswith("-") or stripped.startswith("*"):
+        return ParsedCommand(action="unknown", target=None)
+
+    parts = stripped.split(maxsplit=1)
 
     if not parts:
         return ParsedCommand(action="unknown", target=None)
@@ -481,7 +486,10 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
         return format_world_state(state), state
 
     elif cmd["action"] == "status":
-        return format_character_status(state["character_positions"]), state
+        # Show full play state (location/inventory/exits/locks) + character positions
+        world_info = format_world_state(state)
+        char_info = format_character_status(state["character_positions"])
+        return f"{world_info}\n\n{char_info}", state
 
     elif cmd["action"] == "help":
         return get_help_text(), state

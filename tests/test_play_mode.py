@@ -1519,3 +1519,107 @@ class TestHelpIncludesSaveLoad:
         assert "save" in help_text
         assert "load" in help_text
         assert "セーブ" in help_text or "保存" in help_text
+
+
+# =============================================================================
+# Status Command Shows Play State Tests
+# =============================================================================
+
+
+class TestStatusShowsPlayState:
+    """Tests for status command showing full play state."""
+
+    def test_status_shows_location(self):
+        """status should show current location."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall", "あゆ": "start_hall"},
+            holding=["iron_key"],
+            scenario_data={"locations": {"start_hall": {"exits": ["locked_study"]}}},
+            unlocked_doors=[],
+        )
+
+        cmd = {"action": "status", "target": None}
+        output, _ = execute_command(cmd, state)
+
+        # Should show location
+        assert "start_hall" in output
+        # Should show inventory
+        assert "iron_key" in output
+        # Should show exits
+        assert "locked_study" in output
+        # Should also show character positions
+        assert "やな" in output
+        assert "あゆ" in output
+
+    def test_status_shows_locks(self):
+        """status should show lock status."""
+        from scripts.play_mode import execute_command, PlayState
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=[],
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "exits": ["locked_study"],
+                        "locked_exits": {
+                            "locked_study": {
+                                "door_name": "north_door",
+                                "locked": True,
+                            }
+                        },
+                    }
+                }
+            },
+            unlocked_doors=[],
+        )
+
+        cmd = {"action": "status", "target": None}
+        output, _ = execute_command(cmd, state)
+
+        # Should show lock icon
+        assert "🔒" in output or "north_door" in output
+
+
+# =============================================================================
+# Markdown Guard Tests
+# =============================================================================
+
+
+class TestMarkdownGuard:
+    """Tests for Markdown bullet point paste guard."""
+
+    def test_markdown_dash_ignored(self):
+        """Lines starting with - should be ignored."""
+        from scripts.play_mode import parse_command
+
+        cmd = parse_command("- this is a bullet point")
+        assert cmd["action"] == "unknown"
+
+    def test_markdown_asterisk_ignored(self):
+        """Lines starting with * should be ignored."""
+        from scripts.play_mode import parse_command
+
+        cmd = parse_command("* another bullet point")
+        assert cmd["action"] == "unknown"
+
+    def test_normal_commands_still_work(self):
+        """Normal commands should still work."""
+        from scripts.play_mode import parse_command
+
+        cmd = parse_command("look")
+        assert cmd["action"] == "look"
+
+        cmd = parse_command("go north")
+        assert cmd["action"] == "move"
+        assert cmd["target"] == "north"
