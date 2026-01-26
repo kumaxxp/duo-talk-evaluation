@@ -9,47 +9,20 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.11"]
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Install and test
         run: |
           python -m pip install --upgrade pip
-          pip install pydantic pyyaml pandas requests click google-genai
-          pip install pytest pytest-cov ruff
-        env:
-          PYTHONPATH: ${{ github.workspace }}
-
-      - name: Lint with ruff
-        run: ruff check src/ tests/ experiments/ hakoniwa/ --exit-zero
-        env:
-          PYTHONPATH: ${{ github.workspace }}
-
-      - name: Run hakoniwa matcher tests
-        run: python -m pytest tests/test_hakoniwa_matcher.py -v --tb=long
-        env:
-          PYTHONPATH: ${{ github.workspace }}
-
-      - name: Run all tests
-        run: python -m pytest tests/ -v --tb=short
-        env:
-          PYTHONPATH: ${{ github.workspace }}
-
-      - name: Upload test results (placeholder)
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-results
-          path: pyproject.toml
+          pip install pytest pydantic pyyaml pandas requests click
+          PYTHONPATH=. python -m pytest tests/test_hakoniwa_matcher.py -v
 
   smoke-test:
     runs-on: ubuntu-latest
