@@ -517,12 +517,23 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
             target = DIRECTION_ALIASES[current_loc].get(target.lower(), target)
 
         if target not in state["available_exits"]:
-            available = ", ".join(state["available_exits"])
-            # Show direction hints if available
+            # Show user-friendly directions instead of raw exit names
             if current_loc in DIRECTION_ALIASES:
-                directions = list(DIRECTION_ALIASES[current_loc].keys())
-                return f"'{cmd['target']}' には移動できません。移動可能: {available} (方角: {', '.join(directions)})", state
-            return f"'{target}' には移動できません。移動可能: {available}", state
+                # Build direction -> exit mapping for display
+                dir_to_exit: dict[str, str] = {}
+                for direction, exit_name in DIRECTION_ALIASES[current_loc].items():
+                    # Skip short aliases (n, s, u, d) - only show full names
+                    if len(direction) > 1:
+                        dir_to_exit[direction] = exit_name
+
+                if dir_to_exit:
+                    # Format: "north → locked_study, up → goal_attic"
+                    dir_hints = [f"{d} → {e}" for d, e in dir_to_exit.items()]
+                    return f"'{cmd['target']}' には移動できません。利用可能な方角: {', '.join(dir_hints)}", state
+
+            # Fallback: show exit names directly
+            available = ", ".join(state["available_exits"])
+            return f"'{cmd['target']}' には移動できません。移動可能: {available}", state
 
         # Check for locked exits (Preflight check)
         locations = state["scenario_data"].get("locations", {})

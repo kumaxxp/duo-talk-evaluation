@@ -1262,6 +1262,110 @@ class TestExitDoorMappingFix:
         assert "locked_study" in output
         assert "🔒" in output  # Should show locked icon
 
+    def test_use_unlock_persists_in_save_load_roundtrip(self, tmp_path):
+        """unlock should persist through save/load cycle."""
+        from scripts.play_mode import (
+            execute_command, PlayState, save_play_state, load_play_state
+        )
+
+        state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=["iron_key"],
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "props": ["coat_rack"],
+                        "exits": ["locked_study"],
+                        "locked_exits": {
+                            "locked_study": {
+                                "door_name": "north_door",
+                                "required_key": "iron_key",
+                                "locked": True,
+                            }
+                        },
+                    }
+                }
+            },
+            unlocked_doors=[],
+        )
+
+        # Use key to unlock
+        cmd = {"action": "use", "target": "iron_key north_door"}
+        _, unlocked_state = execute_command(cmd, state)
+        assert "north_door" in unlocked_state["unlocked_doors"]
+
+        # Save the unlocked state
+        save_path = tmp_path / "unlocked_state.json"
+        save_play_state(unlocked_state, save_path)
+
+        # Load it back
+        loaded_state = load_play_state(save_path)
+
+        # unlocked_doors should persist
+        assert "north_door" in loaded_state["unlocked_doors"]
+
+    def test_status_lock_icon_matches_state(self):
+        """Lock icon (🔒/🔓) should match unlocked_doors state."""
+        from scripts.play_mode import format_world_state, PlayState
+
+        # State with door still locked
+        locked_state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=[],
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "exits": ["locked_study"],
+                        "locked_exits": {
+                            "locked_study": {
+                                "door_name": "north_door",
+                                "locked": True,
+                            }
+                        },
+                    }
+                }
+            },
+            unlocked_doors=[],  # Not unlocked
+        )
+
+        locked_output = format_world_state(locked_state)
+        assert "🔒" in locked_output  # Locked icon
+
+        # State with door unlocked
+        unlocked_state = PlayState(
+            scenario_name="test",
+            current_location="start_hall",
+            available_objects=["coat_rack"],
+            available_exits=["locked_study"],
+            character_positions={"やな": "start_hall"},
+            holding=[],
+            scenario_data={
+                "locations": {
+                    "start_hall": {
+                        "exits": ["locked_study"],
+                        "locked_exits": {
+                            "locked_study": {
+                                "door_name": "north_door",
+                                "locked": True,
+                            }
+                        },
+                    }
+                }
+            },
+            unlocked_doors=["north_door"],  # Unlocked!
+        )
+
+        unlocked_output = format_world_state(unlocked_state)
+        assert "🔓" in unlocked_output  # Unlocked icon
+
 
 # =============================================================================
 # P1: BUG-005 Direction Alias Tests
