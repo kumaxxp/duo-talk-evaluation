@@ -226,6 +226,8 @@ async def run_experiment():
             ui.notify(f"Experiment failed with exit code {process.returncode}", type="negative")
 
         refresh_results()
+        _refresh_board()
+        _refresh_action_panel()
 
     except Exception as e:
         state.log_output = f"Error: {e}"
@@ -764,16 +766,36 @@ def export_demo_pack():
         ui.notify(f"Export failed: {e}", type="negative")
 
 
+def _resolve_scenario_path(scenario_id: str) -> Path | None:
+    """Resolve scenario_id to file path using registry, then fallback."""
+    # 1. Registry lookup (authoritative)
+    registry = load_registry(REGISTRY_PATH) if REGISTRY_PATH.exists() else []
+    for entry in registry:
+        if entry.get("scenario_id") == scenario_id and entry.get("path"):
+            candidate = SCENARIOS_DIR / entry["path"]
+            if candidate.exists():
+                return candidate
+
+    # 2. Direct filename
+    candidate = SCENARIOS_DIR / f"{scenario_id}.json"
+    if candidate.exists():
+        return candidate
+
+    # 3. scn_ prefix
+    candidate = SCENARIOS_DIR / f"scn_{scenario_id}.json"
+    if candidate.exists():
+        return candidate
+
+    return None
+
+
 def _get_scenario_objects(scenario_id: str | None) -> list[dict]:
     """Extract objects from the selected scenario for Visual Board display."""
     if not scenario_id:
         return []
 
-    scenario_path = SCENARIOS_DIR / f"{scenario_id}.json"
-    if not scenario_path.exists():
-        # Try scn_ prefix
-        scenario_path = SCENARIOS_DIR / f"scn_{scenario_id}.json"
-    if not scenario_path.exists():
+    scenario_path = _resolve_scenario_path(scenario_id)
+    if not scenario_path:
         return []
 
     scenario = load_scenario(scenario_path)
