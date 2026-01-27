@@ -24,6 +24,7 @@ CELL_LABELS = {
     3: "W", 4: "C", 5: "E",
     6: "SW", 7: "S", 8: "SE",
 }
+MAX_ITEMS_PER_CELL = 6
 
 
 def _build_zone_map(
@@ -83,8 +84,14 @@ def create_visual_board(
                         "text-xs text-gray-400 select-none"
                     )
                 elif cell_objects:
-                    for obj in cell_objects:
+                    visible = cell_objects[:MAX_ITEMS_PER_CELL]
+                    overflow = len(cell_objects) - MAX_ITEMS_PER_CELL
+                    for obj in visible:
                         _render_object_chip(obj, on_select, selected_id)
+                    if overflow > 0:
+                        ui.label(f"+{overflow}").classes(
+                            "text-xs text-gray-500 font-bold select-none"
+                        )
                 else:
                     # Empty actionable cell
                     ui.label("·").classes(
@@ -105,9 +112,9 @@ def _render_object_chip(
     obj_id = obj.get("id") or obj.get("name", "")
     is_selected = selected_id is not None and str(obj_id) == str(selected_id)
 
-    highlight = "ring-2 ring-blue-500" if is_selected else ""
+    highlight = "ring-2 ring-blue-500 bg-blue-100 font-bold" if is_selected else ""
 
-    btn = ui.button(
+    ui.button(
         f"{icon}",
         on_click=lambda o=obj: on_select(o) if on_select else None,
     ).props("flat dense padding='2px 6px'").classes(
