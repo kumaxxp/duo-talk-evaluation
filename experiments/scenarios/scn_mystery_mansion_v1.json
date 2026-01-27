@@ -6,7 +6,7 @@
   },
   "locations": {
     "start_hall": {
-      "props": ["coat_rack", "umbrella_stand", "mirror"],
+      "props": ["coat_rack", "umbrella_stand", "mirror", "iron_key", "old_locket"],
       "exits": ["locked_study"],
       "containers": {
         "coat_rack": ["iron_key"],
