@@ -40,6 +40,7 @@ from gui_nicegui.data.latest import save_latest_pointer, load_latest_pointer
 from gui_nicegui.data.compare import compare_run_meta, compare_metrics
 from gui_nicegui.data.export import create_export_zip, create_pack_export_zip, collect_export_files
 from gui_nicegui.data.runner import build_runner_command
+from gui_nicegui.components.visual_board import create_visual_board
 
 
 class AppState:
@@ -59,6 +60,8 @@ class AppState:
         self.show_compare: bool = True
         self.auto_open_issues: bool = True  # Auto-open Issues Only after pack completion
         self.last_pack_result_dirs: list[Path] = []  # Track result dirs from last pack run
+        # Visual Board state (Single Source of Truth)
+        self.selected_object: dict | None = None
 
 
 state = AppState()
@@ -135,7 +138,13 @@ def create_scenario_panel():
                         "text-xs font-mono text-gray-400"
                     )
 
-        select.on_value_change(lambda e: update_summary(e.value))
+        def on_scenario_change(e):
+            update_summary(e.value)
+            state.selected_object = None
+            _refresh_board()
+            _refresh_action_panel()
+
+        select.on_value_change(on_scenario_change)
 
 
 def create_execution_panel():
@@ -755,23 +764,149 @@ def export_demo_pack():
         ui.notify(f"Export failed: {e}", type="negative")
 
 
+def _get_scenario_objects(scenario_id: str | None) -> list[dict]:
+    """Extract objects from the selected scenario for Visual Board display."""
+    if not scenario_id:
+        return []
+
+    scenario_path = SCENARIOS_DIR / f"{scenario_id}.json"
+    if not scenario_path.exists():
+        # Try scn_ prefix
+        scenario_path = SCENARIOS_DIR / f"scn_{scenario_id}.json"
+    if not scenario_path.exists():
+        return []
+
+    scenario = load_scenario(scenario_path)
+    if not scenario:
+        return []
+
+    objects: list[dict] = []
+
+    # Extract characters
+    characters = scenario.get("characters", {})
+    for char_name, char_data in characters.items():
+        obj: dict = {"id": char_name, "name": char_name, "type": "character"}
+        if isinstance(char_data, dict):
+            obj["state"] = char_data.get("location", "")
+        objects.append(obj)
+
+    # Extract props from all locations
+    locations = scenario.get("locations", {})
+    for loc_name, loc_data in locations.items():
+        if not isinstance(loc_data, dict):
+            continue
+        props = loc_data.get("props", [])
+        for prop_name in props:
+            objects.append({"id": prop_name, "name": prop_name, "type": "item"})
+
+        # Locked exits (doors)
+        locked = loc_data.get("locked_exits", {})
+        for _exit_id, exit_data in locked.items():
+            if isinstance(exit_data, dict):
+                door_name = exit_data.get("door_name", _exit_id)
+                objects.append({
+                    "id": door_name,
+                    "name": door_name,
+                    "type": "door",
+                    "state": "locked" if exit_data.get("locked") else "unlocked",
+                })
+
+    return objects
+
+
+# Visual Board panel + Action Panel references
+board_container = None
+action_container = None
+
+
+def _on_object_select(obj: dict) -> None:
+    """Handle object selection from Visual Board."""
+    state.selected_object = obj
+    _refresh_action_panel()
+    _refresh_board()
+
+
+def _refresh_board() -> None:
+    """Re-render the Visual Board."""
+    if board_container is None:
+        return
+    board_container.clear()
+    objects = _get_scenario_objects(state.selected_scenario)
+    selected_id = None
+    if state.selected_object:
+        selected_id = state.selected_object.get("id") or state.selected_object.get("name")
+    with board_container:
+        if objects:
+            create_visual_board(objects, on_select=_on_object_select, selected_id=selected_id)
+        else:
+            ui.label("Select a scenario to display objects").classes("text-sm text-gray-400")
+
+
+def _refresh_action_panel() -> None:
+    """Re-render the Action Panel for the selected object."""
+    if action_container is None:
+        return
+    action_container.clear()
+    obj = state.selected_object
+    with action_container:
+        if not obj:
+            ui.label("No object selected").classes("text-sm text-gray-400")
+            return
+
+        from hakoniwa.ui.zone_resolver import icon_for, label_for
+        icon = icon_for(obj)
+        name = label_for(obj)
+
+        ui.label(f"{icon} {name}").classes("text-lg font-bold")
+
+        # Object details
+        obj_type = obj.get("type", "unknown")
+        ui.label(f"Type: {obj_type}").classes("text-sm text-gray-600")
+
+        obj_state = obj.get("state")
+        if obj_state:
+            state_str = obj_state if isinstance(obj_state, str) else ", ".join(str(s) for s in obj_state)
+            ui.label(f"State: {state_str}").classes("text-sm text-gray-600")
+
+        obj_id = obj.get("id", "")
+        ui.label(f"ID: {obj_id}").classes("text-xs text-gray-400 font-mono")
+
+
+def create_visual_board_panel() -> None:
+    """Create the Visual Board + Action Panel section."""
+    global board_container, action_container
+
+    with ui.card().classes("w-full"):
+        ui.label("Visual Board").classes("text-lg font-bold")
+        board_container = ui.column().classes("w-full items-center")
+        _refresh_board()
+
+    with ui.card().classes("w-full"):
+        ui.label("Selected Object").classes("text-lg font-bold")
+        action_container = ui.column().classes("w-full")
+        _refresh_action_panel()
+
+
 def create_app():
     """Create the main application."""
     ui.page_title("duo-talk Evaluation GUI")
 
     with ui.header().classes("bg-blue-600"):
         ui.label("duo-talk Evaluation").classes("text-xl text-white font-bold")
-        ui.label("Fast Triage + Demo Pack").classes("text-sm text-blue-200 ml-2")
+        ui.label("Fast Triage + Demo Pack + Visual Board").classes("text-sm text-blue-200 ml-2")
 
     with ui.column().classes("w-full p-4 gap-4"):
         with ui.row().classes("w-full gap-4"):
-            with ui.column().classes("w-1/3 gap-4"):
+            with ui.column().classes("w-1/4 gap-4"):
                 create_scenario_panel()
                 create_execution_panel()
-                create_demo_pack_panel()
+                create_visual_board_panel()
 
-            with ui.column().classes("w-2/3"):
+            with ui.column().classes("w-1/2"):
                 create_results_panel()
+
+            with ui.column().classes("w-1/4 gap-4"):
+                create_demo_pack_panel()
 
 
 # Create app
