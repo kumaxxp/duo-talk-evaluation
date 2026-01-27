@@ -1,0 +1,695 @@
+From 86e10e4d9ad6f3b9615ed48026eddbafb2ac4a33 Mon Sep 17 00:00:00 2001
+From: kumaxxp <xxp@ezweb.ne.jp>
+Date: Mon, 26 Jan 2026 15:03:51 +0900
+Subject: [PATCH] =?UTF-8?q?feat(P-Next1/PR3):=20NiceGUI=20MVP=20-=20Timeli?=
+ =?UTF-8?q?ne=20+=20Diff=E6=94=B9=E5=96=84?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+## Timeline コンポーネント
+- gui_nicegui/components/timeline.py: タイムライン表示コンポーネント
+  - create_timeline(): インタラクティブタイムライン
+  - create_mini_timeline(): コンパクトプレビュー
+  - turns_to_timeline_items(): ターンデータ変換
+  - 色分け: 緑(OK), 黄(Retry), 橙(Format), 赤(GiveUp)
+
+## Diff Viewer コンポーネント
+- gui_nicegui/components/diff_viewer.py: Diff表示改善
+  - create_diff_viewer(): Side-by-side比較
+  - create_inline_diff(): インライン差分表示
+  - create_change_summary(): 変更統計
+
+## main.py 統合
+- show_turns_dialog: タイムライン追加
+- Results panel: mini timeline プレビュー
+- Diff tab: 改善されたdiff表示
+
+## テスト
+- tests/test_gui_components.py: 11テスト追加
+- 全62 GUIテストパス
+---
+ gui_nicegui/components/__init__.py    |   6 +
+ gui_nicegui/components/diff_viewer.py | 161 ++++++++++++++++++++++++
+ gui_nicegui/components/timeline.py    | 173 ++++++++++++++++++++++++++
+ gui_nicegui/main.py                   |  85 +++++++++----
+ tests/test_gui_components.py          | 154 +++++++++++++++++++++++
+ 5 files changed, 555 insertions(+), 24 deletions(-)
+ create mode 100644 gui_nicegui/components/__init__.py
+ create mode 100644 gui_nicegui/components/diff_viewer.py
+ create mode 100644 gui_nicegui/components/timeline.py
+ create mode 100644 tests/test_gui_components.py
+
+diff --git a/gui_nicegui/components/__init__.py b/gui_nicegui/components/__init__.py
+new file mode 100644
+index 0000000..34d6ee1
+--- /dev/null
++++ b/gui_nicegui/components/__init__.py
+@@ -0,0 +1,6 @@
++"""GUI components for duo-talk evaluation."""
++
++from gui_nicegui.components.timeline import create_timeline, TimelineItem
++from gui_nicegui.components.diff_viewer import create_diff_viewer
++
++__all__ = ["create_timeline", "TimelineItem", "create_diff_viewer"]
+diff --git a/gui_nicegui/components/diff_viewer.py b/gui_nicegui/components/diff_viewer.py
+new file mode 100644
+index 0000000..06203ee
+--- /dev/null
++++ b/gui_nicegui/components/diff_viewer.py
+@@ -0,0 +1,161 @@
++"""Diff viewer component with inline highlighting.
++
++Provides visual diff display with color-coded changes.
++"""
++
++from nicegui import ui
++
++
++def create_diff_viewer(
++    old_text: str,
++    new_text: str,
++    title: str = "Diff",
++    max_length: int = 500,
++) -> ui.element:
++    """Create a visual diff viewer with inline highlighting.
++
++    Args:
++        old_text: Original text
++        new_text: New/modified text
++        title: Title for the diff section
++        max_length: Maximum text length to display
++
++    Returns:
++        NiceGUI element containing the diff
++    """
++    # Truncate if needed
++    old_display = old_text[:max_length] + ("..." if len(old_text) > max_length else "")
++    new_display = new_text[:max_length] + ("..." if len(new_text) > max_length else "")
++
++    with ui.card().classes("w-full") as card:
++        ui.label(title).classes("text-sm font-bold mb-2")
++
++        if old_text == new_text:
++            ui.label("No changes").classes("text-gray-500 text-sm italic")
++            return card
++
++        # Side-by-side view
++        with ui.row().classes("w-full gap-2"):
++            # Old (removed)
++            with ui.card().classes("flex-1 bg-red-50 border-l-4 border-red-400"):
++                ui.label("Before").classes("text-xs font-bold text-red-700")
++                with ui.scroll_area().classes("max-h-32"):
++                    ui.code(old_display).classes("text-xs whitespace-pre-wrap")
++
++            # New (added)
++            with ui.card().classes("flex-1 bg-green-50 border-l-4 border-green-400"):
++                ui.label("After").classes("text-xs font-bold text-green-700")
++                with ui.scroll_area().classes("max-h-32"):
++                    ui.code(new_display).classes("text-xs whitespace-pre-wrap")
++
++    return card
++
++
++def create_inline_diff(
++    old_text: str,
++    new_text: str,
++    title: str = "",
++) -> ui.element:
++    """Create inline diff with word-level highlighting.
++
++    Args:
++        old_text: Original text
++        new_text: New text
++        title: Optional title
++
++    Returns:
++        NiceGUI element
++    """
++    with ui.element("div").classes("w-full") as container:
++        if title:
++            ui.label(title).classes("text-xs font-bold mb-1")
++
++        # Split into words for comparison
++        old_words = old_text.split()
++        new_words = new_text.split()
++
++        old_set = set(old_words)
++        new_set = set(new_words)
++
++        # Build highlighted HTML
++        html_parts = []
++
++        # Show removed words
++        removed = [w for w in old_words if w not in new_set]
++        if removed:
++            for word in removed[:10]:  # Limit display
++                html_parts.append(
++                    f'<span class="bg-red-200 text-red-800 px-1 rounded line-through">{word}</span>'
++                )
++            if len(removed) > 10:
++                html_parts.append(f'<span class="text-gray-500">...+{len(removed) - 10}</span>')
++
++        # Show added words
++        added = [w for w in new_words if w not in old_set]
++        if added:
++            if html_parts:
++                html_parts.append('<span class="mx-2">→</span>')
++            for word in added[:10]:
++                html_parts.append(
++                    f'<span class="bg-green-200 text-green-800 px-1 rounded">{word}</span>'
++                )
++            if len(added) > 10:
++                html_parts.append(f'<span class="text-gray-500">...+{len(added) - 10}</span>')
++
++        if html_parts:
++            ui.html(" ".join(html_parts)).classes("text-sm")
++        else:
++            ui.label("Structural changes only").classes("text-xs text-gray-500")
++
++    return container
++
++
++def create_change_summary(
++    old_text: str,
++    new_text: str,
++) -> dict:
++    """Create a summary of changes between two texts.
++
++    Args:
++        old_text: Original text
++        new_text: New text
++
++    Returns:
++        Dictionary with change statistics
++    """
++    old_words = set(old_text.split())
++    new_words = set(new_text.split())
++
++    removed = old_words - new_words
++    added = new_words - old_words
++    unchanged = old_words & new_words
++
++    return {
++        "removed_count": len(removed),
++        "added_count": len(added),
++        "unchanged_count": len(unchanged),
++        "change_ratio": len(removed) + len(added) / max(len(old_words), 1),
++        "removed_words": list(removed)[:5],
++        "added_words": list(added)[:5],
++    }
++
++
++def create_change_badge(summary: dict) -> ui.element:
++    """Create a compact change badge from summary.
++
++    Args:
++        summary: Change summary from create_change_summary
++
++    Returns:
++        NiceGUI badge element
++    """
++    removed = summary["removed_count"]
++    added = summary["added_count"]
++
++    with ui.row().classes("gap-1") as row:
++        if removed > 0:
++            ui.badge(f"-{removed}").props("color=red outline").classes("text-xs")
++        if added > 0:
++            ui.badge(f"+{added}").props("color=green outline").classes("text-xs")
++
++    return row
+diff --git a/gui_nicegui/components/timeline.py b/gui_nicegui/components/timeline.py
+new file mode 100644
+index 0000000..affbc63
+--- /dev/null
++++ b/gui_nicegui/components/timeline.py
+@@ -0,0 +1,173 @@
++"""Timeline component for turn visualization.
++
++Displays turn progression as a horizontal timeline with issue indicators.
++"""
++
++from dataclasses import dataclass
++from typing import Callable
++
++from nicegui import ui
++
++
++@dataclass
++class TimelineItem:
++    """Single item in the timeline."""
++
++    turn_number: int
++    speaker: str
++    has_issue: bool = False
++    issue_type: str = ""  # "retry", "format_break", "give_up"
++    is_selected: bool = False
++
++
++def get_item_color(item: TimelineItem) -> str:
++    """Get background color for timeline item based on issue type."""
++    if item.issue_type == "give_up":
++        return "bg-red-500"
++    elif item.issue_type == "format_break":
++        return "bg-orange-500"
++    elif item.issue_type == "retry":
++        return "bg-yellow-500"
++    elif item.has_issue:
++        return "bg-amber-400"
++    return "bg-green-500"
++
++
++def get_speaker_icon(speaker: str) -> str:
++    """Get icon/emoji for speaker."""
++    if speaker == "やな":
++        return "👧"
++    elif speaker == "あゆ":
++        return "👩"
++    return "👤"
++
++
++def create_timeline(
++    items: list[TimelineItem],
++    on_select: Callable[[int], None] | None = None,
++    selected_index: int = -1,
++) -> ui.element:
++    """Create a horizontal timeline showing turn progression.
++
++    Args:
++        items: List of TimelineItem to display
++        on_select: Callback when item is clicked (receives turn index)
++        selected_index: Currently selected item index
++
++    Returns:
++        NiceGUI element containing the timeline
++    """
++    with ui.card().classes("w-full p-2") as timeline_card:
++        ui.label("Timeline").classes("text-sm font-bold mb-2")
++
++        # Legend
++        with ui.row().classes("gap-2 mb-2 text-xs"):
++            ui.html('<span class="inline-block w-3 h-3 bg-green-500 rounded-full"></span>')
++            ui.label("OK")
++            ui.html('<span class="inline-block w-3 h-3 bg-yellow-500 rounded-full"></span>')
++            ui.label("Retry")
++            ui.html('<span class="inline-block w-3 h-3 bg-orange-500 rounded-full"></span>')
++            ui.label("Format")
++            ui.html('<span class="inline-block w-3 h-3 bg-red-500 rounded-full"></span>')
++            ui.label("GiveUp")
++
++        # Timeline container with horizontal scroll
++        with ui.scroll_area().classes("w-full").style("max-height: 80px"):
++            with ui.row().classes("gap-1 items-center flex-nowrap"):
++                for i, item in enumerate(items):
++                    color = get_item_color(item)
++                    speaker_icon = get_speaker_icon(item.speaker)
++
++                    # Highlight selected
++                    border_class = "ring-2 ring-blue-600" if i == selected_index else ""
++
++                    # Create clickable turn indicator
++                    with ui.element("div").classes(
++                        f"flex flex-col items-center cursor-pointer {border_class}"
++                    ).on("click", lambda _, idx=i: on_select(idx) if on_select else None):
++
++                        # Turn circle with color
++                        ui.element("div").classes(
++                            f"w-6 h-6 rounded-full {color} flex items-center justify-center text-xs text-white font-bold"
++                        ).style("min-width: 24px").props(f'title="T{item.turn_number}"')
++
++                        # Speaker icon below
++                        ui.label(speaker_icon).classes("text-xs")
++
++                        # Turn number
++                        ui.label(f"T{item.turn_number}").classes("text-xs text-gray-500")
++
++                    # Connector line (except for last item)
++                    if i < len(items) - 1:
++                        connector_color = "bg-gray-300"
++                        if item.has_issue:
++                            connector_color = "bg-orange-200"
++                        ui.element("div").classes(f"w-4 h-0.5 {connector_color}").style(
++                            "margin-top: -20px"
++                        )
++
++    return timeline_card
++
++
++def create_mini_timeline(
++    items: list[TimelineItem],
++    max_display: int = 20,
++) -> ui.element:
++    """Create a compact mini timeline for overview.
++
++    Args:
++        items: List of TimelineItem
++        max_display: Maximum items to display
++
++    Returns:
++        NiceGUI element
++    """
++    display_items = items[:max_display]
++    has_more = len(items) > max_display
++
++    with ui.row().classes("gap-0.5 items-center") as row:
++        for item in display_items:
++            color = get_item_color(item)
++            ui.element("div").classes(f"w-2 h-4 {color} rounded-sm").props(
++                f'title="T{item.turn_number}: {item.speaker}"'
++            )
++
++        if has_more:
++            ui.label(f"+{len(items) - max_display}").classes("text-xs text-gray-500 ml-1")
++
++    return row
++
++
++def turns_to_timeline_items(raw_turns: list[dict]) -> list[TimelineItem]:
++    """Convert raw turns to TimelineItems.
++
++    Args:
++        raw_turns: List of raw turn dictionaries
++
++    Returns:
++        List of TimelineItem
++    """
++    items = []
++    for turn in raw_turns:
++        has_retry = turn.get("retry_steps", 0) > 0
++        has_format_break = turn.get("format_break_triggered", False)
++        has_give_up = turn.get("give_up", False)
++
++        issue_type = ""
++        if has_give_up:
++            issue_type = "give_up"
++        elif has_format_break:
++            issue_type = "format_break"
++        elif has_retry:
++            issue_type = "retry"
++
++        items.append(
++            TimelineItem(
++                turn_number=turn.get("turn_number", 0),
++                speaker=turn.get("speaker", ""),
++                has_issue=has_retry or has_format_break or has_give_up,
++                issue_type=issue_type,
++            )
++        )
++
++    return items
+diff --git a/gui_nicegui/main.py b/gui_nicegui/main.py
+index c60fac0..adf4532 100644
+--- a/gui_nicegui/main.py
++++ b/gui_nicegui/main.py
+@@ -28,6 +28,12 @@ from gui_nicegui.data.results import (
+ )
+ from gui_nicegui.data.turns import to_view_model
+ from gui_nicegui.data.diff import generate_repair_diff, generate_speech_diff
++from gui_nicegui.components.timeline import (
++    create_timeline, create_mini_timeline, turns_to_timeline_items, TimelineItem
++)
++from gui_nicegui.components.diff_viewer import (
++    create_diff_viewer, create_inline_diff, create_change_summary, create_change_badge
++)
+ from gui_nicegui.data.guidance import extract_available_from_card
+ from gui_nicegui.data.pack import get_demo_scenarios, create_pack_run_id, get_pack_run_dir
+ from gui_nicegui.data.latest import save_latest_pointer, load_latest_pointer
+@@ -285,6 +291,12 @@ def refresh_results():
+                             "color=deep-orange"
+                         )
+ 
++                # Mini timeline preview
++                turns = load_turns_log(run_path)
++                if turns:
++                    timeline_items = turns_to_timeline_items(turns)
++                    create_mini_timeline(timeline_items, max_display=25)
++
+                 ui.label(f"Profile: {info.get('profile', 'N/A')}").classes(
+                     "text-xs text-gray-500"
+                 )
+@@ -314,10 +326,24 @@ def show_turns_dialog(run_path: Path, filter_issues: bool = False, auto_focus_fi
+         filter_issues: If True, show only issue turns
+         auto_focus_first: If True, auto-expand first issue turn details
+     """
+-    raw_turns = load_turns_log(run_path)
+-
+-    if filter_issues:
+-        raw_turns = filter_issue_turns(raw_turns)
++    all_turns = load_turns_log(run_path)
++    raw_turns = filter_issue_turns(all_turns) if filter_issues else all_turns
++
++    # State for timeline selection
++    selected_turn_idx = {"value": -1}
++    turn_cards_container = None
++
++    def on_timeline_select(idx: int):
++        """Handle timeline item selection."""
++        selected_turn_idx["value"] = idx
++        if turn_cards_container:
++            turn_cards_container.clear()
++            with turn_cards_container:
++                # Show only selected turn expanded, or all turns
++                for i, raw_turn in enumerate(raw_turns):
++                    vm = to_view_model(raw_turn)
++                    is_selected = i == idx
++                    create_turn_card(vm, raw_turn, auto_expand=is_selected)
+ 
+     with ui.dialog() as dialog, ui.card().classes("w-11/12 max-w-6xl"):
+         with ui.row().classes("w-full items-center justify-between"):
+@@ -328,7 +354,17 @@ def show_turns_dialog(run_path: Path, filter_issues: bool = False, auto_focus_fi
+         if not raw_turns:
+             ui.label("No turns found").classes("text-gray-500")
+         else:
+-            with ui.scroll_area().classes("h-[70vh]"):
++            # Timeline at the top (using all turns for context)
++            timeline_items = turns_to_timeline_items(all_turns)
++            create_timeline(
++                timeline_items,
++                on_select=on_timeline_select,
++                selected_index=selected_turn_idx["value"],
++            )
++
++            # Turn cards below
++            turn_cards_container = ui.scroll_area().classes("h-[60vh]")
++            with turn_cards_container:
+                 for i, raw_turn in enumerate(raw_turns):
+                     vm = to_view_model(raw_turn)
+                     # Auto-expand first issue turn when requested
+@@ -420,33 +456,34 @@ def create_turn_details(vm: dict, raw_turn: dict):
+                 ui.label("repaired_output:").classes("text-xs font-bold mt-2")
+                 ui.code(vm.get("repaired_output", "")[:500]).classes("text-xs")
+ 
+-        # Diff panel
++        # Diff panel (improved with visual diff viewer)
+         with ui.tab_panel(diff_tab):
++            has_any_diff = False
++
+             # raw_output vs repaired_output diff
+             if vm.get("repaired_output"):
+-                repair_diff = generate_repair_diff(
+-                    vm.get("raw_output", ""),
+-                    vm.get("repaired_output")
+-                )
+-                if repair_diff["has_changes"]:
+-                    ui.label("Output Repair:").classes("text-xs font-bold")
+-                    if repair_diff["removed"]:
+-                        ui.label(f"- {repair_diff['removed'][:200]}").classes(
+-                            "text-xs text-red-600 font-mono"
+-                        )
+-                    if repair_diff["added"]:
+-                        ui.label(f"+ {repair_diff['added'][:200]}").classes(
+-                            "text-xs text-green-600 font-mono"
+-                        )
++                raw_output = vm.get("raw_output", "")
++                repaired_output = vm.get("repaired_output", "")
++                if raw_output != repaired_output:
++                    has_any_diff = True
++                    create_diff_viewer(
++                        raw_output,
++                        repaired_output,
++                        title="🔧 Output Repair",
++                        max_length=400,
++                    )
+ 
+             # raw_speech vs final_speech diff
+             raw_speech = vm.get("raw_speech", "")
+             final_speech = vm.get("final_speech", "")
+             if raw_speech and final_speech and raw_speech != final_speech:
+-                speech_diff = generate_speech_diff(raw_speech, final_speech)
+-                ui.label("Speech Correction:").classes("text-xs font-bold mt-2")
+-                ui.label(f"Before: {raw_speech[:150]}").classes("text-xs text-gray-500")
+-                ui.label(f"After: {final_speech[:150]}").classes("text-xs")
++                has_any_diff = True
++                ui.separator().classes("my-2")
++                ui.label("💬 Speech Correction").classes("text-sm font-bold")
++                create_inline_diff(raw_speech, final_speech)
++
++            if not has_any_diff:
++                ui.label("No differences detected").classes("text-gray-500 text-sm")
+ 
+         # Meta panel
+         with ui.tab_panel(meta_tab):
+diff --git a/tests/test_gui_components.py b/tests/test_gui_components.py
+new file mode 100644
+index 0000000..18e4ce5
+--- /dev/null
++++ b/tests/test_gui_components.py
+@@ -0,0 +1,154 @@
++"""Tests for GUI components (P-Next1/PR3)."""
++
++import pytest
++
++
++class TestTimelineComponent:
++    """Tests for timeline component."""
++
++    def test_turns_to_timeline_items_basic(self):
++        """Should convert raw turns to timeline items."""
++        from gui_nicegui.components.timeline import turns_to_timeline_items
++
++        raw_turns = [
++            {"turn_number": 1, "speaker": "やな", "retry_steps": 0},
++            {"turn_number": 2, "speaker": "あゆ", "retry_steps": 1},
++            {"turn_number": 3, "speaker": "やな", "give_up": True},
++        ]
++
++        items = turns_to_timeline_items(raw_turns)
++
++        assert len(items) == 3
++        assert items[0].turn_number == 1
++        assert items[0].speaker == "やな"
++        assert items[0].has_issue is False
++
++        assert items[1].turn_number == 2
++        assert items[1].has_issue is True
++        assert items[1].issue_type == "retry"
++
++        assert items[2].turn_number == 3
++        assert items[2].has_issue is True
++        assert items[2].issue_type == "give_up"
++
++    def test_turns_to_timeline_items_format_break(self):
++        """Should detect format break issues."""
++        from gui_nicegui.components.timeline import turns_to_timeline_items
++
++        raw_turns = [
++            {"turn_number": 1, "speaker": "やな", "format_break_triggered": True},
++        ]
++
++        items = turns_to_timeline_items(raw_turns)
++
++        assert items[0].has_issue is True
++        assert items[0].issue_type == "format_break"
++
++    def test_turns_to_timeline_items_empty(self):
++        """Should handle empty turn list."""
++        from gui_nicegui.components.timeline import turns_to_timeline_items
++
++        items = turns_to_timeline_items([])
++
++        assert items == []
++
++    def test_get_item_color_normal(self):
++        """Should return green for normal turns."""
++        from gui_nicegui.components.timeline import get_item_color, TimelineItem
++
++        item = TimelineItem(turn_number=1, speaker="やな", has_issue=False)
++        color = get_item_color(item)
++
++        assert "green" in color
++
++    def test_get_item_color_give_up(self):
++        """Should return red for give_up."""
++        from gui_nicegui.components.timeline import get_item_color, TimelineItem
++
++        item = TimelineItem(
++            turn_number=1, speaker="やな", has_issue=True, issue_type="give_up"
++        )
++        color = get_item_color(item)
++
++        assert "red" in color
++
++    def test_get_speaker_icon(self):
++        """Should return correct icons for speakers."""
++        from gui_nicegui.components.timeline import get_speaker_icon
++
++        assert get_speaker_icon("やな") == "👧"
++        assert get_speaker_icon("あゆ") == "👩"
++        assert get_speaker_icon("unknown") == "👤"
++
++
++class TestDiffViewerComponent:
++    """Tests for diff viewer component."""
++
++    def test_create_change_summary_basic(self):
++        """Should create change summary correctly."""
++        from gui_nicegui.components.diff_viewer import create_change_summary
++
++        old_text = "Hello world foo bar"
++        new_text = "Hello world baz qux"
++
++        summary = create_change_summary(old_text, new_text)
++
++        assert summary["removed_count"] == 2  # foo, bar
++        assert summary["added_count"] == 2  # baz, qux
++        assert summary["unchanged_count"] == 2  # Hello, world
++
++    def test_create_change_summary_no_changes(self):
++        """Should handle identical texts."""
++        from gui_nicegui.components.diff_viewer import create_change_summary
++
++        text = "Hello world"
++        summary = create_change_summary(text, text)
++
++        assert summary["removed_count"] == 0
++        assert summary["added_count"] == 0
++
++    def test_create_change_summary_complete_change(self):
++        """Should handle complete text change."""
++        from gui_nicegui.components.diff_viewer import create_change_summary
++
++        old_text = "foo bar"
++        new_text = "baz qux"
++
++        summary = create_change_summary(old_text, new_text)
++
++        assert summary["removed_count"] == 2
++        assert summary["added_count"] == 2
++        assert summary["unchanged_count"] == 0
++
++
++class TestTimelineItemDataclass:
++    """Tests for TimelineItem dataclass."""
++
++    def test_timeline_item_defaults(self):
++        """Should have correct default values."""
++        from gui_nicegui.components.timeline import TimelineItem
++
++        item = TimelineItem(turn_number=1, speaker="やな")
++
++        assert item.turn_number == 1
++        assert item.speaker == "やな"
++        assert item.has_issue is False
++        assert item.issue_type == ""
++        assert item.is_selected is False
++
++    def test_timeline_item_with_issue(self):
++        """Should store issue information."""
++        from gui_nicegui.components.timeline import TimelineItem
++
++        item = TimelineItem(
++            turn_number=5,
++            speaker="あゆ",
++            has_issue=True,
++            issue_type="give_up",
++            is_selected=True,
++        )
++
++        assert item.turn_number == 5
++        assert item.has_issue is True
++        assert item.issue_type == "give_up"
++        assert item.is_selected is True
+-- 
+2.43.0
+

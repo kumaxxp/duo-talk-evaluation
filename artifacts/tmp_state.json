@@ -1,0 +1,100 @@
+{
+  "current_location": "start_hall",
+  "holding": [
+    "iron_key"
+  ],
+  "saved_at": "2026-01-27T00:46:52.588648",
+  "scenario_data": {
+    "characters": {
+      "あゆ": {
+        "holding": [],
+        "location": "start_hall"
+      },
+      "やな": {
+        "holding": [],
+        "location": "start_hall"
+      }
+    },
+    "clear_condition": {
+      "target": "goal_attic",
+      "type": "reach_location"
+    },
+    "description": "P-Next2 Flagship: 3部屋の洋館探索。鍵を見つけて書斎を解錠し、屋根裏を目指す。",
+    "lint_allow": {
+      "unidirectional_exits": []
+    },
+    "locations": {
+      "goal_attic": {
+        "exits": [
+          "locked_study"
+        ],
+        "is_goal": true,
+        "props": [
+          "old_trunk",
+          "dusty_portraits",
+          "treasure_chest"
+        ]
+      },
+      "locked_study": {
+        "exits": [
+          "start_hall",
+          "goal_attic"
+        ],
+        "props": [
+          "bookshelf",
+          "desk",
+          "reading_lamp",
+          "ladder_hatch"
+        ]
+      },
+      "start_hall": {
+        "containers": {
+          "coat_rack": [
+            "iron_key"
+          ],
+          "umbrella_stand": [
+            "old_locket"
+          ]
+        },
+        "exits": [
+          "locked_study"
+        ],
+        "locked_exits": {
+          "locked_study": {
+            "door_name": "north_door",
+            "hint_on_locked": "ドアには鍵穴があります。鍵が必要なようです。",
+            "locked": true,
+            "required_key": "iron_key",
+            "suggestions": [
+              "inspect north_door",
+              "look around",
+              "inspect coat_rack"
+            ]
+          }
+        },
+        "props": [
+          "coat_rack",
+          "umbrella_stand",
+          "mirror"
+        ],
+        "red_herrings": {
+          "old_locket": {
+            "description": "古びたロケットペンダント。中には色褪せた写真が入っている。",
+            "hint": "思い出の品のようだが、何かに使えるものではなさそう..."
+          }
+        }
+      }
+    },
+    "name": "mystery_mansion",
+    "notes": "Flagship scenario for P-Next2. Clear condition: reach goal_attic. Requires iron_key from coat_rack to unlock north_door. Red herring: old_locket in umbrella_stand (decorative item, no gameplay use).",
+    "preflight_messages": {
+      "locked_door_no_key": "[PREFLIGHT] 🔒 {door_name} は施錠されています。{hint}\n💡 次の行動候補: {suggestions}"
+    },
+    "time_of_day": "evening"
+  },
+  "scenario_name": "mystery_mansion",
+  "schema_version": "1.0.0",
+  "unlocked_doors": [
+    "north_door"
+  ]
+}

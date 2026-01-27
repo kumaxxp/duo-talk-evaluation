@@ -1,0 +1,410 @@
+From 43a8877ebf93808c208b81279ed25022689bf644 Mon Sep 17 00:00:00 2001
+From: kumaxxp <xxp@ezweb.ne.jp>
+Date: Mon, 26 Jan 2026 14:51:36 +0900
+Subject: [PATCH] =?UTF-8?q?feat(P-Next1/PR2):=20Play=20Mode=E5=B0=8E?=
+ =?UTF-8?q?=E7=B7=9A=E7=9F=AD=E7=B8=AE=20-=20=E3=82=A8=E3=82=A4=E3=83=AA?=
+ =?UTF-8?q?=E3=82=A2=E3=82=B9=E5=BC=B7=E5=8C=96=20&=20=E3=83=98=E3=83=AB?=
+ =?UTF-8?q?=E3=83=97=E6=94=B9=E5=96=84?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+## 変更内容
+
+### 短縮エイリアス追加
+- g = move (go)
+- t = take
+- o = open
+- x = search (examine)
+- 日本語エイリアス拡充 (行く, 拾う, 開く, 探す等)
+
+### ヘルプ改善
+- カテゴリ分け (探索/アイテム/情報/システム)
+- 全エイリアス表示
+- 使用例セクション追加
+
+### コマンド提案機能
+- タイポ時に類似コマンドを提案
+- suggest_command() 関数追加
+
+### 起動メッセージ改善
+- クイックコマンドリファレンス表示
+- 視認性向上のための罫線追加
+
+## テスト
+- TestShortAliases: 5テスト追加
+- TestSuggestCommand: 4テスト追加
+- TestImprovedHelp: 3テスト追加
+- TestCommandAliasesDictionary: 3テスト追加
+- 合計49テストパス
+---
+ scripts/play_mode.py    | 149 +++++++++++++++++++++++++----------
+ tests/test_play_mode.py | 167 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 277 insertions(+), 39 deletions(-)
+
+diff --git a/scripts/play_mode.py b/scripts/play_mode.py
+index 4a30128..0162059 100644
+--- a/scripts/play_mode.py
++++ b/scripts/play_mode.py
+@@ -149,6 +149,22 @@ def format_character_status(positions: dict[str, str]) -> str:
+ # =============================================================================
+ 
+ 
++# Command aliases for quick reference
++COMMAND_ALIASES: dict[str, list[str]] = {
++    "look": ["look", "l", "見る", "look around"],
++    "move": ["move", "go", "g", "移動", "行く"],
++    "take": ["take", "get", "t", "取る", "拾う"],
++    "open": ["open", "o", "開ける", "開く"],
++    "search": ["search", "inspect", "x", "examine", "調べる", "探す"],
++    "where": ["where", "w", "どこ", "現在地"],
++    "inventory": ["inventory", "inv", "i", "持ち物", "所持品"],
++    "map": ["map", "m", "地図", "マップ"],
++    "help": ["help", "h", "?", "ヘルプ"],
++    "quit": ["quit", "exit", "q", "終了"],
++    "status": ["status", "st", "状態", "ステータス"],
++}
++
++
+ def parse_command(user_input: str) -> ParsedCommand:
+     """Parse user input into command.
+ 
+@@ -166,31 +182,62 @@ def parse_command(user_input: str) -> ParsedCommand:
+     action = parts[0].lower()
+     target = parts[1] if len(parts) > 1 else None
+ 
+-    # Normalize commands
+-    if action in ("look", "l", "見る"):
+-        return ParsedCommand(action="look", target=target)
+-    elif action in ("move", "go", "移動"):
+-        return ParsedCommand(action="move", target=target)
+-    elif action in ("take", "get", "取る"):
+-        return ParsedCommand(action="take", target=target)
+-    elif action in ("open", "開ける"):
+-        return ParsedCommand(action="open", target=target)
+-    elif action in ("search", "inspect", "調べる"):
+-        return ParsedCommand(action="search", target=target)
+-    elif action in ("where", "w", "どこ"):
+-        return ParsedCommand(action="where", target=None)
+-    elif action in ("inventory", "inv", "i", "持ち物"):
+-        return ParsedCommand(action="inventory", target=None)
+-    elif action in ("map", "m", "地図"):
+-        return ParsedCommand(action="map", target=None)
+-    elif action in ("help", "h", "?"):
+-        return ParsedCommand(action="help", target=None)
+-    elif action in ("quit", "exit", "q"):
+-        return ParsedCommand(action="quit", target=None)
+-    elif action in ("status", "st", "状態"):
+-        return ParsedCommand(action="status", target=None)
+-    else:
+-        return ParsedCommand(action="unknown", target=user_input)
++    # Normalize commands using alias dictionary
++    for cmd, aliases in COMMAND_ALIASES.items():
++        if action in aliases:
++            # where, inventory, map, help, quit, status don't use targets
++            if cmd in ("where", "inventory", "map", "help", "quit", "status"):
++                return ParsedCommand(action=cmd, target=None)
++            return ParsedCommand(action=cmd, target=target)
++
++    return ParsedCommand(action="unknown", target=user_input)
++
++
++def suggest_command(user_input: str) -> str | None:
++    """Suggest a similar command for typos or unknown input.
++
++    Args:
++        user_input: The unknown user input
++
++    Returns:
++        Suggestion message or None if no good match
++    """
++    if not user_input:
++        return None
++
++    action = user_input.split()[0].lower()
++
++    # Common typos and suggestions
++    suggestions: dict[str, str] = {
++        "lok": "look",
++        "loo": "look",
++        "mve": "move",
++        "mov": "move",
++        "tke": "take",
++        "tak": "take",
++        "opn": "open",
++        "serch": "search",
++        "srch": "search",
++        "wher": "where",
++        "invent": "inventory",
++        "invetory": "inventory",
++        "mp": "map",
++        "hlp": "help",
++        "hep": "help",
++        "ext": "quit",
++        "exi": "quit",
++    }
++
++    if action in suggestions:
++        return f"もしかして: {suggestions[action]}"
++
++    # Check if it starts like a known command
++    for cmd, aliases in COMMAND_ALIASES.items():
++        for alias in aliases:
++            if len(action) >= 2 and alias.startswith(action):
++                return f"もしかして: {alias}"
++
++    return None
+ 
+ 
+ def get_help_text() -> str:
+@@ -200,18 +247,34 @@ def get_help_text() -> str:
+         Help text string
+     """
+     return """
+-📖 コマンド一覧:
+-  look, l           - 現在地の情報を表示
+-  move <場所>       - 指定した場所に移動
+-  take <物>         - 物を拾う
+-  open <容器>       - 容器を開けて中身を見る
+-  search [対象]     - 隠されたものを探す
+-  where, w          - 現在地とキャラクター位置
+-  inventory, inv, i - 所持品一覧
+-  map, m            - 全体マップを表示
+-  status, st        - キャラクター状態を表示
+-  help, h           - このヘルプを表示
+-  quit, q           - 終了
++📖 コマンド一覧
++
++【探索】
++  look (l)              現在地の情報を表示
++  move <場所> (go, g)   指定した場所に移動
++  search [対象] (x)     隠されたものを探す
++  map (m)               全体マップを表示
++
++【アイテム】
++  take <物> (get, t)    物を拾う
++  open <容器> (o)       容器を開けて中身を見る
++  inventory (inv, i)    所持品一覧
++
++【情報】
++  where (w)             現在地とキャラクター位置
++  status (st)           キャラクター状態を表示
++  help (h, ?)           このヘルプを表示
++
++【システム】
++  quit (q)              終了
++
++【使用例】
++  move リビング         リビングに移動
++  take コーヒー豆       コーヒー豆を拾う
++  open 引き出し         引き出しを開ける
++  x 本棚                本棚を調べる
++
++💡 ヒント: 括弧内は省略形です (例: l = look)
+ """
+ 
+ 
+@@ -400,7 +463,12 @@ def execute_command(cmd: ParsedCommand, state: PlayState) -> tuple[str, PlayStat
+         return "終了します。", state
+ 
+     else:
+-        return f"不明なコマンド: {cmd.get('target', '')}。'help' でコマンド一覧を表示", state
++        msg = f"❓ 不明なコマンド: {cmd.get('target', '')}"
++        suggestion = suggest_command(cmd.get("target", ""))
++        if suggestion:
++            msg += f"\n💡 {suggestion}"
++        msg += "\n📖 'help' でコマンド一覧を表示"
++        return msg, state
+ 
+ 
+ # =============================================================================
+@@ -421,7 +489,10 @@ def run_play_mode(scenario_path: Path):
+         sys.exit(1)
+ 
+     print(f"\n🎮 Play Mode: {state['scenario_name']}")
+-    print("'help' でコマンド一覧、'quit' で終了")
++    print("─" * 40)
++    print("💡 クイックコマンド: l=見る g=移動 t=取る o=開ける x=調べる")
++    print("   h=ヘルプ m=マップ i=所持品 q=終了")
++    print("─" * 40)
+     print()
+     print(format_world_state(state))
+     print()
+diff --git a/tests/test_play_mode.py b/tests/test_play_mode.py
+index 0327b11..59866fa 100644
+--- a/tests/test_play_mode.py
++++ b/tests/test_play_mode.py
+@@ -573,3 +573,170 @@ class TestHelpUpdatedForNewCommands:
+         help_text = get_help_text()
+ 
+         assert "map" in help_text
++
++
++class TestShortAliases:
++    """Tests for short command aliases (P-Next1/PR2)."""
++
++    def test_parse_g_as_move(self):
++        """'g' should be alias for move."""
++        from scripts.play_mode import parse_command
++
++        cmd = parse_command("g リビング")
++        assert cmd["action"] == "move"
++        assert cmd["target"] == "リビング"
++
++    def test_parse_t_as_take(self):
++        """'t' should be alias for take."""
++        from scripts.play_mode import parse_command
++
++        cmd = parse_command("t コーヒー豆")
++        assert cmd["action"] == "take"
++        assert cmd["target"] == "コーヒー豆"
++
++    def test_parse_o_as_open(self):
++        """'o' should be alias for open."""
++        from scripts.play_mode import parse_command
++
++        cmd = parse_command("o 引き出し")
++        assert cmd["action"] == "open"
++        assert cmd["target"] == "引き出し"
++
++    def test_parse_x_as_search(self):
++        """'x' should be alias for search (examine)."""
++        from scripts.play_mode import parse_command
++
++        cmd = parse_command("x 本棚")
++        assert cmd["action"] == "search"
++        assert cmd["target"] == "本棚"
++
++    def test_parse_examine_as_search(self):
++        """'examine' should be alias for search."""
++        from scripts.play_mode import parse_command
++
++        cmd = parse_command("examine 壁")
++        assert cmd["action"] == "search"
++        assert cmd["target"] == "壁"
++
++
++class TestSuggestCommand:
++    """Tests for command suggestion on typos (P-Next1/PR2)."""
++
++    def test_suggest_for_common_typo(self):
++        """Should suggest correct command for common typos."""
++        from scripts.play_mode import suggest_command
++
++        result_lok = suggest_command("lok")
++        result_mov = suggest_command("mov")
++        result_tke = suggest_command("tke")
++
++        assert result_lok is not None and "look" in result_lok
++        assert result_mov is not None and "move" in result_mov
++        assert result_tke is not None and "take" in result_tke
++
++    def test_suggest_for_partial_match(self):
++        """Should suggest command for partial input."""
++        from scripts.play_mode import suggest_command
++
++        # Should match commands starting with partial input
++        result = suggest_command("hel")
++        assert result is not None
++        assert "help" in result
++
++    def test_no_suggestion_for_valid_command(self):
++        """Should return None for unrecognized input without close match."""
++        from scripts.play_mode import suggest_command
++
++        result = suggest_command("xyzabc")
++        assert result is None
++
++    def test_unknown_command_shows_suggestion(self):
++        """Unknown command should show suggestion in output."""
++        from scripts.play_mode import execute_command, PlayState, ParsedCommand
++
++        state = PlayState(
++            scenario_name="test",
++            current_location="キッチン",
++            available_objects=[],
++            available_exits=[],
++            character_positions={},
++            holding=[],
++            scenario_data={},
++        )
++
++        cmd = ParsedCommand(action="unknown", target="lok")
++        output, _ = execute_command(cmd, state)
++
++        assert "不明なコマンド" in output
++        assert "help" in output
++
++
++class TestImprovedHelp:
++    """Tests for improved help formatting (P-Next1/PR2)."""
++
++    def test_help_has_categories(self):
++        """Help should have category headers."""
++        from scripts.play_mode import get_help_text
++
++        help_text = get_help_text()
++
++        assert "探索" in help_text
++        assert "アイテム" in help_text
++        assert "情報" in help_text
++        assert "システム" in help_text
++
++    def test_help_shows_aliases(self):
++        """Help should show command aliases."""
++        from scripts.play_mode import get_help_text
++
++        help_text = get_help_text()
++
++        # Check that short aliases are shown
++        assert "(l)" in help_text  # look alias
++        assert "(g)" in help_text or "go, g" in help_text  # move alias
++        assert "(t)" in help_text or "get, t" in help_text  # take alias
++
++    def test_help_has_examples(self):
++        """Help should include usage examples."""
++        from scripts.play_mode import get_help_text
++
++        help_text = get_help_text()
++
++        assert "使用例" in help_text
++        assert "move リビング" in help_text or "リビング" in help_text
++
++
++class TestCommandAliasesDictionary:
++    """Tests for COMMAND_ALIASES dictionary (P-Next1/PR2)."""
++
++    def test_command_aliases_exists(self):
++        """COMMAND_ALIASES dictionary should exist."""
++        from scripts.play_mode import COMMAND_ALIASES
++
++        assert isinstance(COMMAND_ALIASES, dict)
++        assert "look" in COMMAND_ALIASES
++        assert "move" in COMMAND_ALIASES
++
++    def test_all_commands_have_aliases(self):
++        """All main commands should have aliases defined."""
++        from scripts.play_mode import COMMAND_ALIASES
++
++        expected_commands = [
++            "look", "move", "take", "open", "search",
++            "where", "inventory", "map", "help", "quit", "status"
++        ]
++        for cmd in expected_commands:
++            assert cmd in COMMAND_ALIASES, f"Missing alias for: {cmd}"
++
++    def test_japanese_aliases_included(self):
++        """Japanese aliases should be included."""
++        from scripts.play_mode import COMMAND_ALIASES
++
++        # Check some Japanese aliases exist
++        all_aliases = []
++        for aliases in COMMAND_ALIASES.values():
++            all_aliases.extend(aliases)
++
++        assert "見る" in all_aliases
++        assert "移動" in all_aliases
++        assert "取る" in all_aliases
+-- 
+2.43.0
+
