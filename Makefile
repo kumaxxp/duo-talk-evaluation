@@ -3,8 +3,8 @@
 
 .PHONY: help test test-all test-core test-director test-evaluation test-gm \
         test-freeze test-integration coverage experiment-quick experiment-director experiment-generation \
-        benchmark lint format clean dev-run run-dev run-gate run-full gui \
-        new-scenario lint-scenarios scenario-summary play load-test
+        benchmark lint format clean dev-run run-dev run-gate run-full gui gui-with-gm \
+        new-scenario lint-scenarios scenario-summary play load-test release-gui release-clean
 
 # Default conda environment
 CONDA_ENV ?= duo-talk
@@ -48,6 +48,11 @@ help:
 	@echo ""
 	@echo "GUI:"
 	@echo "  make gui               - Start NiceGUI evaluation dashboard (port 8080)"
+	@echo "  make gui-with-gm       - Start GUI with GM service"
+	@echo ""
+	@echo "Release:"
+	@echo "  make release-gui       - Create release package (tar.gz)"
+	@echo "  make release-clean     - Clean release artifacts"
 	@echo ""
 	@echo "Scenario Tools:"
 	@echo "  make new-scenario id=scn_xxx  - Generate new scenario template"
@@ -194,6 +199,35 @@ ci-gate:
 
 gui:
 	$(PYTHON) -m gui_nicegui.main
+
+gui-with-gm:
+	./run_gui.sh --with-gm
+
+#------------------------------------------------------------------------------
+# Release
+#------------------------------------------------------------------------------
+
+RELEASE_NAME ?= hakoniwa-console
+RELEASE_VERSION ?= 0.1.0
+
+release-gui:
+	@echo "=== Creating release package ==="
+	@mkdir -p dist
+	@echo "Exporting requirements..."
+	pip freeze > dist/requirements-freeze.txt
+	@echo "Creating archive..."
+	tar --exclude='*.pyc' --exclude='__pycache__' --exclude='.pytest_cache' \
+		--exclude='results/*' --exclude='reports/*.csv' --exclude='dist' \
+		-czvf dist/$(RELEASE_NAME)-$(RELEASE_VERSION).tar.gz \
+		gui_nicegui/ run_gui.sh Makefile requirements.txt \
+		docs/specs/PHASE4_RELEASE_NOTES.md docs/specs/DEMO_SCRIPT.md \
+		docs/specs/PHASE4_GUI_IMPL_NOTES.md
+	@echo ""
+	@echo "Release package created: dist/$(RELEASE_NAME)-$(RELEASE_VERSION).tar.gz"
+	@ls -lh dist/$(RELEASE_NAME)-$(RELEASE_VERSION).tar.gz
+
+release-clean:
+	rm -rf dist/
 
 #------------------------------------------------------------------------------
 # Scenario Tools (Phase C)
