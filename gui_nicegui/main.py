@@ -41,6 +41,7 @@ from gui_nicegui.data.compare import compare_run_meta, compare_metrics
 from gui_nicegui.data.export import create_export_zip, create_pack_export_zip, collect_export_files
 from gui_nicegui.data.runner import build_runner_command
 from gui_nicegui.components.visual_board import create_visual_board
+from gui_nicegui.adapters.core_adapter import generate_thought, generate_utterance
 
 
 class AppState:
@@ -66,6 +67,9 @@ class AppState:
         # HAKONIWA Console state (Phase 4)
         self.speaker: str = "やな"  # Current speaker selection
         self.topic: str = ""  # Current topic/prompt
+        self.session_id: str = "session_001"  # Session identifier for API calls
+        self.pending_thought: str = ""  # Last generated thought (for utterance generation)
+        self.generating: bool = False  # Lock to prevent concurrent generation
 
         # Dialogue log - list of conversation turns
         self.dialogue_log: list[dict] = [
@@ -1033,6 +1037,8 @@ def _create_dialogue_card(turn_data: dict) -> None:
                 ui.badge("RETRY").props("color=orange")
             elif status == "GIVE_UP":
                 ui.badge("GIVE_UP").props("color=red")
+            elif status == "THOUGHT":
+                ui.badge("THOUGHT").props("color=blue outline")
 
         # Thought (collapsed by default)
         if thought:
@@ -1050,6 +1056,110 @@ def _create_dialogue_card(turn_data: dict) -> None:
                 ui.code(turn_data["raw_output"]).classes("text-xs")
                 ui.label("Repaired:").classes("text-xs font-bold mt-1")
                 ui.code(turn_data["repaired_output"]).classes("text-xs")
+
+
+async def _handle_generate_thought() -> None:
+    """Handle Generate Thought button click."""
+    if state.generating:
+        ui.notify("Generation already in progress", type="warning")
+        return
+
+    state.generating = True
+    state.log_output = f"Generating thought for {state.speaker}..."
+
+    try:
+        result = await generate_thought(
+            session_id=state.session_id,
+            speaker=state.speaker,
+            topic=state.topic,
+        )
+
+        # Calculate next turn number
+        next_turn = len(state.dialogue_log) + 1
+
+        # Add thought to dialogue log
+        new_entry = {
+            "turn": next_turn,
+            "speaker": state.speaker,
+            "thought": result["thought"],
+            "speech": "",  # No speech yet
+            "status": "THOUGHT",
+        }
+        state.dialogue_log.append(new_entry)
+        state.pending_thought = result["thought"]
+
+        # Refresh UI
+        _refresh_main_stage()
+
+        # Update log and notify
+        state.log_output = f"Thought generated for {state.speaker} ({result['latency_ms']}ms)"
+        ui.notify(
+            f"Thought generated: {result['thought'][:50]}...",
+            type="positive",
+        )
+
+    except asyncio.TimeoutError as e:
+        state.log_output = f"Timeout: {e}"
+        ui.notify(f"Timeout: {e}", type="negative")
+
+    except Exception as e:
+        state.log_output = f"Error: {e}"
+        ui.notify(f"Error generating thought: {e}", type="negative")
+
+    finally:
+        state.generating = False
+
+
+async def _handle_generate_utterance() -> None:
+    """Handle Generate Utterance button click."""
+    if state.generating:
+        ui.notify("Generation already in progress", type="warning")
+        return
+
+    if not state.pending_thought:
+        ui.notify("No pending thought. Generate a thought first.", type="warning")
+        return
+
+    state.generating = True
+    state.log_output = f"Generating utterance for {state.speaker}..."
+
+    try:
+        result = await generate_utterance(
+            session_id=state.session_id,
+            speaker=state.speaker,
+            thought=state.pending_thought,
+        )
+
+        # Update the last dialogue entry (which should have the thought)
+        if state.dialogue_log:
+            last_entry = state.dialogue_log[-1]
+            if last_entry.get("status") == "THOUGHT":
+                last_entry["speech"] = result["speech"]
+                last_entry["status"] = "PASS"  # Mark as complete
+
+        # Clear pending thought
+        state.pending_thought = ""
+
+        # Refresh UI
+        _refresh_main_stage()
+
+        # Update log and notify
+        state.log_output = f"Utterance generated for {state.speaker} ({result['latency_ms']}ms)"
+        ui.notify(
+            f"Utterance: {result['speech'][:50]}...",
+            type="positive",
+        )
+
+    except asyncio.TimeoutError as e:
+        state.log_output = f"Timeout: {e}"
+        ui.notify(f"Timeout: {e}", type="negative")
+
+    except Exception as e:
+        state.log_output = f"Error: {e}"
+        ui.notify(f"Error generating utterance: {e}", type="negative")
+
+    finally:
+        state.generating = False
 
 
 def create_control_panel() -> None:
@@ -1100,13 +1210,13 @@ def create_control_panel() -> None:
         with ui.column().classes("w-full gap-2"):
             ui.button(
                 "Generate Thought",
-                on_click=lambda: ui.notify("Generate Thought (Step2で実装)", type="info"),
+                on_click=_handle_generate_thought,
                 icon="psychology",
             ).classes("w-full").props("outline")
 
             ui.button(
                 "Generate Utterance",
-                on_click=lambda: ui.notify("Generate Utterance (Step2で実装)", type="info"),
+                on_click=_handle_generate_utterance,
                 icon="chat",
             ).classes("w-full").props("outline")
 
