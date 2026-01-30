@@ -303,17 +303,99 @@ async def post_step(
             utterance = payload.get("utterance", "")
             world_state = payload.get("world_state", {})
 
+            # Build WorldState matching GM's Pydantic schema
+            turn_number = payload.get("turn_number", 0)
+
+            # Parse time if string format (e.g., "朝 7:00")
+            time_str = world_state.get("time", "朝 7:00")
+            time_label = "朝"  # default
+            if isinstance(time_str, str):
+                # Extract time label from string like "朝 7:00"
+                for label in ["朝", "昼", "夕", "夜"]:
+                    if label in time_str:
+                        time_label = label
+                        break
+            elif isinstance(time_str, dict):
+                time_label = time_str.get("label", "朝")
+
+            # Get current location
+            current_loc = world_state.get("current_location", "キッチン")
+            if isinstance(world_state.get("location"), dict):
+                current_loc = world_state["location"].get("current", current_loc)
+
+            # Build characters with proper CharacterState structure
+            raw_characters = world_state.get("characters", {})
+            characters = {}
+            for char_name, char_data in raw_characters.items():
+                if isinstance(char_data, dict):
+                    characters[char_name] = {
+                        "status": char_data.get("status", ["起床済み"]),
+                        "holding": char_data.get("holding", []),
+                        "location": char_data.get("location", current_loc),
+                    }
+                else:
+                    characters[char_name] = {
+                        "status": ["起床済み"],
+                        "holding": [],
+                        "location": current_loc,
+                    }
+
+            # Ensure both characters exist
+            if "やな" not in characters:
+                characters["やな"] = {"status": ["起床済み"], "holding": [], "location": current_loc}
+            if "あゆ" not in characters:
+                characters["あゆ"] = {"status": ["起床済み"], "holding": [], "location": current_loc}
+
+            # Build locations with proper LocationState structure
+            raw_locations = world_state.get("locations", {})
+            locations = {}
+            for loc_name, loc_data in raw_locations.items():
+                if isinstance(loc_data, dict):
+                    locations[loc_name] = {
+                        "description": loc_data.get("description", ""),
+                        "exits": loc_data.get("exits", []),
+                    }
+
+            # Default locations if empty
+            if not locations:
+                locations = {
+                    "キッチン": {"description": "朝のキッチン。", "exits": ["リビング"]},
+                    "リビング": {"description": "テレビのある部屋。", "exits": ["キッチン"]},
+                }
+
+            # Build props with proper PropState structure
+            raw_props = world_state.get("props", {})
+            props = {}
+            for prop_name, prop_data in raw_props.items():
+                if isinstance(prop_data, dict):
+                    props[prop_name] = {
+                        "location": prop_data.get("location", current_loc),
+                        "state": prop_data.get("state", []),
+                    }
+
+            # Default props if empty
+            if not props:
+                props = {
+                    "マグカップ": {"location": "キッチン", "state": ["clean"]},
+                    "コーヒーメーカー": {"location": "キッチン", "state": ["off"]},
+                }
+
             gm_request = {
                 "session_id": payload.get("session_id", "gui_session"),
-                "turn_number": payload.get("turn_number", 0),
+                "turn_number": turn_number,
                 "speaker": speaker,
                 "raw_output": f"Thought: (thinking)\nOutput: {utterance}",
                 "world_state": {
-                    "current_location": world_state.get("current_location", "寝室"),
-                    "characters": world_state.get("characters", {}),
-                    "locations": {},
-                    "time": world_state.get("time", "朝 7:00"),
-                    "props": {},
+                    "version": "0.1",
+                    "time": {
+                        "label": time_label,
+                        "turn": turn_number,
+                    },
+                    "location": {"current": current_loc},
+                    "locations": locations,
+                    "characters": characters,
+                    "props": props,
+                    "events": [],
                 },
             }
 
