@@ -49,12 +49,60 @@ class HealthResponse(TypedDict):
 GM_BASE_URL = "http://localhost:8001"
 DEFAULT_TIMEOUT = 3.0
 
+# Exponential backoff configuration
+BACKOFF_BASE = 1.0  # Initial backoff in seconds
+BACKOFF_MAX_RETRIES = 3
+BACKOFF_MULTIPLIER = 2.0  # Exponential multiplier
+
 # Track GM availability
 _gm_available: bool | None = None  # None = not checked yet
 
 
+async def _check_gm_availability_with_backoff(max_retries: int = BACKOFF_MAX_RETRIES) -> bool:
+    """Check if GM service is available with exponential backoff.
+
+    Retries with delays: 1s -> 2s -> 4s (exponential backoff).
+
+    Args:
+        max_retries: Maximum number of retry attempts (default: 3)
+
+    Returns:
+        True if GM is available, False otherwise
+    """
+    global _gm_available
+    if not HTTPX_AVAILABLE:
+        _gm_available = False
+        return False
+
+    backoff_delay = BACKOFF_BASE
+
+    for attempt in range(max_retries + 1):
+        try:
+            async with httpx.AsyncClient(timeout=2.0) as client:
+                response = await client.get(f"{GM_BASE_URL}/health")
+                if response.status_code == 200:
+                    _gm_available = True
+                    logger.info(f"GM service: CONNECTED (attempt {attempt + 1})")
+                    return True
+        except Exception as e:
+            if attempt < max_retries:
+                logger.warning(
+                    f"GM service check failed (attempt {attempt + 1}/{max_retries + 1}): {e}, "
+                    f"retrying in {backoff_delay}s..."
+                )
+                await asyncio.sleep(backoff_delay)
+                backoff_delay *= BACKOFF_MULTIPLIER
+            else:
+                logger.warning(
+                    f"GM service not available after {max_retries + 1} attempts: {e}"
+                )
+
+    _gm_available = False
+    return False
+
+
 async def _check_gm_availability() -> bool:
-    """Check if GM service is available."""
+    """Check if GM service is available (single attempt)."""
     global _gm_available
     if not HTTPX_AVAILABLE:
         _gm_available = False

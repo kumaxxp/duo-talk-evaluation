@@ -2,9 +2,9 @@
 # CI/CD and development commands
 
 .PHONY: help test test-all test-core test-director test-evaluation test-gm \
-        test-freeze coverage experiment-quick experiment-director experiment-generation \
+        test-freeze test-integration coverage experiment-quick experiment-director experiment-generation \
         benchmark lint format clean dev-run run-dev run-gate run-full gui \
-        new-scenario lint-scenarios scenario-summary play
+        new-scenario lint-scenarios scenario-summary play load-test
 
 # Default conda environment
 CONDA_ENV ?= duo-talk
@@ -24,8 +24,10 @@ help:
 	@echo "  make test-evaluation   - Run duo-talk-evaluation tests"
 	@echo "  make test-gm           - Run duo-talk-gm tests"
 	@echo "  make test-freeze       - Run P0 Freeze verification tests"
+	@echo "  make test-integration  - Run integration tests (One-Step E2E)"
 	@echo "  make coverage          - Run tests with coverage"
 	@echo "  make ci-gate           - Quick CI gate (gm+eval tests, lint, gui-smoke)"
+	@echo "  make load-test         - Run load test (N=5 concurrent One-Step)"
 	@echo ""
 	@echo "Runner (GM 2x2):"
 	@echo "  make dev-run           - Run dev profile (quick, seeds=1, turns=3)"
@@ -82,6 +84,15 @@ test-freeze:
 
 coverage:
 	$(PYTHON) scripts/ci/run_tests.py --component all --coverage
+
+test-integration:
+	$(PYTHON) -m pytest tests/integration/ -v --tb=short
+
+test-integration-real:
+	./scripts/ci/run_integration.sh --with-services
+
+load-test:
+	$(PYTHON) scripts/load_test_one_step.py --concurrent 5 --iterations 3
 
 #------------------------------------------------------------------------------
 # Runner (GM 2x2)
