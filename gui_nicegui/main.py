@@ -1311,6 +1311,234 @@ async def _handle_gm_step() -> None:
         state.generating = False
 
 
+# One-Step configuration
+ONE_STEP_MAX_RETRIES = 2
+ONE_STEP_TIMEOUT_CORE = 5.0
+ONE_STEP_TIMEOUT_DIRECTOR = 5.0
+ONE_STEP_TIMEOUT_GM = 3.0
+
+
+def _apply_world_patch(patch: dict) -> None:
+    """Apply GM world_patch to state.world_state_summary."""
+    if "current_location" in patch:
+        state.world_state_summary["current_location"] = patch["current_location"]
+    if "time" in patch:
+        state.world_state_summary["time"] = patch["time"]
+    if "characters" in patch:
+        for char_name, char_data in patch["characters"].items():
+            if char_name in state.world_state_summary["characters"]:
+                state.world_state_summary["characters"][char_name].update(char_data)
+    if "changes" in patch:
+        state.world_state_summary["recent_changes"] = (
+            patch["changes"] + state.world_state_summary.get("recent_changes", [])[:2]
+        )
+
+
+async def _handle_one_step() -> None:
+    """Handle One-Step button click - full Thought→Check→Utterance→Check→GM flow."""
+    if state.generating:
+        ui.notify("Generation already in progress", type="warning")
+        return
+
+    state.generating = True
+    speaker = state.speaker
+    topic = state.topic
+    retry_count = 0
+
+    state.log_output = f"[One-Step] Starting for {speaker}..."
+
+    try:
+        # ========================================
+        # Phase 1: Generate Thought
+        # ========================================
+        state.log_output = f"[One-Step] Generating thought for {speaker}..."
+        thought_result = await generate_thought(
+            session_id=state.session_id,
+            speaker=speaker,
+            topic=topic,
+            timeout=ONE_STEP_TIMEOUT_CORE,
+        )
+        thought = thought_result["thought"]
+        state.log_output = f"[One-Step] Thought generated ({thought_result['latency_ms']}ms)"
+
+        # ========================================
+        # Phase 2: Director Check (Thought)
+        # ========================================
+        state.log_output = f"[One-Step] Checking thought..."
+        thought_retries = 0
+        while thought_retries < ONE_STEP_MAX_RETRIES:
+            check_result = await director_check(
+                stage="thought",
+                content=thought,
+                context={
+                    "session_id": state.session_id,
+                    "speaker": speaker,
+                    "dialogue_log": state.dialogue_log,
+                },
+                timeout=ONE_STEP_TIMEOUT_DIRECTOR,
+            )
+
+            if check_result["status"] == "PASS":
+                state.log_output = f"[One-Step] Thought PASS ({check_result['latency_ms']}ms)"
+                break
+            else:
+                thought_retries += 1
+                retry_count += 1
+                state.director_status["retry_count"] += 1
+                state.log_output = f"[One-Step] Thought RETRY ({thought_retries}/{ONE_STEP_MAX_RETRIES})"
+
+                if check_result["repaired_output"]:
+                    thought = check_result["repaired_output"]
+                else:
+                    # Regenerate thought
+                    thought_result = await generate_thought(
+                        session_id=state.session_id,
+                        speaker=speaker,
+                        topic=topic,
+                        timeout=ONE_STEP_TIMEOUT_CORE,
+                    )
+                    thought = thought_result["thought"]
+
+        # ========================================
+        # Phase 3: Generate Utterance
+        # ========================================
+        state.log_output = f"[One-Step] Generating utterance..."
+        utterance_result = await generate_utterance(
+            session_id=state.session_id,
+            speaker=speaker,
+            thought=thought,
+            timeout=ONE_STEP_TIMEOUT_CORE,
+        )
+        speech = utterance_result["speech"]
+        state.log_output = f"[One-Step] Utterance generated ({utterance_result['latency_ms']}ms)"
+
+        # ========================================
+        # Phase 4: Director Check (Speech)
+        # ========================================
+        state.log_output = f"[One-Step] Checking speech..."
+        speech_retries = 0
+        raw_speech = speech  # Keep original for diff display
+        while speech_retries < ONE_STEP_MAX_RETRIES:
+            check_result = await director_check(
+                stage="speech",
+                content=speech,
+                context={
+                    "session_id": state.session_id,
+                    "speaker": speaker,
+                    "dialogue_log": state.dialogue_log,
+                },
+                timeout=ONE_STEP_TIMEOUT_DIRECTOR,
+            )
+
+            if check_result["status"] == "PASS":
+                state.log_output = f"[One-Step] Speech PASS ({check_result['latency_ms']}ms)"
+                break
+            else:
+                speech_retries += 1
+                retry_count += 1
+                state.director_status["retry_count"] += 1
+                state.log_output = f"[One-Step] Speech RETRY ({speech_retries}/{ONE_STEP_MAX_RETRIES})"
+
+                if check_result["repaired_output"]:
+                    speech = check_result["repaired_output"]
+                else:
+                    # Regenerate utterance
+                    utterance_result = await generate_utterance(
+                        session_id=state.session_id,
+                        speaker=speaker,
+                        thought=thought,
+                        timeout=ONE_STEP_TIMEOUT_CORE,
+                    )
+                    speech = utterance_result["speech"]
+
+        # Determine final status
+        final_status = "PASS" if check_result["status"] == "PASS" else "RETRY"
+
+        # ========================================
+        # Phase 5: GM Step
+        # ========================================
+        state.log_output = f"[One-Step] Applying GM step..."
+        gm_result = await gm_post_step(
+            payload={
+                "utterance": speech,
+                "speaker": speaker,
+                "world_state": state.world_state_summary,
+            },
+            timeout=ONE_STEP_TIMEOUT_GM,
+        )
+        state.log_output = f"[One-Step] GM step applied ({gm_result['latency_ms']}ms)"
+
+        # ========================================
+        # Phase 6: Update State & UI
+        # ========================================
+        # Add new dialogue entry
+        next_turn = len(state.dialogue_log) + 1
+        new_entry = {
+            "turn": next_turn,
+            "speaker": speaker,
+            "thought": thought,
+            "speech": speech,
+            "status": final_status,
+            "director_reasons": check_result.get("reasons", []),
+        }
+
+        # Add raw/repaired if there was a speech retry
+        if final_status == "RETRY" or raw_speech != speech:
+            new_entry["raw_output"] = raw_speech
+            new_entry["repaired_output"] = speech
+
+        state.dialogue_log.append(new_entry)
+
+        # Apply world patch
+        _apply_world_patch(gm_result["world_patch"])
+
+        # Add actions to action log
+        for action in gm_result["actions"]:
+            state.action_logs.append({
+                "turn": next_turn,
+                "action": action.get("action", "UNKNOWN"),
+                "actor": action.get("actor", "?"),
+                "result": action.get("result", "SUCCESS"),
+                "description": f"{action.get('actor', '?')} → {action.get('target', '?')}",
+            })
+
+        # Update Director status
+        state.director_status["last_stage"] = "speech"
+        state.director_status["last_status"] = final_status
+        state.director_status["reasons"] = check_result.get("reasons", [])
+
+        # Update GM connection status
+        state.gm_connected = True
+
+        # Refresh UI
+        _refresh_main_stage()
+        _refresh_god_view()
+
+        # Final notification
+        state.log_output = f"[One-Step] Complete! T{next_turn} {speaker} ({final_status})"
+        if retry_count > 0:
+            ui.notify(
+                f"One-Step complete (T{next_turn}, {retry_count} retries)",
+                type="warning" if final_status == "RETRY" else "positive",
+            )
+        else:
+            ui.notify(
+                f"One-Step complete: T{next_turn} {speaker} - {final_status}",
+                type="positive",
+            )
+
+    except asyncio.TimeoutError as e:
+        state.log_output = f"[One-Step] Timeout: {e}"
+        ui.notify(f"One-Step timeout: {e}", type="negative")
+
+    except Exception as e:
+        state.log_output = f"[One-Step] Error: {e}"
+        ui.notify(f"One-Step error: {e}", type="negative")
+
+    finally:
+        state.generating = False
+
+
 # God View container reference
 god_view_container = None
 
@@ -1432,7 +1660,7 @@ def create_control_panel() -> None:
 
             ui.button(
                 "One-Step",
-                on_click=lambda: ui.notify("One-Step (Step4で実装)", type="info"),
+                on_click=_handle_one_step,
                 icon="play_arrow",
             ).classes("w-full").props("color=primary")
 
