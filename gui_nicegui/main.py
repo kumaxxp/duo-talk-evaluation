@@ -42,6 +42,8 @@ from gui_nicegui.data.export import create_export_zip, create_pack_export_zip, c
 from gui_nicegui.data.runner import build_runner_command
 from gui_nicegui.components.visual_board import create_visual_board
 from gui_nicegui.adapters.core_adapter import generate_thought, generate_utterance
+from gui_nicegui.adapters.director_adapter import check as director_check
+from gui_nicegui.clients.gm_client import post_step as gm_post_step, get_health as gm_get_health
 
 
 class AppState:
@@ -1162,6 +1164,214 @@ async def _handle_generate_utterance() -> None:
         state.generating = False
 
 
+async def _handle_director_check() -> None:
+    """Handle Director Check button click - check the last dialogue entry."""
+    if not state.dialogue_log:
+        ui.notify("No dialogue to check", type="warning")
+        return
+
+    if state.generating:
+        ui.notify("Generation in progress", type="warning")
+        return
+
+    state.generating = True
+    last_entry = state.dialogue_log[-1]
+    content = last_entry.get("speech") or last_entry.get("thought", "")
+    stage = "speech" if last_entry.get("speech") else "thought"
+
+    state.log_output = f"Checking {stage} for {last_entry.get('speaker', '?')}..."
+
+    try:
+        result = await director_check(
+            stage=stage,
+            content=content,
+            context={
+                "session_id": state.session_id,
+                "speaker": last_entry.get("speaker", "やな"),
+                "dialogue_log": state.dialogue_log,
+            },
+        )
+
+        # Update dialogue entry with Director result
+        last_entry["director_status"] = result["status"]
+        last_entry["director_reasons"] = result["reasons"]
+
+        if result["status"] == "RETRY":
+            last_entry["raw_output"] = content
+            last_entry["repaired_output"] = result["repaired_output"]
+            last_entry["status"] = "RETRY"
+            state.director_status["retry_count"] += 1
+        else:
+            last_entry["status"] = "PASS"
+
+        # Update Director status
+        state.director_status["last_stage"] = stage
+        state.director_status["last_status"] = result["status"]
+        state.director_status["reasons"] = result["reasons"]
+        if result["injected_facts"]:
+            state.director_status["injected_facts"] = result["injected_facts"]
+
+        # Refresh UI
+        _refresh_main_stage()
+        _refresh_god_view()
+
+        # Notify
+        state.log_output = f"Director: {result['status']} ({result['latency_ms']}ms)"
+        if result["status"] == "RETRY":
+            ui.notify(
+                f"RETRY: {result['reasons'][0] if result['reasons'] else 'Unknown reason'}",
+                type="warning",
+            )
+        else:
+            ui.notify("PASS", type="positive")
+
+    except asyncio.TimeoutError as e:
+        state.log_output = f"Timeout: {e}"
+        ui.notify(f"Timeout: {e}", type="negative")
+
+    except Exception as e:
+        state.log_output = f"Error: {e}"
+        ui.notify(f"Error checking: {e}", type="negative")
+
+    finally:
+        state.generating = False
+
+
+async def _handle_gm_step() -> None:
+    """Handle GM Step button click - apply step to world state."""
+    if not state.dialogue_log:
+        ui.notify("No dialogue for GM step", type="warning")
+        return
+
+    if state.generating:
+        ui.notify("Generation in progress", type="warning")
+        return
+
+    state.generating = True
+    last_entry = state.dialogue_log[-1]
+    state.log_output = f"Applying GM step for {last_entry.get('speaker', '?')}..."
+
+    try:
+        result = await gm_post_step(
+            payload={
+                "utterance": last_entry.get("speech", ""),
+                "speaker": last_entry.get("speaker", "やな"),
+                "world_state": state.world_state_summary,
+            },
+        )
+
+        # Apply world patch
+        patch = result["world_patch"]
+        if "current_location" in patch:
+            state.world_state_summary["current_location"] = patch["current_location"]
+        if "time" in patch:
+            state.world_state_summary["time"] = patch["time"]
+        if "characters" in patch:
+            for char_name, char_data in patch["characters"].items():
+                if char_name in state.world_state_summary["characters"]:
+                    state.world_state_summary["characters"][char_name].update(char_data)
+        if "changes" in patch:
+            state.world_state_summary["recent_changes"] = patch["changes"] + state.world_state_summary.get("recent_changes", [])[:2]
+
+        # Add actions to action log
+        next_turn = len(state.dialogue_log)
+        for action in result["actions"]:
+            state.action_logs.append({
+                "turn": next_turn,
+                "action": action.get("action", "UNKNOWN"),
+                "actor": action.get("actor", "?"),
+                "result": action.get("result", "SUCCESS"),
+                "description": f"{action.get('actor', '?')} → {action.get('target', '?')}",
+            })
+
+        # Update GM connection status
+        state.gm_connected = True
+
+        # Refresh UI
+        _refresh_god_view()
+
+        # Notify
+        state.log_output = f"GM step applied ({result['latency_ms']}ms)"
+        ui.notify(
+            f"World updated: {patch.get('changes', ['No changes'])[0] if patch.get('changes') else 'Applied'}",
+            type="positive",
+        )
+
+    except asyncio.TimeoutError as e:
+        state.log_output = f"Timeout: {e}"
+        ui.notify(f"Timeout: {e}", type="negative")
+        state.gm_connected = False
+
+    except Exception as e:
+        state.log_output = f"Error: {e}"
+        ui.notify(f"Error: {e}", type="negative")
+        state.gm_connected = False
+
+    finally:
+        state.generating = False
+
+
+# God View container reference
+god_view_container = None
+
+
+def _refresh_god_view() -> None:
+    """Re-render the God View panel."""
+    if god_view_container is None:
+        return
+    god_view_container.clear()
+    with god_view_container:
+        _render_god_view_content()
+
+
+def _render_god_view_content() -> None:
+    """Render God View content (extracted for refresh)."""
+    # World State Summary
+    ui.label("World State").classes("text-sm font-bold mt-2")
+    ws = state.world_state_summary
+
+    with ui.card().classes("w-full bg-gray-50"):
+        with ui.column().classes("text-xs gap-1"):
+            ui.label(f"Location: {ws.get('current_location', 'N/A')}")
+            ui.label(f"Time: {ws.get('time', 'N/A')}")
+
+            # Characters
+            chars = ws.get("characters", {})
+            for char_name, char_data in chars.items():
+                loc = char_data.get("location", "?")
+                holding = char_data.get("holding", [])
+                holding_str = ", ".join(holding) if holding else "(none)"
+                ui.label(f"  {char_name}: {loc} [holding: {holding_str}]")
+
+    # Recent changes (highlighted)
+    changes = ws.get("recent_changes", [])
+    if changes:
+        ui.label("Recent Changes").classes("text-sm font-bold mt-2")
+        with ui.card().classes("w-full bg-yellow-50"):
+            for change in changes[-3:]:  # Show last 3
+                ui.label(f"• {change}").classes("text-xs")
+
+    ui.separator()
+
+    # Action Log
+    ui.label("Action Log").classes("text-sm font-bold mt-2")
+
+    with ui.scroll_area().classes("h-32"):
+        for action in reversed(state.action_logs[-5:]):  # Show last 5, newest first
+            turn_num = action.get("turn", 0)
+            action_type = action.get("action", "?")
+            actor = action.get("actor", "?")
+            result = action.get("result", "?")
+            desc = action.get("description", "")
+
+            result_color = "green" if result == "SUCCESS" else "orange"
+
+            with ui.row().classes("items-center gap-1 text-xs"):
+                ui.badge(f"T{turn_num}").props("color=grey outline")
+                ui.badge(action_type).props(f"color={result_color} outline")
+                ui.label(f"{actor}: {desc}").classes("text-gray-600")
+
+
 def create_control_panel() -> None:
     """Create Control Panel (left pane) for HAKONIWA Console."""
     with ui.card().classes("w-full"):
@@ -1228,6 +1438,24 @@ def create_control_panel() -> None:
 
         ui.separator()
 
+        # Director/GM manual operations
+        ui.label("Director / GM").classes("text-sm font-bold mt-2")
+
+        with ui.column().classes("w-full gap-2"):
+            ui.button(
+                "Check (Director)",
+                on_click=_handle_director_check,
+                icon="verified",
+            ).classes("w-full").props("outline color=orange")
+
+            ui.button(
+                "Apply Step (GM)",
+                on_click=_handle_gm_step,
+                icon="sync",
+            ).classes("w-full").props("outline color=teal")
+
+        ui.separator()
+
         # Director status display
         ui.label("Director Status").classes("text-sm font-bold mt-2")
         with ui.column().classes("w-full text-xs"):
@@ -1267,53 +1495,15 @@ def create_main_stage() -> None:
 
 def create_god_view() -> None:
     """Create God View (right pane) for HAKONIWA Console."""
+    global god_view_container
+
     with ui.card().classes("w-full"):
         ui.label("God View (GM Monitor)").classes("text-lg font-bold")
 
-        # World State Summary
-        ui.label("World State").classes("text-sm font-bold mt-2")
-        ws = state.world_state_summary
-
-        with ui.card().classes("w-full bg-gray-50"):
-            with ui.column().classes("text-xs gap-1"):
-                ui.label(f"Location: {ws.get('current_location', 'N/A')}")
-                ui.label(f"Time: {ws.get('time', 'N/A')}")
-
-                # Characters
-                chars = ws.get("characters", {})
-                for char_name, char_data in chars.items():
-                    loc = char_data.get("location", "?")
-                    holding = char_data.get("holding", [])
-                    holding_str = ", ".join(holding) if holding else "(none)"
-                    ui.label(f"  {char_name}: {loc} [holding: {holding_str}]")
-
-        # Recent changes (highlighted)
-        changes = ws.get("recent_changes", [])
-        if changes:
-            ui.label("Recent Changes").classes("text-sm font-bold mt-2")
-            with ui.card().classes("w-full bg-yellow-50"):
-                for change in changes[-3:]:  # Show last 3
-                    ui.label(f"• {change}").classes("text-xs")
-
-        ui.separator()
-
-        # Action Log
-        ui.label("Action Log").classes("text-sm font-bold mt-2")
-
-        with ui.scroll_area().classes("h-32"):
-            for action in reversed(state.action_logs[-5:]):  # Show last 5, newest first
-                turn_num = action.get("turn", 0)
-                action_type = action.get("action", "?")
-                actor = action.get("actor", "?")
-                result = action.get("result", "?")
-                desc = action.get("description", "")
-
-                result_color = "green" if result == "SUCCESS" else "orange"
-
-                with ui.row().classes("items-center gap-1 text-xs"):
-                    ui.badge(f"T{turn_num}").props("color=grey outline")
-                    ui.badge(action_type).props(f"color={result_color} outline")
-                    ui.label(f"{actor}: {desc}").classes("text-gray-600")
+        # Refreshable container for world state and action log
+        god_view_container = ui.column().classes("w-full")
+        with god_view_container:
+            _render_god_view_content()
 
 
 def create_hakoniwa_console() -> None:
