@@ -1,15 +1,16 @@
 {
   "name": "mystery_mansion",
   "description": "P-Next2 Flagship: 3部屋の洋館探索。鍵を見つけて書斎を解錠し、屋根裏を目指す。",
+  "gm_opening_message": "【脱出ゲーム開始】あなた達は今「脱出ゲーム」のシナリオにいます。最優先目標は脱出です。雑談（コーヒー/日常会話）は禁止。毎ターン必ず「次の行動」を1つだけ実行してください。使えるコマンド例: take <object> / inspect <object> / use <key> <door>。まずは start_hall を探索し、鍵(iron_key)を取得し、use iron_key north_door で解錠し、goal_attic を目指してください。",
   "lint_allow": {
     "unidirectional_exits": []
   },
   "locations": {
     "start_hall": {
-      "props": ["coat_rack", "umbrella_stand", "mirror", "iron_key", "old_locket"],
+      "props": ["coat_rack", "umbrella_stand", "mirror", "iron_key", "old_locket", "north_door"],
       "exits": ["locked_study"],
       "containers": {
-        "coat_rack": ["iron_key"],
+        "coat_rack": [],
         "umbrella_stand": ["old_locket"]
       },
       "red_herrings": {
@@ -24,7 +25,7 @@
           "required_key": "iron_key",
           "locked": true,
           "hint_on_locked": "ドアには鍵穴があります。鍵が必要なようです。",
-          "suggestions": ["inspect north_door", "look around", "inspect coat_rack"]
+          "suggestions": ["take iron_key", "use iron_key north_door"]
         }
       }
     },
@@ -38,6 +39,93 @@
       "is_goal": true
     }
   },
+  "props": {
+    "coat_rack": {
+      "location": "start_hall",
+      "openable": false,
+      "is_container": true,
+      "contains": [],
+      "takeable": false
+    },
+    "umbrella_stand": {
+      "location": "start_hall",
+      "openable": false,
+      "is_container": true,
+      "contains": ["old_locket"],
+      "takeable": false
+    },
+    "mirror": {
+      "location": "start_hall",
+      "openable": false,
+      "takeable": false
+    },
+    "iron_key": {
+      "location": "start_hall",
+      "openable": false,
+      "takeable": true,
+      "description": "古びた鉄の鍵。北のドアを開けられそうだ。"
+    },
+    "old_locket": {
+      "location": "start_hall",
+      "openable": true,
+      "takeable": true,
+      "description": "古びたロケットペンダント。中には色褪せた写真が入っている。"
+    },
+    "north_door": {
+      "location": "start_hall",
+      "openable": true,
+      "lockable": true,
+      "locked": true,
+      "required_key": "iron_key",
+      "leads_to": "locked_study",
+      "takeable": false,
+      "description": "重厚な木製のドア。北へ続いている。施錠されている。"
+    },
+    "bookshelf": {
+      "location": "locked_study",
+      "openable": false,
+      "takeable": false
+    },
+    "desk": {
+      "location": "locked_study",
+      "openable": true,
+      "is_container": true,
+      "contains": [],
+      "takeable": false
+    },
+    "reading_lamp": {
+      "location": "locked_study",
+      "openable": false,
+      "takeable": true
+    },
+    "ladder_hatch": {
+      "location": "locked_study",
+      "openable": true,
+      "leads_to": "goal_attic",
+      "takeable": false
+    },
+    "old_trunk": {
+      "location": "goal_attic",
+      "openable": true,
+      "is_container": true,
+      "contains": [],
+      "takeable": false
+    },
+    "dusty_portraits": {
+      "location": "goal_attic",
+      "openable": false,
+      "takeable": false
+    },
+    "treasure_chest": {
+      "location": "goal_attic",
+      "openable": true,
+      "lockable": true,
+      "locked": false,
+      "is_container": true,
+      "contains": [],
+      "takeable": false
+    }
+  },
   "characters": {
     "やな": {
       "location": "start_hall",
@@ -49,12 +137,25 @@
     }
   },
   "time_of_day": "evening",
-  "notes": "Flagship scenario for P-Next2. Clear condition: reach goal_attic. Requires iron_key from coat_rack to unlock north_door. Red herring: old_locket in umbrella_stand (decorative item, no gameplay use).",
+  "notes": "Flagship scenario for P-Next2. Clear condition: reach goal_attic. Requires iron_key to unlock north_door via 'use iron_key north_door'.",
   "clear_condition": {
     "type": "reach_location",
     "target": "goal_attic"
   },
   "preflight_messages": {
     "locked_door_no_key": "[PREFLIGHT] 🔒 {door_name} は施錠されています。{hint}\n💡 次の行動候補: {suggestions}"
+  },
+  "prop_aliases": {
+    "鍵": "iron_key",
+    "古い鍵": "iron_key",
+    "ドア": "north_door",
+    "北のドア": "north_door",
+    "北ドア": "north_door",
+    "書斎のドア": "north_door",
+    "コートラック": "coat_rack",
+    "コート掛け": "coat_rack",
+    "ロケット": "old_locket",
+    "古いロケット": "old_locket",
+    "傘立て": "umbrella_stand"
   }
 }

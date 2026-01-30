@@ -44,6 +44,7 @@ from pathlib import Path
 from typing import Optional
 
 import httpx
+import jsonpatch
 
 from experiments.generators import Generator, create_generator
 from experiments.scenario_registry import (
@@ -81,7 +82,7 @@ PROFILE_CONFIG = {
     "dev": {
         "conditions": ["D"],
         "seeds": 1,
-        "max_turns": 5,
+        "max_turns": 15,  # Increased for escape game scenarios
         "max_tokens": 192,
     },
     "gate": {
@@ -503,6 +504,17 @@ class TurnResult:
     available_lists_empty: bool = False  # True if all available lists were empty
     retry_same_target: bool = False  # True if blocked_target_after == blocked_target_before
     retry_new_missing: bool = False  # True if give_up with different blocked target
+    # GM-021/Take6: Normalized action
+    normalized_command: Optional[str] = None  # e.g., "use iron_key north_door"
+    normalized_verb: Optional[str] = None  # e.g., "use"
+    normalized_target: Optional[str] = None  # e.g., "iron_key"
+    normalized_secondary_target: Optional[str] = None  # e.g., "north_door"
+    normalized_reason: Optional[str] = None  # e.g., "matched key pattern"
+    normalized_success: bool = False  # Whether normalization was applied
+    # Take7: Validation result (separate from pattern matching)
+    apply_success: bool = False  # True if action is valid and can be applied to world
+    apply_fail_reason: Optional[str] = None  # e.g., "NOT_OPENABLE", "LOCKED"
+    apply_suggestion: Optional[str] = None  # Alternative action suggestion
 
 
 @dataclass
@@ -861,6 +873,18 @@ class ExperimentRunner:
                 # GM-015: Preflight guidance
                 suggest_retry = gm_response.get("suggest_retry", False)
                 guidance_cards = gm_response.get("guidance_cards", [])
+                # GM-021/Take6: Normalized action
+                normalized_action = gm_response.get("normalized_action", {})
+                normalized_command = normalized_action.get("command")
+                normalized_verb = normalized_action.get("verb")
+                normalized_target = normalized_action.get("target")
+                normalized_secondary_target = normalized_action.get("secondary_target")
+                normalized_reason = normalized_action.get("reason")
+                normalized_success = normalized_action.get("normalized", False)
+                # Take7: Validation result (separate from pattern matching)
+                apply_success = normalized_action.get("apply_success", False)
+                apply_fail_reason = normalized_action.get("fail_reason")
+                apply_suggestion = normalized_action.get("suggestion")
 
                 # Taste-3: Track initial state before retry loop
                 preflight_retry_suggested = suggest_retry
@@ -958,6 +982,18 @@ class ExperimentRunner:
                     )
                     suggest_retry = gm_response.get("suggest_retry", False)
                     guidance_cards = gm_response.get("guidance_cards", [])
+                    # GM-021/Take6: Normalized action (update on retry)
+                    normalized_action = gm_response.get("normalized_action", {})
+                    normalized_command = normalized_action.get("command")
+                    normalized_verb = normalized_action.get("verb")
+                    normalized_target = normalized_action.get("target")
+                    normalized_secondary_target = normalized_action.get("secondary_target")
+                    normalized_reason = normalized_action.get("reason")
+                    normalized_success = normalized_action.get("normalized", False)
+                    # Take7: Validation result (update on retry)
+                    apply_success = normalized_action.get("apply_success", False)
+                    apply_fail_reason = normalized_action.get("fail_reason")
+                    apply_suggestion = normalized_action.get("suggestion")
 
                     # Check for GIVE_UP in fact_cards
                     if any("[GIVE_UP]" in card for card in fact_cards):
@@ -1065,6 +1101,17 @@ class ExperimentRunner:
                 total_generation_calls = 1
                 # P1 Fix: No retry attempts when GM disabled
                 retry_attempts = []
+                # GM-021/Take6: No normalization when GM disabled
+                normalized_command = None
+                normalized_verb = None
+                normalized_target = None
+                normalized_secondary_target = None
+                normalized_reason = None
+                normalized_success = False
+                # Take7: No validation when GM disabled
+                apply_success = False
+                apply_fail_reason = None
+                apply_suggestion = None
 
             # GM-013: Classify MISSING_OBJECT as soft/hard
             missing_soft_hard = None
@@ -1278,9 +1325,27 @@ class ExperimentRunner:
                 available_lists_empty=available_lists_empty,
                 retry_same_target=retry_same_target,
                 retry_new_missing=retry_new_missing,
+                # GM-021/Take6: Normalized action
+                normalized_command=normalized_command,
+                normalized_verb=normalized_verb,
+                normalized_target=normalized_target,
+                normalized_secondary_target=normalized_secondary_target,
+                normalized_reason=normalized_reason,
+                normalized_success=normalized_success,
+                # Take7: Validation result
+                apply_success=apply_success,
+                apply_fail_reason=apply_fail_reason,
+                apply_suggestion=apply_suggestion,
             )
             turns.append(turn_result)
             total_retries += retry_count
+
+            # Apply world_delta to update world_state for next turn
+            if world_delta:
+                try:
+                    world_state = jsonpatch.apply_patch(world_state, world_delta)
+                except jsonpatch.JsonPatchException as e:
+                    logger.warning(f"Failed to apply world_delta at turn {turn_number}: {e}")
 
             # Taste-3: Early stop - break if give_up count reaches 2
             if give_up:
@@ -1479,8 +1544,18 @@ class ExperimentRunner:
         - キッチン ⇄ リビング (bidirectional connection)
 
         Taste-3: Support loading scenarios from JSON files.
+        GM-019: Uses ScenarioRegistry for scenario resolution.
         """
-        # Try to load from file first
+        # GM-019: Use registry for scenario resolution
+        try:
+            registry = ScenarioRegistry()
+            scenario_data, _base_meta = registry.load_scenario(scenario)
+            if scenario_data is not None:
+                return self._convert_scenario_to_world_state(scenario_data)
+        except Exception:
+            pass  # Fall back to legacy resolution
+
+        # Legacy: Try to load from file directly
         scenario_path = Path(__file__).parent / "scenarios" / f"{scenario}.json"
         if scenario_path.exists():
             with open(scenario_path, encoding="utf-8") as f:
@@ -1619,14 +1694,23 @@ class ExperimentRunner:
                 "location": char_data.get("location", "キッチン"),
             }
 
-        # Build props - collect from all locations
+        # Build props - prefer detailed props from scenario_data["props"]
+        # Fallback to location-based list for backwards compatibility
+        scenario_props = scenario_data.get("props", {})
         props_dict = {}
-        for loc_name, loc_data in locations.items():
-            for prop_name in loc_data.get("props", []):
-                props_dict[prop_name] = {
-                    "location": loc_name,
-                    "state": ["default"],
-                }
+
+        # If scenario has detailed props, use them
+        if scenario_props:
+            for prop_name, prop_data in scenario_props.items():
+                props_dict[prop_name] = prop_data.copy()
+        else:
+            # Fallback: collect from locations (minimal data)
+            for loc_name, loc_data in locations.items():
+                for prop_name in loc_data.get("props", []):
+                    props_dict[prop_name] = {
+                        "location": loc_name,
+                        "state": ["default"],
+                    }
 
         # Get current location (first character's location)
         current_location = "キッチン"
@@ -1650,6 +1734,7 @@ class ExperimentRunner:
             "characters": character_dict,
             "props": props_dict,
             "events": [],
+            "gm_opening_message": scenario_data.get("gm_opening_message", ""),
         }
 
     def _build_context_prompt(self, world_state: dict, turns: list[TurnResult]) -> str:
@@ -1678,7 +1763,19 @@ class ExperimentRunner:
             speech = t.parsed_speech or t.raw_output
             history_lines.append(f"{t.speaker}: {speech}")
 
-        context = f"""現在地: {location}
+        # Turn0: Inject gm_opening_message (genre/goal primer) - MUST be at the very top
+        opening_section = ""
+        if len(turns) == 0:
+            gm_opening = world_state.get("gm_opening_message", "")
+            if gm_opening:
+                opening_section = f"""━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【最重要指示 - 必ず従うこと】
+{gm_opening}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+"""
+
+        context = f"""{opening_section}現在地: {location}
 時間: {time_label}
 周囲のもの: {', '.join(props_at_location) if props_at_location else 'なし'}
 
@@ -3244,6 +3341,17 @@ def generate_turns_log(
                 "available_lists_empty": t.available_lists_empty,
                 "retry_same_target": t.retry_same_target,
                 "retry_new_missing": t.retry_new_missing,
+                # GM-021/Take6: Normalized action
+                "normalized_command": t.normalized_command,
+                "normalized_verb": t.normalized_verb,
+                "normalized_target": t.normalized_target,
+                "normalized_secondary_target": t.normalized_secondary_target,
+                "normalized_reason": t.normalized_reason,
+                "normalized_success": t.normalized_success,
+                # Take7: Validation result
+                "apply_success": t.apply_success,
+                "apply_fail_reason": t.apply_fail_reason,
+                "apply_suggestion": t.apply_suggestion,
             })
 
     log_path = output_path / "turns_log.json"

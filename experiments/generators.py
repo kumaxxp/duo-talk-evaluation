@@ -136,7 +136,8 @@ class RealLLMGenerator(Generator):
     """
 
     # System prompt for character dialogue (Two-pass compatible)
-    CHARACTER_SYSTEM_PROMPT = """あなたは以下のキャラクターとして対話します。
+    # NOTE: {game_directive} MUST come FIRST for escape room scenarios
+    CHARACTER_SYSTEM_PROMPT = """{game_directive}あなたは以下のキャラクターとして対話します。
 
 ## キャラクター
 やな（姉）: 一人称「私」、直感的、行動派、明るく柔らかい口調
@@ -180,9 +181,20 @@ Output: *マグカップを手に取る* コーヒー淹れようか
         """Generate output from real LLM via Ollama."""
         start_total = time.perf_counter()
 
+        # Extract game_directive from prompt if present (marked with ━━━ delimiters)
+        game_directive = ""
+        context_only = prompt
+        if "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" in prompt:
+            parts = prompt.split("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            if len(parts) >= 3:
+                # Extract the directive and keep context separate
+                game_directive = parts[1].strip() + "\n\n"
+                context_only = parts[2].strip()
+
         # Build full prompt
         full_prompt = self.CHARACTER_SYSTEM_PROMPT.format(
-            context=prompt,
+            game_directive=game_directive,
+            context=context_only,
             history="",  # Will be filled by caller if needed
             speaker=speaker,
         )
