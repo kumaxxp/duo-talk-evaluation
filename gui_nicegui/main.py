@@ -63,6 +63,81 @@ class AppState:
         # Visual Board state (Single Source of Truth)
         self.selected_object: dict | None = None
 
+        # HAKONIWA Console state (Phase 4)
+        self.speaker: str = "やな"  # Current speaker selection
+        self.topic: str = ""  # Current topic/prompt
+
+        # Dialogue log - list of conversation turns
+        self.dialogue_log: list[dict] = [
+            {
+                "turn": 1,
+                "speaker": "やな",
+                "thought": "妹と一緒に朝を迎えられて嬉しいな。今日も楽しい一日になりそう。",
+                "speech": "おはよう、あゆ〜！今日もいい天気だね！",
+                "status": "PASS",
+            },
+            {
+                "turn": 2,
+                "speaker": "あゆ",
+                "thought": "姉様は相変わらず朝から元気ね。少し眩しいけど、悪くない。",
+                "speech": "おはようございます、姉様。...朝から声が大きいですよ。",
+                "status": "PASS",
+            },
+            {
+                "turn": 3,
+                "speaker": "やな",
+                "thought": "あゆったら、素直じゃないんだから。でもそこが可愛いよね。",
+                "speech": "えへへ、ごめんね〜。でもあゆの寝癖、可愛いよ？",
+                "status": "RETRY",
+                "raw_output": "あゆの寝癖可愛い",
+                "repaired_output": "えへへ、ごめんね〜。でもあゆの寝癖、可愛いよ？",
+            },
+        ]
+
+        # Director status - last check result and retry count
+        self.director_status: dict = {
+            "last_stage": "speech",
+            "last_status": "PASS",
+            "retry_count": 1,
+            "give_up": False,
+            "reasons": [],
+            "injected_facts": [],
+        }
+
+        # World state summary from GM
+        self.world_state_summary: dict = {
+            "current_location": "寝室",
+            "time": "朝 7:00",
+            "characters": {
+                "やな": {"location": "寝室", "holding": []},
+                "あゆ": {"location": "寝室", "holding": []},
+            },
+            "recent_changes": ["やなが起床した", "あゆが起床した"],
+        }
+
+        # Action logs from GM
+        self.action_logs: list[dict] = [
+            {
+                "turn": 1,
+                "action": "WAKE_UP",
+                "actor": "やな",
+                "result": "SUCCESS",
+                "description": "やなが起床しました",
+            },
+            {
+                "turn": 2,
+                "action": "WAKE_UP",
+                "actor": "あゆ",
+                "result": "SUCCESS",
+                "description": "あゆが起床しました",
+            },
+        ]
+
+        # Connection status indicators
+        self.core_connected: bool = True
+        self.director_connected: bool = True
+        self.gm_connected: bool = False  # GM requires health check
+
 
 state = AppState()
 
@@ -909,26 +984,294 @@ def create_visual_board_panel() -> None:
         _refresh_action_panel()
 
 
+# ============================================================
+# HAKONIWA Console Components (Phase 4)
+# ============================================================
+
+# Main Stage container reference
+main_stage_container = None
+
+
+def _refresh_main_stage() -> None:
+    """Re-render the Main Stage dialogue cards."""
+    if main_stage_container is None:
+        return
+    main_stage_container.clear()
+    with main_stage_container:
+        for turn_data in state.dialogue_log:
+            _create_dialogue_card(turn_data)
+
+
+def _create_dialogue_card(turn_data: dict) -> None:
+    """Create a single dialogue card for Main Stage."""
+    turn_num = turn_data.get("turn", 0)
+    speaker = turn_data.get("speaker", "?")
+    thought = turn_data.get("thought", "")
+    speech = turn_data.get("speech", "")
+    status = turn_data.get("status", "PASS")
+
+    # Card styling based on status
+    border_class = ""
+    if status == "RETRY":
+        border_class = " border-l-4 border-orange-400"
+    elif status == "GIVE_UP":
+        border_class = " border-l-4 border-red-400"
+
+    # Speaker-based color
+    speaker_color = "pink" if speaker == "やな" else "purple"
+
+    with ui.card().classes(f"w-full mb-2{border_class}"):
+        # Header row
+        with ui.row().classes("items-center gap-2"):
+            ui.badge(f"T{turn_num}").props("color=primary")
+            ui.badge(speaker).props(f"color={speaker_color}")
+
+            # Status badge
+            if status == "PASS":
+                ui.badge("PASS").props("color=green outline")
+            elif status == "RETRY":
+                ui.badge("RETRY").props("color=orange")
+            elif status == "GIVE_UP":
+                ui.badge("GIVE_UP").props("color=red")
+
+        # Thought (collapsed by default)
+        if thought:
+            with ui.expansion("Thought", icon="psychology").classes("text-sm").props("dense"):
+                ui.label(thought).classes("text-gray-600 italic")
+
+        # Speech
+        if speech:
+            ui.label(speech).classes("text-base mt-1")
+
+        # Show repair diff if exists
+        if turn_data.get("raw_output") and turn_data.get("repaired_output"):
+            with ui.expansion("Repair Diff", icon="compare").classes("text-xs").props("dense"):
+                ui.label("Raw:").classes("text-xs font-bold")
+                ui.code(turn_data["raw_output"]).classes("text-xs")
+                ui.label("Repaired:").classes("text-xs font-bold mt-1")
+                ui.code(turn_data["repaired_output"]).classes("text-xs")
+
+
+def create_control_panel() -> None:
+    """Create Control Panel (left pane) for HAKONIWA Console."""
+    with ui.card().classes("w-full"):
+        ui.label("Control Panel").classes("text-lg font-bold")
+
+        # Connection status indicators
+        with ui.row().classes("gap-2 mb-2"):
+            core_color = "green" if state.core_connected else "red"
+            director_color = "green" if state.director_connected else "red"
+            gm_color = "green" if state.gm_connected else "grey"
+
+            ui.badge("Core").props(f"color={core_color}")
+            ui.badge("Director").props(f"color={director_color}")
+            ui.badge("GM").props(f"color={gm_color}")
+
+        ui.separator()
+
+        # Profile selection
+        ui.select(
+            options=["dev", "gate", "full"],
+            value=state.profile,
+            label="Profile",
+            on_change=lambda e: setattr(state, "profile", e.value),
+        ).classes("w-full")
+
+        # Speaker selection
+        ui.select(
+            options=["やな", "あゆ"],
+            value=state.speaker,
+            label="Speaker",
+            on_change=lambda e: setattr(state, "speaker", e.value),
+        ).classes("w-full")
+
+        # Topic input
+        ui.input(
+            label="Topic / Prompt",
+            value=state.topic,
+            on_change=lambda e: setattr(state, "topic", e.value),
+        ).classes("w-full")
+
+        ui.separator()
+
+        # Manual trigger buttons
+        ui.label("Manual Triggers").classes("text-sm font-bold mt-2")
+
+        with ui.column().classes("w-full gap-2"):
+            ui.button(
+                "Generate Thought",
+                on_click=lambda: ui.notify("Generate Thought (Step2で実装)", type="info"),
+                icon="psychology",
+            ).classes("w-full").props("outline")
+
+            ui.button(
+                "Generate Utterance",
+                on_click=lambda: ui.notify("Generate Utterance (Step2で実装)", type="info"),
+                icon="chat",
+            ).classes("w-full").props("outline")
+
+            ui.button(
+                "One-Step",
+                on_click=lambda: ui.notify("One-Step (Step4で実装)", type="info"),
+                icon="play_arrow",
+            ).classes("w-full").props("color=primary")
+
+        ui.separator()
+
+        # Director status display
+        ui.label("Director Status").classes("text-sm font-bold mt-2")
+        with ui.column().classes("w-full text-xs"):
+            ds = state.director_status
+            ui.label(f"Last Stage: {ds.get('last_stage', 'N/A')}")
+            ui.label(f"Last Status: {ds.get('last_status', 'N/A')}")
+            ui.label(f"Retry Count: {ds.get('retry_count', 0)}")
+            if ds.get("give_up"):
+                ui.badge("GIVE_UP").props("color=red")
+
+
+def create_main_stage() -> None:
+    """Create Main Stage (center pane) for HAKONIWA Console."""
+    global main_stage_container
+
+    with ui.card().classes("w-full h-full"):
+        with ui.row().classes("w-full items-center justify-between"):
+            ui.label("Main Stage").classes("text-lg font-bold")
+            ui.badge(f"{len(state.dialogue_log)} turns").props("color=blue outline")
+
+        # Character placeholders (future: actual images)
+        with ui.row().classes("w-full justify-center gap-8 my-2"):
+            with ui.column().classes("items-center"):
+                ui.icon("face", size="48px").classes("text-pink-400")
+                ui.label("やな").classes("text-sm")
+            with ui.column().classes("items-center"):
+                ui.icon("face", size="48px").classes("text-purple-400")
+                ui.label("あゆ").classes("text-sm")
+
+        ui.separator()
+
+        # Dialogue log scroll area
+        with ui.scroll_area().classes("h-[50vh]"):
+            main_stage_container = ui.column().classes("w-full")
+            _refresh_main_stage()
+
+
+def create_god_view() -> None:
+    """Create God View (right pane) for HAKONIWA Console."""
+    with ui.card().classes("w-full"):
+        ui.label("God View (GM Monitor)").classes("text-lg font-bold")
+
+        # World State Summary
+        ui.label("World State").classes("text-sm font-bold mt-2")
+        ws = state.world_state_summary
+
+        with ui.card().classes("w-full bg-gray-50"):
+            with ui.column().classes("text-xs gap-1"):
+                ui.label(f"Location: {ws.get('current_location', 'N/A')}")
+                ui.label(f"Time: {ws.get('time', 'N/A')}")
+
+                # Characters
+                chars = ws.get("characters", {})
+                for char_name, char_data in chars.items():
+                    loc = char_data.get("location", "?")
+                    holding = char_data.get("holding", [])
+                    holding_str = ", ".join(holding) if holding else "(none)"
+                    ui.label(f"  {char_name}: {loc} [holding: {holding_str}]")
+
+        # Recent changes (highlighted)
+        changes = ws.get("recent_changes", [])
+        if changes:
+            ui.label("Recent Changes").classes("text-sm font-bold mt-2")
+            with ui.card().classes("w-full bg-yellow-50"):
+                for change in changes[-3:]:  # Show last 3
+                    ui.label(f"• {change}").classes("text-xs")
+
+        ui.separator()
+
+        # Action Log
+        ui.label("Action Log").classes("text-sm font-bold mt-2")
+
+        with ui.scroll_area().classes("h-32"):
+            for action in reversed(state.action_logs[-5:]):  # Show last 5, newest first
+                turn_num = action.get("turn", 0)
+                action_type = action.get("action", "?")
+                actor = action.get("actor", "?")
+                result = action.get("result", "?")
+                desc = action.get("description", "")
+
+                result_color = "green" if result == "SUCCESS" else "orange"
+
+                with ui.row().classes("items-center gap-1 text-xs"):
+                    ui.badge(f"T{turn_num}").props("color=grey outline")
+                    ui.badge(action_type).props(f"color={result_color} outline")
+                    ui.label(f"{actor}: {desc}").classes("text-gray-600")
+
+
+def create_hakoniwa_console() -> None:
+    """Create the HAKONIWA Console 3-pane layout."""
+    with ui.row().classes("w-full gap-4"):
+        # Left pane: Control Panel (20%)
+        with ui.column().classes("w-1/5 gap-4"):
+            create_control_panel()
+
+        # Center pane: Main Stage (50%)
+        with ui.column().classes("w-3/5"):
+            create_main_stage()
+
+        # Right pane: God View (30%)
+        with ui.column().classes("w-1/5 gap-4"):
+            create_god_view()
+
+
 def create_app():
     """Create the main application."""
-    ui.page_title("duo-talk Evaluation GUI")
+    ui.page_title("HAKONIWA Console")
 
-    with ui.header().classes("bg-blue-600"):
-        ui.label("duo-talk Evaluation").classes("text-xl text-white font-bold")
-        ui.label("Fast Triage + Demo Pack + Visual Board").classes("text-sm text-blue-200 ml-2")
+    with ui.header().classes("bg-indigo-700"):
+        ui.label("HAKONIWA Console").classes("text-xl text-white font-bold")
 
-    with ui.column().classes("w-full p-4 gap-4"):
-        with ui.row().classes("w-full gap-4"):
-            with ui.column().classes("w-1/4 gap-4"):
-                create_scenario_panel()
-                create_execution_panel()
-                create_visual_board_panel()
+        # Connection indicators in header
+        with ui.row().classes("ml-4 gap-2"):
+            core_color = "green" if state.core_connected else "red"
+            director_color = "green" if state.director_connected else "red"
+            gm_color = "green" if state.gm_connected else "grey"
 
-            with ui.column().classes("w-1/2"):
-                create_results_panel()
+            ui.badge("Core").props(f"color={core_color} outline")
+            ui.badge("Director").props(f"color={director_color} outline")
+            ui.badge("GM").props(f"color={gm_color} outline")
 
-            with ui.column().classes("w-1/4 gap-4"):
-                create_demo_pack_panel()
+        ui.space()
+        ui.label("Phase 4: Integration Dashboard").classes("text-sm text-indigo-200")
+
+    # Main content area with tabs for Console vs Legacy
+    with ui.tabs().classes("w-full") as tabs:
+        console_tab = ui.tab("Console", icon="dashboard")
+        legacy_tab = ui.tab("Legacy", icon="history")
+
+    with ui.tab_panels(tabs, value=console_tab).classes("w-full"):
+        # HAKONIWA Console (new 3-pane layout)
+        with ui.tab_panel(console_tab).classes("p-4"):
+            create_hakoniwa_console()
+
+        # Legacy view (original layout)
+        with ui.tab_panel(legacy_tab).classes("p-4"):
+            with ui.column().classes("w-full gap-4"):
+                with ui.row().classes("w-full gap-4"):
+                    with ui.column().classes("w-1/4 gap-4"):
+                        create_scenario_panel()
+                        create_execution_panel()
+                        create_visual_board_panel()
+
+                    with ui.column().classes("w-1/2"):
+                        create_results_panel()
+
+                    with ui.column().classes("w-1/4 gap-4"):
+                        create_demo_pack_panel()
+
+    # Footer with status log
+    with ui.footer().classes("bg-gray-100"):
+        ui.label("Ready").classes("text-xs text-gray-500").bind_text_from(
+            state, "log_output", lambda x: x.split("\n")[-1] if x else "Ready"
+        )
 
 
 # Create app
