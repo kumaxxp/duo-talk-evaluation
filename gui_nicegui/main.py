@@ -11,7 +11,7 @@ import asyncio
 import sys
 from pathlib import Path
 
-from nicegui import ui
+from nicegui import app, ui
 
 # Project paths
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -146,6 +146,37 @@ class AppState:
 
 
 state = AppState()
+
+# GM health check configuration
+GM_HEALTH_CHECK_INTERVAL = 5.0  # seconds
+_last_gm_error_notify: float = 0  # Suppress frequent error notifications
+
+
+async def _do_gm_health_check() -> None:
+    """Perform a single GM health check (called by ui.timer)."""
+    global _last_gm_error_notify
+    import logging
+    import time
+    logger = logging.getLogger(__name__)
+
+    try:
+        result = await gm_get_health(use_mock=False)
+        was_connected = state.gm_connected
+        state.gm_connected = bool(result and result.get("status") == "ok")
+
+        # Log state changes
+        if state.gm_connected and not was_connected:
+            logger.info("GM service: CONNECTED")
+        elif not state.gm_connected and was_connected:
+            logger.warning("GM service: DISCONNECTED")
+
+    except Exception as e:
+        state.gm_connected = False
+        # Suppress frequent error notifications (max once per 30s)
+        now = time.time()
+        if now - _last_gm_error_notify > 30:
+            _last_gm_error_notify = now
+            logger.warning(f"GM health check failed: {e}")
 
 
 def create_scenario_panel():
@@ -1605,15 +1636,25 @@ def create_control_panel() -> None:
     with ui.card().classes("w-full"):
         ui.label("Control Panel").classes("text-lg font-bold")
 
-        # Connection status indicators
+        # Connection status indicators (GM badge reactive)
         with ui.row().classes("gap-2 mb-2"):
             core_color = "green" if state.core_connected else "red"
             director_color = "green" if state.director_connected else "red"
-            gm_color = "green" if state.gm_connected else "grey"
 
             ui.badge("Core").props(f"color={core_color}")
             ui.badge("Director").props(f"color={director_color}")
-            ui.badge("GM").props(f"color={gm_color}")
+
+            # GM badge - reactive via ui.timer
+            gm_badge_panel = ui.badge("GM").props("color=grey")
+
+            def _update_gm_badge_panel():
+                """Update GM badge color based on connection status."""
+                if state.gm_connected:
+                    gm_badge_panel.props("color=green")
+                else:
+                    gm_badge_panel.props("color=grey")
+
+            ui.timer(1.0, _update_gm_badge_panel)
 
         ui.separator()
 
@@ -1754,18 +1795,35 @@ def create_app():
     """Create the main application."""
     ui.page_title("HAKONIWA Console")
 
+    # GM health check timer (runs every 5 seconds)
+    # The timer is async-aware and will call the async function
+    ui.timer(GM_HEALTH_CHECK_INTERVAL, _do_gm_health_check)
+    # Also do an immediate check on startup (after 0.5s to let UI initialize)
+    ui.timer(0.5, _do_gm_health_check, once=True)
+
     with ui.header().classes("bg-indigo-700"):
         ui.label("HAKONIWA Console").classes("text-xl text-white font-bold")
 
-        # Connection indicators in header
+        # Connection indicators in header (reactive)
         with ui.row().classes("ml-4 gap-2"):
             core_color = "green" if state.core_connected else "red"
             director_color = "green" if state.director_connected else "red"
-            gm_color = "green" if state.gm_connected else "grey"
 
             ui.badge("Core").props(f"color={core_color} outline")
             ui.badge("Director").props(f"color={director_color} outline")
-            ui.badge("GM").props(f"color={gm_color} outline")
+
+            # GM badge - reactive via ui.timer
+            gm_badge = ui.badge("GM").props("color=grey outline")
+
+            def _update_gm_badge():
+                """Update GM badge color based on connection status."""
+                if state.gm_connected:
+                    gm_badge.props("color=green outline")
+                else:
+                    gm_badge.props("color=grey outline")
+
+            # Update badge display every 1 second
+            ui.timer(1.0, _update_gm_badge)
 
         ui.space()
         ui.label("Phase 4: Integration Dashboard").classes("text-sm text-indigo-200")
