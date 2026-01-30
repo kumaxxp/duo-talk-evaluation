@@ -1,0 +1,3 @@
+success,total_latency_ms,thought_latency_ms,director_thought_latency_ms,utterance_latency_ms,director_speech_latency_ms,gm_latency_ms,director_thought_status,director_speech_status,error
+True,5042,3022,1,1804,0,214,PASS,PASS,
+True,5264,3339,0,1798,0,125,PASS,PASS,
