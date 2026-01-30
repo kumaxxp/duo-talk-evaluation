@@ -2,7 +2,7 @@
 
 > AIキャラクター姉妹「やな」と「あゆ」の対話エコシステム
 
-[![Phase](https://img.shields.io/badge/Phase-3.2%20Complete-brightgreen)](docs/strategy/STRATEGY.md)
+[![Phase](https://img.shields.io/badge/Phase-4%20Complete-brightgreen)](docs/strategy/STRATEGY.md)
 [![Coverage](https://img.shields.io/badge/Coverage-96%25-brightgreen)]()
 [![Python](https://img.shields.io/badge/Python-3.11+-blue)]()
 
@@ -44,7 +44,7 @@ duo-talk-ecosystem/
 | [duo-talk-core](https://github.com/kumaxxp/duo-talk-core) | v1.0.0 | キャラクター設定、プロンプト生成、Two-Phase対話生成 |
 | [duo-talk-director](https://github.com/kumaxxp/duo-talk-director) | v1.0.0 | 品質チェック、RAG Injection、状態抽出 |
 | [duo-talk-gm](https://github.com/kumaxxp/duo-talk-gm) | v0.1.0 | 世界状態管理、アクション判定、ファクト生成 |
-| **duo-talk-evaluation** | v0.1.0 | 評価フレームワーク、A/Bテスト、HAKONIWA、**ドキュメントHQ** |
+| **duo-talk-evaluation** | v0.4.0-hakoniwa-alpha | 評価フレームワーク、A/Bテスト、HAKONIWA、**ドキュメントHQ** |
 
 ---
 
@@ -190,7 +190,7 @@ duo-talk-evaluation/
 
 ### Upcoming
 
-- [ ] **Phase 4**: GUI Implementation & System Integration
+- [x] **Phase 4**: GUI Implementation & System Integration
 - [ ] **Phase 5**: Optimal Configuration
 
 See [STRATEGY.md](docs/strategy/STRATEGY.md) for details.

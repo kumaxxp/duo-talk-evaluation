@@ -36,7 +36,7 @@ AIキャラクター「やな」と「あゆ」の姉妹対話を通じて、以
 | 2.3 | NoveltyGuard | ✅ Complete | 100% |
 | 3.1 | RAG Observation | ✅ Complete | 100% |
 | **3.2** | **RAG Injection** | ✅ **Complete** | **100%** |
-| 4 | GUI Implementation | 🔲 Planned | 0% |
+| 4 | GUI Implementation | ✅ Complete | 100% |
 | 5 | System Integration | 🔲 Planned | 0% |
 
 ### 2.2 Current Phase Details
@@ -52,9 +52,15 @@ AIキャラクター「やな」と「あゆ」の姉妹対話を通じて、以
 
 ## 3. Next Objective
 
-### Phase 4: GUI Implementation & System Integration
+### Phase 4 Complete (HAKONIWA GUI Released)
 
-**目標**: 評価結果の可視化と開発者体験の向上
+**目標**: 評価結果の可視化と開発者体験の向上 — HAKONIWA Console をリリース済み
+
+### Next Objective
+
+### Phase 5: Scenario Editor & Persistence (Draft)
+
+**目標**: シナリオの対話的編集とセッション永続化を実装し、シナリオ作成→実行の一連ワークフローをGUIで提供
 
 #### 4.1 Priority Items
 
